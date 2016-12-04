@@ -1,0 +1,11 @@
+﻿main: com.arirangJS.Main.Main
+
+name: MaTaku
+version: 1.0
+author: devonnuri
+description: Scripting eaiser using Javascript! based on Rhino (Arirang Arirang Arariyo)
+
+commands:
+    arirang:
+        description: Manage Arirang Scripts
+        aliases: [arirangjs, 아리랑]
