@@ -12,8 +12,8 @@ import java.util.Arrays;
 import com.arirangJS.Debug.Debug;
 
 public class FileSystem {
-	public static final String LOC_PLUGIN = "plugins/ArirangJS";
-	public static final String LOC_SCRIPT = LOC_PLUGIN+"/scripts";
+	public static final String LOC_PLUGIN = "plugins/ArirangJS/";
+	public static final String LOC_SCRIPT = LOC_PLUGIN+"scripts/";
 	
 	public static String[] readRaw(String filename){
 		try{
@@ -37,13 +37,35 @@ public class FileSystem {
 		}
 	}
 	
+	public static String[] readRaw(File file){
+		try{
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String str;
+			ArrayList<String> result = new ArrayList<String>();
+			
+			while((str = reader.readLine()) != null){
+				result.add(str);
+			}
+			
+			reader.close();
+			return result.toArray(new String[result.toArray().length]);
+			
+		}catch(IOException e){
+			Debug.danger("파일("+file.getName()+") 입력 오류(IOException)가 발생하였습니다. 자세한 내용은 아래에 있습니다.");
+			Debug.danger(e.getMessage());
+			return null;
+		}
+	}
+	
+	
 	public static String readLine(String filename, int line){
-		if(readRaw(filename).length < line){
+		String[] file = readRaw(filename);
+		if(file.length < line){
 			Debug.danger("[FileSystem] 주어진 줄 번호가 너무 큽니다.");
 			return null;
 		}
 		
-		return readRaw(filename)[line];
+		return file[line];
 	}
 	
 	public static void writeRaw(String filename, ArrayList<String> string){
@@ -94,18 +116,17 @@ public class FileSystem {
 		writeRaw(filename, new ArrayList<String>(Arrays.asList(result)));
 	}
 	
-	protected static boolean checkExist(String filename){
+	public static boolean checkExist(String filename){
 		if(isExist(filename)){
 			return true;
 		}else{
 			File file = new File(filename);
-			file.getParentFile().mkdirs();
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				Debug.danger("파일("+filename+") 출력 오류(IOException)가 발생하였습니다. 자세한 내용은 아래에 있습니다.");
-				e.printStackTrace();
+			if(filename.endsWith("/")) {
+				file.mkdirs();
+			} else {
+				file.getParentFile().mkdirs();
 			}
+			
 			return false;
 		}
 	}

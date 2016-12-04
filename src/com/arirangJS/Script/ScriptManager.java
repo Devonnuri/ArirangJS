@@ -8,15 +8,17 @@ import org.mozilla.javascript.Scriptable;
 
 import com.arirangJS.Debug.Debug;
 
-public class Script {
+public class ScriptManager {
 	String code;
+	int line=1;
 	
-	public Script(String code) {
+	public ScriptManager(String code) {
 		this.code = code;
 	}
 	
-	public Script(String[] code) {
+	public ScriptManager(String[] code) {
 		this.code = Arrays.toString(code);
+		this.line = code.length;
 	}
 	
 	public static String toString(Object object) {
@@ -31,7 +33,7 @@ public class Script {
 		try {
 			Scriptable scope = context.initStandardObjects();
 			
-			result = context.evaluateString(scope, code, "<cmd>", 1, null);
+			result = context.evaluateString(scope, code, "<cmd>", line, null);
 		} catch(RhinoException e) {
 			Debug.danger(e.getMessage());
 		} finally {
