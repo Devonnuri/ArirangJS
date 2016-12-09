@@ -16,7 +16,7 @@ import com.arirangJS.Script.ScriptManager;
 import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin implements Listener {
-	HashMap<String, ScriptManager> scripts = new HashMap<String, ScriptManager>();
+	HashMap<String, String> scripts = new HashMap<String, String>();
 	
 	public void onEnable() {
 		FileSystem.checkExist(FileSystem.LOC_PLUGIN);
@@ -27,7 +27,10 @@ public class Main extends JavaPlugin implements Listener {
 		
 		for(File file : folder_script.listFiles()) {
 			String[] code = FileSystem.readRaw(file);
-			scripts.put(file.getName(), new ScriptManager(code));
+			String str = "";
+			for(String temp : code) str += temp;
+			
+			scripts.put(file.getName(), str);
 			
 			Debug.success("File \""+file.getName()+"\" was loaded successfully!");
 		}
@@ -68,10 +71,6 @@ public class Main extends JavaPlugin implements Listener {
 					} else {
 						sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] Script \""+args[1]+"\" is not exist.");
 					}
-					return true;
-				}else if(args[0].equalsIgnoreCase("test")) {
-		            ScriptManager script = new ScriptManager(args[1]);
-					sender.sendMessage(ScriptManager.toString(script.run()));
 					return true;
 				}
 				

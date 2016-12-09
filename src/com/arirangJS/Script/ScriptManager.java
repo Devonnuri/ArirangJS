@@ -1,15 +1,16 @@
 package com.arirangJS.Script;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.annotations.JSConstructor;
-import org.mozilla.javascript.annotations.JSStaticFunction;
 
 import com.arirangJS.Debug.Debug;
+
 
 public class ScriptManager {
 	String code;
@@ -40,8 +41,9 @@ public class ScriptManager {
 		
 		try {
 			Scriptable scope = context.initStandardObjects();
+			ScriptableObject.defineClass(scope, com.arirangJS.Script.Classes._Bukkit.class);
 			
-			ScriptableObject.defineClass(scope, _Bukkit.class);
+			ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(com.arirangJS.Script.Classes._ChatColor.class));
 			
 			result = context.evaluateString(scope, code, "<cmd>", line, null);
 		} catch(RhinoException e) {
@@ -56,61 +58,18 @@ public class ScriptManager {
 		return result;
 	}
 	
-	public static class _Bukkit extends ScriptableObject {
-
-		private static final long serialVersionUID = -3993427606107770469L;
-		
-		@JSConstructor
-	    public _Bukkit() {}
-		
-		@Override
-		public String getClassName() {
-			return "Bukkit";
+	public static ScriptableObject constantsToObj(Class<?> clazz) {
+		ScriptableObject obj = new NativeObject();
+		for(Field field : clazz.getFields()) {
+			try {
+				obj.putConst(field.getName(), obj, field.get(null));
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				Debug.danger("An error occured translate class to jsObject");
+				e.printStackTrace();
+			}
 		}
 		
-		@JSStaticFunction
-		public static void broadcastMessage(String message) {
-			org.bukkit.Bukkit.broadcastMessage(message);
-		}
-		
-		@JSStaticFunction
-		public static void banIP(String address) {
-			org.bukkit.Bukkit.banIP(address);
-		}
-		
-		@JSStaticFunction
-		public static void clearRecipes() {
-			org.bukkit.Bukkit.clearRecipes();
-		}
-		
-		@JSStaticFunction
-		public static boolean getAllowEnd() {
-			return org.bukkit.Bukkit.getAllowEnd();
-		}
-		
-		@JSStaticFunction
-		public static boolean getAllowFlight() {
-			return org.bukkit.Bukkit.getAllowFlight();
-		}
-		
-		@JSStaticFunction
-		public static boolean getAllowNether() {
-			return org.bukkit.Bukkit.getAllowNether();
-		}
-		
-		@JSStaticFunction
-		public static int getAmbientSpawnLimit() {
-			return org.bukkit.Bukkit.getAmbientSpawnLimit();
-		}
-		
-		@JSStaticFunction
-		public static int getAnimalSpawnLimit() {
-			return org.bukkit.Bukkit.getAnimalSpawnLimit();
-		}
-		
-		@JSStaticFunction
-		public static String getBukkitVersion() {
-			return org.bukkit.Bukkit.getBukkitVersion();
-		}
+		return obj;
 	}
+
 }
