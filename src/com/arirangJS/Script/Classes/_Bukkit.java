@@ -1,14 +1,10 @@
 package com.arirangJS.Script.Classes;
 
 import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSStaticFunction;
 
 public class _Bukkit extends ScriptableObject {
 	private static final long serialVersionUID = -3993427606107770469L;
-	
-	@JSConstructor
-    public _Bukkit() {}
 	
 	@Override
 	public String getClassName() {
