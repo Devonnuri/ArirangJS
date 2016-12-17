@@ -67,11 +67,11 @@ public class ScriptManager implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		callMethod("onPlayerJoin", e.getPlayer().getName());
+		callMethod("onPlayerJoin", new _Player(e.getPlayer()));
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		callMethod("onPlayerQuit", e.getPlayer().getName());
+		callMethod("onPlayerQuit", new _Player(e.getPlayer()));
 	}
 }
