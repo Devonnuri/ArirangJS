@@ -19,6 +19,9 @@ import org.mozilla.javascript.ScriptableObject;
 import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
 import com.arirangJS.Main.Main;
+import com.arirangJS.Script.Classes._Bukkit;
+import com.arirangJS.Script.Classes._ChatColor;
+import com.arirangJS.Script.Classes._Player;
 
 
 public class ScriptManager implements Listener {
@@ -28,9 +31,9 @@ public class ScriptManager implements Listener {
 			Scriptable scope = context.initStandardObjects();
 			
 			try {
-				ScriptableObject.defineClass(scope, com.arirangJS.Script.Classes._Bukkit.class);
-				ScriptableObject.putProperty(scope, "ChatColor",
-				constantsToObj(com.arirangJS.Script.Classes._ChatColor.class));
+				ScriptableObject.defineClass(scope, _Bukkit.class);
+				ScriptableObject.defineClass(scope, _Player.class, false, true);
+				ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
 				context.evaluateReader(scope, new FileReader(FileSystem.LOC_SCRIPT+filename), filename, 0, null);
 				Object object = scope.get(functionName, scope);
 				
@@ -39,7 +42,7 @@ public class ScriptManager implements Listener {
 					function.call(context, scope, scope, args);
 				}
 			} catch(RhinoException e) {
-				Debug.danger(e.getMessage());
+				Debug.danger(e.getMessage()+" ("+e.lineNumber()+", "+e.columnNumber()+")");
 			} catch(IOException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
 				Debug.danger("An error occured while compiling code.");
 			} finally {
@@ -64,11 +67,11 @@ public class ScriptManager implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		callMethod("onPlayerJoin");
+		callMethod("onPlayerJoin", e.getPlayer().getName());
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		callMethod("onPlayerQuit");
+		callMethod("onPlayerQuit", e.getPlayer().getName());
 	}
 }
