@@ -2,6 +2,7 @@ package com.arirangJS.Main;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,6 +17,12 @@ import com.arirangJS.Script.ScriptManager;
 import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin {
+	public static HashMap<String, Boolean> isCanceled = new HashMap<String, Boolean>();
+	
+	public static String joinMessage = "";
+	public static String quitMessage = "";
+	public static String chatFormat = "";
+	
 	public static ArrayList<String> scripts = new ArrayList<String>();
 	
 	public void onEnable() {

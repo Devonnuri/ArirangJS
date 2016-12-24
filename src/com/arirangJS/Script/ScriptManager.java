@@ -5,9 +5,14 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -19,8 +24,10 @@ import org.mozilla.javascript.ScriptableObject;
 import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
 import com.arirangJS.Main.Main;
+import com.arirangJS.Script.Classes._Biome;
 import com.arirangJS.Script.Classes._Bukkit;
 import com.arirangJS.Script.Classes._ChatColor;
+import com.arirangJS.Script.Classes._Event;
 import com.arirangJS.Script.Classes._Player;
 
 
@@ -32,8 +39,10 @@ public class ScriptManager implements Listener {
 			
 			try {
 				ScriptableObject.defineClass(scope, _Bukkit.class);
-				ScriptableObject.defineClass(scope, _Player.class, false, true);
+				ScriptableObject.defineClass(scope, _Player.class);
+				ScriptableObject.defineClass(scope, _Event.class);
 				ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
+				ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
 				context.evaluateReader(scope, new FileReader(FileSystem.LOC_SCRIPT+filename), filename, 0, null);
 				Object object = scope.get(functionName, scope);
 				
@@ -65,13 +74,65 @@ public class ScriptManager implements Listener {
 		return obj;
 	}
 	
+	public static String locToJSON(Location location) {
+		double x = location.getX();
+		double y = location.getY();
+		double z = location.getZ();
+		float yaw = location.getYaw();
+		float pitch = location.getPitch();
+		int blockX = location.getBlockX();
+		int blockY = location.getBlockY();
+		int blockZ = location.getBlockZ();
+		
+		String result = String.format("({x: %f, y: %f, z: %f, yaw: %f, pitch: %f, blockX: %d, blockY: %d, blockZ: %d})",
+				x, y, z, yaw, pitch, blockX, blockY, blockZ);
+		return result;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static String blockToJSON(Block block) {
+		int x = block.getX();
+		int y = block.getY();
+		int z = block.getZ();
+		int id = block.getTypeId();
+		int damage = block.getData();
+		int biome = block.getBiome().ordinal();
+		
+		String result = String.format("({x: %d, y: %d, z: %d, id: %d, damage: %d, biome: %d})",
+				x, y, z, id, damage, biome);
+		return result;
+	}
+	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		callMethod("onPlayerJoin", new _Player(e.getPlayer()));
+		Main.joinMessage = e.getJoinMessage();
+		callMethod("onPlayerJoin", e.getPlayer().getName());
+		e.setJoinMessage(Main.joinMessage);
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		callMethod("onPlayerQuit", new _Player(e.getPlayer()));
+		Main.quitMessage = e.getQuitMessage();
+		callMethod("onPlayerQuit", e.getPlayer().getName());
+		e.setQuitMessage(Main.quitMessage);
+	}
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent e) {
+		callMethod("onPlayerMove", e.getPlayer().getName(), locToJSON(e.getFrom()), locToJSON(e.getTo()));
+	}
+	
+	@EventHandler
+	public void onPlayerChat(AsyncPlayerChatEvent e) {
+		Main.chatFormat = e.getFormat();
+		callMethod("onPlayerChat", e.getPlayer().getName(), e.getMessage());
+		e.setFormat(Main.chatFormat);
+	}
+	
+	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent e) {
+		Main.isCanceled.put(e.getEventName(), false);
+		callMethod("onBlockPlace", e.getPlayer().getName(), blockToJSON(e.getBlock()));
+		e.setCancelled(Main.isCanceled.get(e.getEventName()));
 	}
 }
