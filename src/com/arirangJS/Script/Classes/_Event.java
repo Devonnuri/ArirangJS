@@ -50,6 +50,6 @@ public class _Event extends ScriptableObject {
 	
 	@JSStaticFunction
 	public static void setCancelled(String event, boolean cancel) {
-		Main.isCanceled.put(event, cancel);
+		Main.isCancelled.put(event, cancel);
 	}
 }

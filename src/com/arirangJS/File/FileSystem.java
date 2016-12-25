@@ -3,6 +3,8 @@ package com.arirangJS.File;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import com.arirangJS.Debug.Debug;
 public class FileSystem {
 	public static final String LOC_PLUGIN = "plugins/ArirangJS/";
 	public static final String LOC_SCRIPT = LOC_PLUGIN+"scripts/";
+	public static final String LOC_TEMP = LOC_SCRIPT+"temp/";
 	
 	public static String[] readRaw(String filename){
 		try{
@@ -61,7 +64,7 @@ public class FileSystem {
 	public static String readLine(String filename, int line){
 		String[] file = readRaw(filename);
 		if(file.length < line){
-			Debug.danger("[FileSystem] 주어진 줄 번호가 너무 큽니다.");
+			Debug.danger("주어진 줄 번호가 너무 큽니다.");
 			return null;
 		}
 		
@@ -107,7 +110,7 @@ public class FileSystem {
 		
 		String[] result = readRaw(filename);
 		if(result.length < line){
-			Debug.danger("[FileSystem] 주어진 줄 번호가 너무 큽니다.");
+			Debug.danger("주어진 줄 번호가 너무 큽니다.");
 			return;
 		}
 		
@@ -128,6 +131,24 @@ public class FileSystem {
 			}
 			
 			return false;
+		}
+	}
+	
+	public static void copy(String src, String dest) {
+		try {
+			FileInputStream input = new FileInputStream(src);
+			FileOutputStream output = new FileOutputStream(dest);
+			
+			int data = 0;
+			while((data = input.read())!=-1) {
+				output.write(data);
+			}
+			
+			input.close();
+			output.close();
+		} catch(IOException e) {
+			Debug.danger("파일을 복사하는 데 문제가 발생하였습니다.");
+			e.printStackTrace();
 		}
 	}
 	

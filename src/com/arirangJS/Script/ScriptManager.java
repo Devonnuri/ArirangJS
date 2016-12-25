@@ -4,16 +4,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeObject;
@@ -43,7 +49,8 @@ public class ScriptManager implements Listener {
 				ScriptableObject.defineClass(scope, _Event.class);
 				ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
 				ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
-				context.evaluateReader(scope, new FileReader(FileSystem.LOC_SCRIPT+filename), filename, 0, null);
+				ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
+				context.evaluateReader(scope, new FileReader(FileSystem.LOC_TEMP+filename), filename, 0, null);
 				Object object = scope.get(functionName, scope);
 				
 				if(object != null && object instanceof Function) {
@@ -91,6 +98,7 @@ public class ScriptManager implements Listener {
 	
 	@SuppressWarnings("deprecation")
 	public static String blockToJSON(Block block) {
+		if(block == null) return "({})";
 		int x = block.getX();
 		int y = block.getY();
 		int z = block.getZ();
@@ -100,6 +108,44 @@ public class ScriptManager implements Listener {
 		
 		String result = String.format("({x: %d, y: %d, z: %d, id: %d, damage: %d, biome: %d})",
 				x, y, z, id, damage, biome);
+		return result;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static String itemToJSON(ItemStack item) {
+		if(item == null) return "({})";
+		int id = item.getTypeId();
+		int amount = item.getAmount();
+		int durability = item.getDurability();
+		String displayName = item.getItemMeta().getDisplayName();
+		List<String> loreList = item.getItemMeta().getLore();
+		String enchantment = "{}";
+		
+		if(item.getEnchantments().size() > 0) {
+			StringBuilder builder = new StringBuilder();
+			// [[id,amount],[id,amount] ...]
+			builder.append("{");
+			for(Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
+				builder.append(entry.getKey().getName()+": "+entry.getValue()+", ");
+			}
+			builder.setLength(builder.length()-2);
+			builder.append("}");
+			enchantment = builder.toString();
+		}
+		
+		
+		String lore = "{}";
+		if(loreList != null) {
+			lore = "[";
+			for(String str : loreList) {
+				lore += "\""+str+"\",";
+			}
+			lore = lore.substring(0, lore.length()-1);
+			lore += "]";
+		}
+		
+		
+		String result = String.format("({id: %d, amount: %d, durability: %d, displayName: \"%s\", lore: %s, enchantment: %s})", id, amount, durability, displayName, lore, enchantment);
 		return result;
 	}
 	
@@ -131,8 +177,32 @@ public class ScriptManager implements Listener {
 	
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
-		Main.isCanceled.put(e.getEventName(), false);
+		Main.isCancelled.put(e.getEventName(), false);
 		callMethod("onBlockPlace", e.getPlayer().getName(), blockToJSON(e.getBlock()));
-		e.setCancelled(Main.isCanceled.get(e.getEventName()));
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent e) {
+		Main.isCancelled.put(e.getEventName(), false);
+		callMethod("onBlockBreak", e.getPlayer().getName(), blockToJSON(e.getBlock()));
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent e) {
+		Main.isCancelled.put(e.getEventName(), false);
+		int action;
+		switch(e.getAction()) {
+			case LEFT_CLICK_AIR: action = 1; break;
+			case RIGHT_CLICK_AIR: action = 2; break;
+			case LEFT_CLICK_BLOCK: action = 3; break;
+			case RIGHT_CLICK_BLOCK: action = 4; break;
+			case PHYSICAL: action = 5; break;
+			default: action = 0;
+		}
+		callMethod("onPlayerInteract", e.getPlayer().getName(), action, blockToJSON(e.getClickedBlock()),
+				itemToJSON(e.getPlayer().getInventory().getItemInMainHand()));
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
 }

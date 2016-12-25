@@ -2,12 +2,17 @@ package com.arirangJS.Main;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.arirangJS.Debug.Debug;
@@ -17,7 +22,7 @@ import com.arirangJS.Script.ScriptManager;
 import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin {
-	public static HashMap<String, Boolean> isCanceled = new HashMap<String, Boolean>();
+	public static HashMap<String, Boolean> isCancelled = new HashMap<String, Boolean>();
 	
 	public static String joinMessage = "";
 	public static String quitMessage = "";
@@ -30,11 +35,13 @@ public class Main extends JavaPlugin {
 		
 		FileSystem.checkExist(FileSystem.LOC_PLUGIN);
 		FileSystem.checkExist(FileSystem.LOC_SCRIPT);
+		FileSystem.checkExist(FileSystem.LOC_TEMP);
 		
-		//File folder_plugin = new File(FileSystem.LOC_PLUGIN);
 		File folder_script = new File(FileSystem.LOC_SCRIPT);
 		
 		for(File file : folder_script.listFiles()) {
+			if(file.isDirectory()) continue;
+			FileSystem.copy(FileSystem.LOC_SCRIPT+file.getName(), FileSystem.LOC_TEMP+file.getName());
 			scripts.add(file.getName());
 			
 			Debug.success("File \""+file.getName()+"\" was loaded successfully!");
@@ -54,22 +61,28 @@ public class Main extends JavaPlugin {
 		if(label.equalsIgnoreCase("arirang") || label.equalsIgnoreCase("arirangjs") || label.equalsIgnoreCase("아리랑")) {
 			if(args.length == 1) {
 				if(args[0].equalsIgnoreCase("test")) {
-					
+					ItemStack item = new ItemStack(Material.DIAMOND_SWORD, 1);
+					item.addEnchantment(Enchantment.FIRE_ASPECT, 1);
+					item.addEnchantment(Enchantment.DURABILITY, 1);
+					ItemMeta meta = item.getItemMeta();
+					meta.setDisplayName(ChatColor.AQUA+"헤헤헷");
+					meta.setLore(Arrays.asList("로어로어", "두번째 로어"));
+					item.setItemMeta(meta);
+					Debug.warn(ScriptManager.itemToJSON(item));
 				}
 			} else if(args.length == 2) {
 				if(args[0].equalsIgnoreCase("reload")) {
 					if(FileSystem.isExist(FileSystem.LOC_SCRIPT + args[1])) {
-						if(!scripts.contains(args[1])) {
-							scripts.add(args[1]);
-							sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] File \""+args[1]+"\" was reloaded successfully!");
-						}
+						scripts.add(args[1]);
+						FileSystem.copy(FileSystem.LOC_SCRIPT+args[1], FileSystem.LOC_TEMP+args[1]);
+						sender.sendMessage(ChatColor.GREEN+""+ChatColor.BOLD+"[ArirangJS] File \""+args[1]+"\" was reloaded successfully!");
 					} else {
 						sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] Script \""+args[1]+"\" is not exist.");
 					}
 					return true;
 				}else if(args[0].equalsIgnoreCase("view")) {
-					if(FileSystem.isExist(FileSystem.LOC_SCRIPT + args[1])) {
-						String[] code = FileSystem.readRaw(args[1]);
+					if(FileSystem.isExist(FileSystem.LOC_TEMP + args[1])) {
+						String[] code = FileSystem.readRaw(FileSystem.LOC_TEMP + args[1]);
 						sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"┌───────["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - "+args[1]+ChatColor.AQUA+""+ChatColor.BOLD+"]───────┐");
 						for(String str : code) {
 							sender.sendMessage(ChatColor.BOLD+str);

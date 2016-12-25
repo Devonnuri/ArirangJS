@@ -1,6 +1,7 @@
 package com.arirangJS.Script.Classes;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
@@ -458,5 +459,17 @@ public class _Player extends ScriptableObject {
 	@JSFunction
 	public void sendMessage(String message) {
 		this.player.sendMessage(message);
+	}
+	
+	//Methods inherited from interface org.bukkit.entity.Entity
+	
+	@JSFunction
+	public void teleport(double x, double y, double z) {
+		this.player.teleport(new Location(player.getWorld(), x, y, z));
+	}
+	
+	@JSFunction
+	public void teleportEye(double x, double y, double z, double yaw, double pitch) {
+		this.player.teleport(new Location(player.getWorld(), x, y, z, (float) yaw, (float) pitch));
 	}
 }
