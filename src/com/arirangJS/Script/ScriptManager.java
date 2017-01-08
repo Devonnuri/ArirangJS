@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -14,7 +15,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -30,10 +33,13 @@ import org.mozilla.javascript.ScriptableObject;
 import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
 import com.arirangJS.Main.Main;
+import com.arirangJS.Script.Classes._Action;
 import com.arirangJS.Script.Classes._Biome;
 import com.arirangJS.Script.Classes._Bukkit;
 import com.arirangJS.Script.Classes._ChatColor;
+import com.arirangJS.Script.Classes._Effect;
 import com.arirangJS.Script.Classes._Event;
+import com.arirangJS.Script.Classes._Inventory;
 import com.arirangJS.Script.Classes._Player;
 
 
@@ -47,9 +53,11 @@ public class ScriptManager implements Listener {
 				ScriptableObject.defineClass(scope, _Bukkit.class);
 				ScriptableObject.defineClass(scope, _Player.class);
 				ScriptableObject.defineClass(scope, _Event.class);
+				ScriptableObject.defineClass(scope, _Inventory.class);
+				ScriptableObject.defineClass(scope, _Effect.class);
 				ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
 				ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
-				ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
+				ScriptableObject.putProperty(scope, "Action", constantsToObj(_Action.class));
 				context.evaluateReader(scope, new FileReader(FileSystem.LOC_TEMP+filename), filename, 0, null);
 				Object object = scope.get(functionName, scope);
 				
@@ -117,8 +125,19 @@ public class ScriptManager implements Listener {
 		int id = item.getTypeId();
 		int amount = item.getAmount();
 		int durability = item.getDurability();
-		String displayName = item.getItemMeta().getDisplayName();
-		List<String> loreList = item.getItemMeta().getLore();
+		String displayName = "";
+		List<String> loreList;
+		if(item.getItemMeta() == null) {
+			displayName = "";
+			loreList = new ArrayList<String>();
+		} else if(item.getItemMeta().getDisplayName() == null) {
+			displayName = "";
+			loreList = new ArrayList<String>();
+		} else {
+			displayName = item.getItemMeta().getDisplayName();
+			loreList = item.getItemMeta().getLore();
+		}
+		
 		String enchantment = "{}";
 		
 		if(item.getEnchantments().size() > 0) {
@@ -133,19 +152,31 @@ public class ScriptManager implements Listener {
 			enchantment = builder.toString();
 		}
 		
-		
-		String lore = "{}";
+		String lore = "[]";
 		if(loreList != null) {
-			lore = "[";
-			for(String str : loreList) {
-				lore += "\""+str+"\",";
+			if(loreList.size() != 0) {
+				lore = "[";
+				for(String str : loreList) {
+					lore += "\""+str+"\",";
+				}
+				lore = lore.substring(0, lore.length()-1);
+				lore += "]";
 			}
-			lore = lore.substring(0, lore.length()-1);
-			lore += "]";
 		}
 		
-		
 		String result = String.format("({id: %d, amount: %d, durability: %d, displayName: \"%s\", lore: %s, enchantment: %s})", id, amount, durability, displayName, lore, enchantment);
+		return result;
+	}
+	
+	public static String arrayToStr(Object[] arr) {
+		String result = "[";
+		if(arr.length == 0) return "[]";
+		
+		for(Object obj : arr) {
+			result += obj.toString()+", ";
+		}
+		result = result.substring(0, result.length()-2);
+		result += "]";
 		return result;
 	}
 	
@@ -204,5 +235,27 @@ public class ScriptManager implements Listener {
 		callMethod("onPlayerInteract", e.getPlayer().getName(), action, blockToJSON(e.getClickedBlock()),
 				itemToJSON(e.getPlayer().getInventory().getItemInMainHand()));
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent e) {
+		Main.isCancelled.put(e.getEventName(), false);
+		callMethod("onInventoryClick", e.getWhoClicked().getName(), e.getInventory().getName(), itemToJSON(e.getCurrentItem()));
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e) {
+		Main.isCancelled.put("PlayerCommandEvent", false);
+		
+		String label = e.getMessage().replace("/", "").split(" ")[0];
+		String[] args = {};
+		
+		if(e.getMessage().contains(" ")) {
+			args = e.getMessage().substring(label.length()+2).split(" ");
+		}
+		
+		callMethod("onCommand", e.getPlayer().getName(), label, arrayToStr(args));
+		e.setCancelled(Main.isCancelled.get("PlayerCommandEvent"));
 	}
 }

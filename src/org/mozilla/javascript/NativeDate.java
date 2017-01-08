@@ -6,12 +6,11 @@
 
 package org.mozilla.javascript;
 
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import java.util.TimeZone;
+import java.util.Date;
 import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 /**
  * This class implements the Date native object.

@@ -296,6 +296,16 @@ public class _Player extends ScriptableObject {
 	}
 	
 	@JSFunction
+	public void openInventory(_Inventory inv) {
+		this.player.openInventory(inv.inv);
+	}
+	
+	@JSFunction
+	public _Inventory getInventory() {
+		return new _Inventory(this.player);
+	}
+	
+	@JSFunction
 	public int getExpToLevel() {
 		return this.player.getExpToLevel();
 	}
