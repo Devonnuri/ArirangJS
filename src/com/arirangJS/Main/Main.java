@@ -80,7 +80,7 @@ public class Main extends JavaPlugin {
 						sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] Script \""+args[1]+"\" is not exist.");
 					}
 					return true;
-				}else if(args[0].equalsIgnoreCase("view")) {
+				} else if(args[0].equalsIgnoreCase("view")) {
 					if(FileSystem.isExist(FileSystem.LOC_TEMP + args[1])) {
 						String[] code = FileSystem.readRaw(FileSystem.LOC_TEMP + args[1]);
 						sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"忙式式式式式式式["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - "+args[1]+ChatColor.AQUA+""+ChatColor.BOLD+"]式式式式式式式忖");
