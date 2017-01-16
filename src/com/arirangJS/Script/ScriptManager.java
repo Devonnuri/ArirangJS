@@ -1,7 +1,9 @@
 package com.arirangJS.Script;
 
-import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.inventory.ItemStack;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -59,7 +62,10 @@ public class ScriptManager implements Listener {
 				ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
 				ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
 				ScriptableObject.putProperty(scope, "Action", constantsToObj(_Action.class));
-				context.evaluateReader(scope, new FileReader(FileSystem.LOC_TEMP+filename), filename, 0, null);
+				
+				FileInputStream inStream = new FileInputStream(FileSystem.LOC_TEMP+filename);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+				context.evaluateReader(scope, reader, filename, 0, null);
 				Object object = scope.get(functionName, scope);
 				
 				if(object != null && object instanceof Function) {
@@ -276,6 +282,20 @@ public class ScriptManager implements Listener {
 			args = e.getMessage().substring(label.length()+2).split(" ");
 		
 		callMethod("onCommand", e.getPlayer().getName(), label, arrayToStr(args));
+		e.setCancelled(Main.isCancelled.get("PlayerCommandEvent"));
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onServerCommand(ServerCommandEvent e) {
+		Main.isCancelled.put("PlayerCommandEvent", e.isCancelled());
+		
+		String label = e.getCommand().replace("/", "").split(" ")[0];
+		String[] args = {};
+		
+		if(e.getCommand().contains(" "))
+			args = e.getCommand().substring(label.length()+2).split(" ");
+		
+		callMethod("onCommand", "<server>", label, arrayToStr(args));
 		e.setCancelled(Main.isCancelled.get("PlayerCommandEvent"));
 	}
 }
