@@ -185,20 +185,25 @@ public class ScriptManager implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Main.joinMessage = e.getJoinMessage();
 		callMethod("onPlayerJoin", e.getPlayer().getName());
+		
 		e.setJoinMessage(Main.joinMessage);
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Main.quitMessage = e.getQuitMessage();
+		
 		callMethod("onPlayerQuit", e.getPlayer().getName());
+		
 		e.setQuitMessage(Main.quitMessage);
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerMove(PlayerMoveEvent e) {
 		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
 		callMethod("onPlayerMove", e.getPlayer().getName(), locToJSON(e.getFrom()), locToJSON(e.getTo()));
+		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
 
@@ -206,7 +211,9 @@ public class ScriptManager implements Listener {
 	public void onPlayerChat(AsyncPlayerChatEvent e) {
 		Main.isCancelled.put(e.getEventName(), e.isCancelled());
 		Main.chatFormat = e.getFormat();
+		
 		callMethod("onPlayerChat", e.getPlayer().getName(), e.getMessage());
+		
 		e.setFormat(Main.chatFormat);
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
@@ -214,19 +221,25 @@ public class ScriptManager implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent e) {
 		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
 		callMethod("onBlockPlace", e.getPlayer().getName(), blockToJSON(e.getBlock()));
+		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent e) {
 		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
 		callMethod("onBlockBreak", e.getPlayer().getName(), blockToJSON(e.getBlock()));
+		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
 		int action;
 		switch(e.getAction()) {
 			case LEFT_CLICK_AIR: action = 1; break;
@@ -239,18 +252,23 @@ public class ScriptManager implements Listener {
 		
 		callMethod("onPlayerInteract", e.getPlayer().getName(), action, blockToJSON(e.getClickedBlock()),
 				itemToJSON(e.getPlayer().getInventory().getItemInMainHand()));
+		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
 		
 		callMethod("onInventoryClick", e.getWhoClicked().getName(), e.getInventory().getName(), itemToJSON(e.getCurrentItem()));
+		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
 		String label = e.getMessage().replace("/", "").split(" ")[0];
 		String[] args = {};
 		
