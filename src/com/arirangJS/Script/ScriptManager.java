@@ -267,7 +267,7 @@ public class ScriptManager implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e) {
-		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		Main.isCancelled.put("PlayerCommandEvent", e.isCancelled());
 		
 		String label = e.getMessage().replace("/", "").split(" ")[0];
 		String[] args = {};
