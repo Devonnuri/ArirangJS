@@ -173,7 +173,7 @@ public class _Inventory extends ScriptableObject {
 	
 	@SuppressWarnings("deprecation")
 	@JSFunction
-	public void setItemDetail(int index, int id, int amount, int damage, String displayName, String lore) {
+	public void setItem2(int index, int id, int amount, int damage, String displayName, String lore) {
 		ItemStack item = new ItemStack(id, amount, (short) damage);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(displayName);

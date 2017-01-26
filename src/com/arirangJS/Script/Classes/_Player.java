@@ -17,7 +17,7 @@ public class _Player extends ScriptableObject {
 	
 	@JSConstructor
 	public _Player(String name) {
-		this.player = Bukkit.getPlayer(name);
+		player = Bukkit.getPlayer(name);
 	}
 	
 	public _Player(Player player) {
@@ -36,87 +36,87 @@ public class _Player extends ScriptableObject {
 	
 	@JSFunction
 	public void chat(String msg) {
-		this.player.chat(msg);
+		player.chat(msg);
 	}
 	
 	@JSFunction
 	public boolean getAllowFlight() {
-		return this.player.getAllowFlight();
+		return player.getAllowFlight();
 	}
 	
 	@JSFunction
 	public String getDisplayName() {
-		return this.player.getDisplayName();
+		return player.getDisplayName();
 	}
 	
 	@JSFunction
 	public double getExhaustion() {
-		return this.player.getExhaustion();
+		return player.getExhaustion();
 	}
 	
 	@JSFunction
 	public double getExp() {
-		return this.player.getExp();
+		return player.getExp();
 	}
 	
 	@JSFunction
 	public double getFlySpeed() {
-		return this.player.getFlySpeed();
+		return player.getFlySpeed();
 	}
 	
 	@JSFunction
 	public double getFoodLevel() {
-		return this.player.getFoodLevel();
+		return player.getFoodLevel();
 	}
 	
 	@JSFunction
 	public double getHealthScale() {
-		return (double) this.player.getHealthScale();
+		return (double) player.getHealthScale();
 	}
 	
 	@JSFunction
 	public int getLevel() {
-		return this.player.getLevel();
+		return player.getLevel();
 	}
 	
 	@JSFunction
 	public String getPlayerListName() {
-		return this.player.getPlayerListName();
+		return player.getPlayerListName();
 	}
 	
 	@JSFunction
 	public int getPlayerTime() {
-		return (int) this.player.getPlayerTime();
+		return (int) player.getPlayerTime();
 	}
 	
 	@JSFunction
 	public int getPlayerTimeOffset() {
-		return (int) this.player.getPlayerTimeOffset();
+		return (int) player.getPlayerTimeOffset();
 	}
 	
 	@JSFunction
 	public double getSaturation() {
-		return this.player.getSaturation();
+		return player.getSaturation();
 	}
 	
 	@JSFunction
 	public int getTotalExperience() {
-		return this.player.getTotalExperience();
+		return player.getTotalExperience();
 	}
 	
 	@JSFunction
 	public double getWalkSpeed() {
-		return this.player.getWalkSpeed();
+		return player.getWalkSpeed();
 	}
 	
 	@JSFunction
 	public void giveExp(int amount) {
-		this.player.giveExp(amount);
+		player.giveExp(amount);
 	}
 	
 	@JSFunction
 	public void giveExpLevels(int amount) {
-		this.player.giveExpLevels(amount);
+		player.giveExpLevels(amount);
 	}
 	
 	@JSFunction
@@ -126,162 +126,162 @@ public class _Player extends ScriptableObject {
 	
 	@JSFunction
 	public boolean isFlying() {
-		return this.player.isFlying();
+		return player.isFlying();
 	}
 	
 	@JSFunction
 	public boolean isHealthScaled() {
-		return this.player.isHealthScaled();
+		return player.isHealthScaled();
 	}
 	
 	@JSFunction
 	public boolean isPlayerTimeRelative() {
-		return this.player.isPlayerTimeRelative();
+		return player.isPlayerTimeRelative();
 	}
 	
 	@JSFunction
 	public boolean isSleepingIgnored() {
-		return this.player.isSleepingIgnored();
+		return player.isSleepingIgnored();
 	}
 	
 	@JSFunction
 	public boolean isSneaking() {
-		return this.player.isSneaking();
+		return player.isSneaking();
 	}
 	
 	@JSFunction
 	public boolean isSprinting() {
-		return this.player.isSprinting();
+		return player.isSprinting();
 	}
 	
 	@JSFunction
 	public void kickPlayer(String message) {
-		this.player.kickPlayer(message);
+		player.kickPlayer(message);
 	}
 	
 	@JSFunction
 	public void loadData() {
-		this.player.loadData();
+		player.loadData();
 	}
 	
 	@JSFunction
 	public boolean performCommand(String command) {
-		return this.player.performCommand(command);
+		return player.performCommand(command);
 	}
 	
 	@JSFunction
 	public void resetPlayerTime() {
-		this.player.resetPlayerTime();
+		player.resetPlayerTime();
 	}
 	
 	@JSFunction
 	public void resetPlayerWeather() {
-		this.player.resetPlayerWeather();
+		player.resetPlayerWeather();
 	}
 	
 	@JSFunction
 	public void saveData() {
-		this.player.saveData();
+		player.saveData();
 	}
 
 	@JSFunction
 	public void sendRawMessage(String message) {
-		this.player.sendRawMessage(message);
+		player.sendRawMessage(message);
 	}
 	
 	@JSFunction
 	public void setAllowFlight(boolean flight) {
-		this.player.setAllowFlight(flight);
+		player.setAllowFlight(flight);
 	}
 	
 	@JSFunction
 	public void setDisplayName(String name) {
-		this.player.setDisplayName(name);
+		player.setDisplayName(name);
 	}
 	
 	@JSFunction
 	public void setExhaustion(double value) {
-		this.player.setExhaustion((float) value);
+		player.setExhaustion((float) value);
 	}
 	
 	@JSFunction
 	public void setExp(double exp) {
-		this.player.setExp((float) exp);
+		player.setExp((float) exp);
 	}
 	
 	@JSFunction
 	public void setFlying(boolean value) {
-		this.player.setFlying(value);
+		player.setFlying(value);
 	}
 	
 	@JSFunction
 	public void setFlySpeed(double value) {
-		this.player.setFlySpeed((float) value);
+		player.setFlySpeed((float) value);
 	}
 	
 	@JSFunction
 	public void setFoodLevel(int value) {
-		this.player.setFoodLevel(value);
+		player.setFoodLevel(value);
 	}
 	
 	@JSFunction
 	public void setHealthScale(double scale) {
-		this.player.setHealthScale(scale);
+		player.setHealthScale(scale);
 	}
 	
 	@JSFunction
 	public void setHealthScaled(boolean scale) {
-		this.player.setHealthScaled(scale);
+		player.setHealthScaled(scale);
 	}
 	
 	@JSFunction
 	public void setLevel(int level) {
-		this.player.setLevel(level);
+		player.setLevel(level);
 	}
 	
 	@JSFunction
 	public void setPlayerListName(String name) {
-		this.player.setPlayerListName(name);
+		player.setPlayerListName(name);
 	}
 	
 	@JSFunction
 	public void setPlayerTime(int time, boolean relative) {
-		this.player.setPlayerTime(time, relative);
+		player.setPlayerTime(time, relative);
 	}
 	
 	@JSFunction
 	public void setResourcePack(String url) {
-		this.player.setResourcePack(url);
+		player.setResourcePack(url);
 	}
 	
 	@JSFunction
 	public void setSaturation(double value) {
-		this.player.setSaturation((float) value);
+		player.setSaturation((float) value);
 	}
 	
 	@JSFunction
 	public void setSleepingIgnored(boolean isSleeping) {
-		this.player.setSleepingIgnored(isSleeping);
+		player.setSleepingIgnored(isSleeping);
 	}
 	
 	@JSFunction
 	public void setSneaking(boolean sneak) {
-		this.player.setSneaking(sneak);
+		player.setSneaking(sneak);
 	}
 	
 	@JSFunction
 	public void setSprinting(boolean sprint) {
-		this.player.setSprinting(sprint);
+		player.setSprinting(sprint);
 	}
 	
 	@JSFunction
 	public void setTotalExperience(int exp) {
-		this.player.setTotalExperience(exp);
+		player.setTotalExperience(exp);
 	}
 	
 	@JSFunction
 	public void setWalkSpeed(double value) {
-		this.player.setWalkSpeed((float) value);
+		player.setWalkSpeed((float) value);
 	}
 	
 	@JSFunction
@@ -292,194 +292,199 @@ public class _Player extends ScriptableObject {
 	// Methods inherited from interface org.bukkit.entity.HumanEntity
 	@JSFunction
 	public void closeInventory() {
-		this.player.closeInventory();
+		player.closeInventory();
 	}
 	
 	@JSFunction
 	public void openInventory(_Inventory inv) {
-		this.player.openInventory(inv.inv);
+		player.openInventory(inv.inv);
 	}
 	
 	@JSFunction
 	public _Inventory getInventory() {
-		return new _Inventory(this.player);
+		return new _Inventory(player);
 	}
 	
 	@JSFunction
 	public int getExpToLevel() {
-		return this.player.getExpToLevel();
+		return player.getExpToLevel();
 	}
 	
 	@JSFunction
 	public String getName() {
-		return this.player.getName();
+		return player.getName();
 	}
 	
 	@JSFunction
 	public int getSleepTicks() {
-		return this.player.getSleepTicks();
+		return player.getSleepTicks();
 	}
 	
 	@JSFunction
 	public boolean isBlocking() {
-		return this.player.isBlocking();
+		return player.isBlocking();
 	}
 	
 	@JSFunction
 	public boolean isSleeping() {
-		return this.player.isSleeping();
+		return player.isSleeping();
 	}
 	
 	//Methods inherited from interface org.bukkit.entity.LivingEntity
 	
 	@JSFunction
 	public boolean getCanPickupItems() {
-		return this.player.getCanPickupItems();
+		return player.getCanPickupItems();
 	}
 	
 	@JSFunction
 	public double getEyeHeight() {
-		return this.player.getEyeHeight();
+		return player.getEyeHeight();
 	}
 	
 	@JSFunction
 	public double getEyeHeightIgnoreSneak() {
-		return this.player.getEyeHeight(true);
+		return player.getEyeHeight(true);
 	}
 	
 	@JSFunction
 	public _Player getKiller() {
-		return new _Player(this.player.getKiller());
+		return new _Player(player.getKiller());
 	}
 	
 	@JSFunction
 	public double getLastDamage() {
-		return this.player.getLastDamage();
+		return player.getLastDamage();
 	}
 	
 	@JSFunction
 	public int getMaximumAir() {
-		return this.player.getMaximumAir();
+		return player.getMaximumAir();
 	}
 	
 	@JSFunction
 	public int getMaximumNoDamageTicks() {
-		return this.player.getMaximumNoDamageTicks();
+		return player.getMaximumNoDamageTicks();
 	}
 	
 	@JSFunction
 	public boolean hasAI() {
-		return this.player.hasAI();
+		return player.hasAI();
 	}
 	
 	@JSFunction
 	public boolean isCollidable() {
-		return this.player.isCollidable();
+		return player.isCollidable();
 	}
 	
 	@JSFunction
 	public boolean isGliding() {
-		return this.player.isGliding();
+		return player.isGliding();
 	}
 	
 	@JSFunction
 	public boolean isLeashed() {
-		return this.player.isLeashed();
+		return player.isLeashed();
 	}
 	
 	@JSFunction
 	public void setAI(boolean ai) {
-		this.player.setAI(ai);
+		player.setAI(ai);
 	}
 	
 	@JSFunction
 	public void setCanPickupItems(boolean pickup) {
-		this.player.setCanPickupItems(pickup);
+		player.setCanPickupItems(pickup);
 	}
 	
 	@JSFunction
 	public void setCollidable(boolean collidable) {
-		this.player.setCollidable(collidable);
+		player.setCollidable(collidable);
 	}
 	
 	@JSFunction
 	public void setGliding(boolean gliding) {
-		this.player.setGliding(gliding);
+		player.setGliding(gliding);
 	}
 	
 	@JSFunction
 	public void setLastDamage(double damage) {
-		this.player.setLastDamage(damage);
+		player.setLastDamage(damage);
 	}
 	
 	@JSFunction
 	public void setMaximumAir(int ticks) {
-		this.player.setMaximumAir(ticks);
+		player.setMaximumAir(ticks);
 	}
 	
 	@JSFunction
 	public void setMaximumNoDamageTicks(int ticks) {
-		this.player.setMaximumNoDamageTicks(ticks);
+		player.setMaximumNoDamageTicks(ticks);
 	}
 	
 	@JSFunction
 	public void setNoDamageTicks(int ticks) {
-		this.player.setNoDamageTicks(ticks);
+		player.setNoDamageTicks(ticks);
 	}
 	
 	@JSFunction
 	public void setRemainingAir(int ticks) {
-		this.player.setRemainingAir(ticks);
+		player.setRemainingAir(ticks);
 	}
 	
 	@JSFunction
 	public void setRemoveWhenFarAway(boolean remove) {
-		this.player.setRemoveWhenFarAway(remove);
+		player.setRemoveWhenFarAway(remove);
 	}
 	
 	//Methods inherited from interface org.bukkit.entity.Damageable
 	
 	@JSFunction
 	public void damage(double amount) {
-		this.player.damage(amount);
+		player.damage(amount);
 	}
 	
 	@JSFunction
 	public double getHealth() {
-		return this.player.getHealth();
+		return player.getHealth();
 	}
 	
 	@JSFunction
 	public double getMaxHealth() {
-		return this.player.getMaxHealth();
+		return player.getMaxHealth();
 	}
 	
 	@JSFunction
 	public void setHealth(double health) {
-		this.player.setHealth(health);
+		player.setHealth(health);
 	}
 	
 	@JSFunction
 	public void setMaxHealth(double health) {
-		this.player.setMaxHealth(health);
+		player.setMaxHealth(health);
 	}
 	
 	//Methods inherited from interface org.bukkit.command.CommandSender
 	
 	@JSFunction
 	public void sendMessage(String message) {
-		this.player.sendMessage(message);
+		player.sendMessage(message);
 	}
 	
 	//Methods inherited from interface org.bukkit.entity.Entity
 	
 	@JSFunction
 	public void teleport(double x, double y, double z) {
-		this.player.teleport(new Location(player.getWorld(), x, y, z));
+		player.teleport(new Location(player.getWorld(), x, y, z));
 	}
 	
 	@JSFunction
 	public void teleportEye(double x, double y, double z, double yaw, double pitch) {
-		this.player.teleport(new Location(player.getWorld(), x, y, z, (float) yaw, (float) pitch));
+		player.teleport(new Location(player.getWorld(), x, y, z, (float) yaw, (float) pitch));
+	}
+	
+	@JSFunction
+	public _World getWorld() {
+		return new _World(player.getWorld());
 	}
 }

@@ -62,4 +62,14 @@ public class _Event extends ScriptableObject {
 	public static boolean getCancelled(String event) {
 		return isCancelled(event);
 	}
+	
+	@JSStaticFunction
+	public static void setInstaBreak(boolean instaBreak) {
+		Main.instaBreak = instaBreak;
+	}
+	
+	@JSStaticFunction
+	public static boolean getInstaBreak() {
+		return Main.instaBreak;
+	}
 }

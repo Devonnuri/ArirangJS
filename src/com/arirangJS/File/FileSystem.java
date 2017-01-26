@@ -5,9 +5,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,30 +19,13 @@ public class FileSystem {
 	public static final String LOC_TEMP = LOC_SCRIPT+"temp/";
 	
 	public static String[] readRaw(String filename){
-		try{
-			checkExist(filename);
-			
-			BufferedReader reader = new BufferedReader(new FileReader(new File(filename)));
-			String str;
-			ArrayList<String> result = new ArrayList<String>();
-			
-			while((str = reader.readLine()) != null){
-				result.add(str);
-			}
-			
-			reader.close();
-			return result.toArray(new String[result.toArray().length]);
-			
-		}catch(IOException e){
-			Debug.danger("파일("+filename+") 입력 오류(IOException)가 발생하였습니다. 자세한 내용은 아래에 있습니다.");
-			Debug.danger(e.getMessage());
-			return null;
-		}
+		checkExist(filename);
+		return readRaw(new File(filename));
 	}
 	
 	public static String[] readRaw(File file){
 		try{
-			BufferedReader reader = new BufferedReader(new FileReader(file));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 			String str;
 			ArrayList<String> result = new ArrayList<String>();
 			
@@ -56,8 +39,33 @@ public class FileSystem {
 		}catch(IOException e){
 			Debug.danger("파일("+file.getName()+") 입력 오류(IOException)가 발생하였습니다. 자세한 내용은 아래에 있습니다.");
 			Debug.danger(e.getMessage());
-			return null;
 		}
+		return null;
+	}
+	
+	public static String readRawInline(String filename){
+		checkExist(filename);
+		return readRawInline(new File(filename));
+	}
+	
+	public static String readRawInline(File file){
+		try{
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+			String str;
+			String result = "";
+			
+			while((str = reader.readLine()) != null){
+				result += str+"\n";
+			}
+			
+			reader.close();
+			return result;
+		}catch(IOException e){
+			Debug.danger("파일("+file.getName()+") 입력 오류(IOException)가 발생하였습니다. 자세한 내용은 아래에 있습니다.");
+			Debug.danger(e.getMessage());
+		}
+		
+		return null;
 	}
 	
 	

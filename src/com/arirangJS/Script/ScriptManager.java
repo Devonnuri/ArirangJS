@@ -12,10 +12,15 @@ import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -44,6 +49,7 @@ import com.arirangJS.Script.Classes._Effect;
 import com.arirangJS.Script.Classes._Event;
 import com.arirangJS.Script.Classes._Inventory;
 import com.arirangJS.Script.Classes._Player;
+import com.arirangJS.Script.Classes._Request;
 
 
 public class ScriptManager implements Listener {
@@ -59,6 +65,7 @@ public class ScriptManager implements Listener {
 				ScriptableObject.defineClass(scope, _Event.class);
 				ScriptableObject.defineClass(scope, _Inventory.class);
 				ScriptableObject.defineClass(scope, _Effect.class);
+				ScriptableObject.defineClass(scope, _Request.class);
 				ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
 				ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
 				ScriptableObject.putProperty(scope, "Action", constantsToObj(_Action.class));
@@ -187,6 +194,11 @@ public class ScriptManager implements Listener {
 		return result;
 	}
 	
+	public static String blockStateToJSON(BlockState state) {
+		String result = String.format("({})");
+		return result;
+	}
+	
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Main.joinMessage = e.getJoinMessage();
@@ -241,22 +253,49 @@ public class ScriptManager implements Listener {
 		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockBurn(BlockBurnEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
+		callMethod("onBlockBurn", blockToJSON(e.getBlock()));
+		
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockDamage(BlockDamageEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		Main.instaBreak = e.getInstaBreak();
+		
+		callMethod("onBlockDamage", e.getPlayer().getName(), blockToJSON(e.getBlock()));
+		
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+		e.setInstaBreak(Main.instaBreak);
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockExplode(BlockExplodeEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
+		callMethod("onBlockExplode", blockToJSON(e.getBlock()), (double) e.getYield());
+		
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockFade(BlockFadeEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
+		callMethod("onBlockExplode", blockToJSON(e.getBlock()));
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		Main.isCancelled.put(e.getEventName(), e.isCancelled());
 		
-		int action;
-		switch(e.getAction()) {
-			case LEFT_CLICK_AIR: action = 1; break;
-			case RIGHT_CLICK_AIR: action = 2; break;
-			case LEFT_CLICK_BLOCK: action = 3; break;
-			case RIGHT_CLICK_BLOCK: action = 4; break;
-			case PHYSICAL: action = 5; break;
-			default: action = 0;
-		}
-		
-		callMethod("onPlayerInteract", e.getPlayer().getName(), action, blockToJSON(e.getClickedBlock()),
+		callMethod("onPlayerInteract", e.getPlayer().getName(), e.getAction().ordinal(), blockToJSON(e.getClickedBlock()),
 				itemToJSON(e.getPlayer().getInventory().getItemInMainHand()));
 		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
@@ -266,7 +305,7 @@ public class ScriptManager implements Listener {
 	public void onInventoryClick(InventoryClickEvent e) {
 		Main.isCancelled.put(e.getEventName(), e.isCancelled());
 		
-		callMethod("onInventoryClick", e.getWhoClicked().getName(), e.getInventory().getName(), itemToJSON(e.getCurrentItem()));
+		callMethod("onInventoryClick", e.getWhoClicked().getName(), e.getInventory().getName(), itemToJSON(e.getCurrentItem()), e.getSlot());
 		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
