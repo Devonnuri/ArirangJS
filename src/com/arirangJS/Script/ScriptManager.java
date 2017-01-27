@@ -1,11 +1,5 @@
 package com.arirangJS.Script;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -33,74 +27,40 @@ import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.inventory.ItemStack;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 
 import com.arirangJS.Debug.Debug;
-import com.arirangJS.File.FileSystem;
 import com.arirangJS.Main.Main;
-import com.arirangJS.Script.Classes._Action;
-import com.arirangJS.Script.Classes._Biome;
-import com.arirangJS.Script.Classes._Bukkit;
-import com.arirangJS.Script.Classes._ChatColor;
-import com.arirangJS.Script.Classes._Effect;
-import com.arirangJS.Script.Classes._Event;
-import com.arirangJS.Script.Classes._Inventory;
-import com.arirangJS.Script.Classes._Player;
-import com.arirangJS.Script.Classes._Request;
 
 
 public class ScriptManager implements Listener {
 	
 	public static void callMethod(String functionName, Object... args) {
-		for(String filename : Main.scripts) {
+		for(Script script : Main.scripts.values()) {
 			Context context = Context.enter();
-			Scriptable scope = context.initStandardObjects();
+			Scriptable scope = script.scope;
+			
+			if(script.errors.size() >= Main.MAX_ERRORS_NUM)
+				continue;
+			
+			if(script.scope == null)
+				continue;
+			
 			
 			try {
-				ScriptableObject.defineClass(scope, _Bukkit.class);
-				ScriptableObject.defineClass(scope, _Player.class);
-				ScriptableObject.defineClass(scope, _Event.class);
-				ScriptableObject.defineClass(scope, _Inventory.class);
-				ScriptableObject.defineClass(scope, _Effect.class);
-				ScriptableObject.defineClass(scope, _Request.class);
-				ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
-				ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
-				ScriptableObject.putProperty(scope, "Action", constantsToObj(_Action.class));
-				
-				FileInputStream inStream = new FileInputStream(FileSystem.LOC_TEMP+filename);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
-				context.evaluateReader(scope, reader, filename, 0, null);
 				Object object = scope.get(functionName, scope);
-				
 				if(object != null && object instanceof Function) {
 					Function function = (Function) object;
 					function.call(context, scope, scope, args);
 				}
 			} catch(RhinoException e) {
+				script.errors.add(e.getMessage());
 				Debug.danger(e.getMessage()+" ("+e.lineNumber()+", "+e.columnNumber()+")");
-			} catch(IOException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-				Debug.danger("An error occured while compiling code.");
 			} finally {
 				Context.exit();
 			}
 		}
-	}
-	
-	public static ScriptableObject constantsToObj(Class<?> clazz) {
-		ScriptableObject obj = new NativeObject();
-		for(Field field : clazz.getFields()) {
-			try {
-				obj.putConst(field.getName(), obj, field.get(null));
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				Debug.danger("An error occured translate class to jsObject");
-				e.printStackTrace();
-			}
-		}
-		
-		return obj;
 	}
 	
 	public static String locToJSON(Location location) {
@@ -312,29 +272,29 @@ public class ScriptManager implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e) {
-		Main.isCancelled.put("PlayerCommandEvent", e.isCancelled());
+		Main.isCancelled.put("CommandEvent", e.isCancelled());
 		
-		String label = e.getMessage().replace("/", "").split(" ")[0];
+		String label = e.getMessage().replaceFirst("\\/", "").split(" ")[0];
 		String[] args = {};
 		
 		if(e.getMessage().contains(" "))
 			args = e.getMessage().substring(label.length()+2).split(" ");
 		
 		callMethod("onCommand", e.getPlayer().getName(), label, arrayToStr(args));
-		e.setCancelled(Main.isCancelled.get("PlayerCommandEvent"));
+		e.setCancelled(Main.isCancelled.get("CommandEvent"));
 	}
 	
 	@EventHandler(ignoreCancelled = true)
 	public void onServerCommand(ServerCommandEvent e) {
-		Main.isCancelled.put("PlayerCommandEvent", e.isCancelled());
+		Main.isCancelled.put("CommandEvent", e.isCancelled());
 		
-		String label = e.getCommand().replace("/", "").split(" ")[0];
+		String label = e.getCommand().replaceFirst("\\/", "").split(" ")[0];
 		String[] args = {};
 		
 		if(e.getCommand().contains(" "))
 			args = e.getCommand().substring(label.length()+2).split(" ");
 		
 		callMethod("onCommand", "<server>", label, arrayToStr(args));
-		e.setCancelled(Main.isCancelled.get("PlayerCommandEvent"));
+		e.setCancelled(Main.isCancelled.get("CommandEvent"));
 	}
 }
