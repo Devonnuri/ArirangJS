@@ -2,6 +2,7 @@ package com.arirangJS.Script;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Location;
@@ -15,7 +16,11 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -87,9 +92,10 @@ public class ScriptManager implements Listener {
 		int id = block.getTypeId();
 		int damage = block.getData();
 		int biome = block.getBiome().ordinal();
+		String world = block.getWorld().getName();
 		
-		String result = String.format("({x: %d, y: %d, z: %d, id: %d, damage: %d, biome: %d})",
-				x, y, z, id, damage, biome);
+		String result = String.format("({x: %d, y: %d, z: %d, id: %d, damage: %d, biome: %d, world: %s})",
+				x, y, z, id, damage, biome, world);
 		return result;
 	}
 	
@@ -116,7 +122,6 @@ public class ScriptManager implements Listener {
 		
 		if(item.getEnchantments().size() > 0) {
 			StringBuilder builder = new StringBuilder();
-			// [[id,amount],[id,amount] ...]
 			builder.append("{");
 			for(Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
 				builder.append(entry.getKey().getName()+": "+entry.getValue()+", ");
@@ -155,8 +160,25 @@ public class ScriptManager implements Listener {
 	}
 	
 	public static String blockStateToJSON(BlockState state) {
-		String result = String.format("({})");
+		String blockJSON = blockToJSON(state.getBlock());
+		int lightLevel = state.getLightLevel();
+		
+		String result = String.format("({block: %s, lightLevel: %d})", blockJSON, lightLevel);
 		return result;
+	}
+	
+	public static String enchantListToJSON(Map<Enchantment, Integer> map) {
+		if(map.size() == 0) return "({})";
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("({");
+		for(Entry<Enchantment, Integer> entry : map.entrySet()) {
+			builder.append(entry.getKey().getName()+": "+entry.getValue()+", ");
+		}
+		builder.setLength(builder.length()-2);
+		builder.append("})");
+		
+		return builder.toString();
 	}
 	
 	@EventHandler(ignoreCancelled = true)
@@ -247,7 +269,40 @@ public class ScriptManager implements Listener {
 	public void onBlockFade(BlockFadeEvent e) {
 		Main.isCancelled.put(e.getEventName(), e.isCancelled());
 		
-		callMethod("onBlockExplode", blockToJSON(e.getBlock()));
+		callMethod("onBlockExplode", blockToJSON(e.getBlock()), blockStateToJSON(e.getNewState()));
+		
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockGrow(BlockGrowEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
+		callMethod("onBlockGrow", blockToJSON(e.getBlock()), blockStateToJSON(e.getNewState()));
+		
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockIgnite(BlockIgniteEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
+		callMethod("onBlockIgnite", e.getPlayer().getName(), blockToJSON(e.getBlock()), e.getCause().ordinal());
+		
+		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockRedstone(BlockRedstoneEvent e) {
+		callMethod("onBlockRedstone", blockToJSON(e.getBlock()), e.getOldCurrent(), e.getNewCurrent());
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onEnchantItem(EnchantItemEvent e) {
+		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		
+		callMethod("onEnchantItem", e.getEnchanter().getName(), itemToJSON(e.getItem()), e.getExpLevelCost(), enchantListToJSON(e.getEnchantsToAdd()), blockToJSON(e.getEnchantBlock()));
+		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
 

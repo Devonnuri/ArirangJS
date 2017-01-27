@@ -52,6 +52,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void onDisable() {
+		
 		Debug.warn("ArirangJS was disabled successfully!");
 		Debug.warn("Arirang Arirang Arariyo~");
 	}
@@ -60,48 +61,43 @@ public class Main extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(label.equalsIgnoreCase("arirang") || label.equalsIgnoreCase("arirangjs") || label.equalsIgnoreCase("嬴葬嫌")) {
 			if(args.length == 1) {
-				if(args[0].equalsIgnoreCase("test")) {
+				if(args[0].equalsIgnoreCase("list")) {
+					sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"忙式式式式式式式["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - File List"+ChatColor.AQUA+""+ChatColor.BOLD+"]式式式式式式式忖");
 					
+					int i=0;
+					for(File file : new File(FileSystem.LOC_SCRIPT).listFiles()) {
+						if(file.isDirectory()) continue;
+						i++;
+						sender.sendMessage(" "+ChatColor.BOLD+""+i+". "+ChatColor.GOLD+""+ChatColor.BOLD+file.getName()+" : "+ChatColor.AQUA+String.format("%.2f KB", file.length()/1024.0));
+					}
+					
+					return true;
 				}
-			} else if(args.length >= 2) {
-				if(args[0].equalsIgnoreCase("reload")) {
-					String filename = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-					if(FileSystem.isExist(FileSystem.LOC_SCRIPT + filename)) {
-						scripts.put(filename, new Script(filename));
-						sender.sendMessage(ChatColor.GREEN+""+ChatColor.BOLD+"[ArirangJS] File \""+filename+"\" was reloaded successfully!");
-					} else {
-						sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] Script \""+filename+"\" is not exist.");
-					}
-					return true;
-				} else if(args[0].equalsIgnoreCase("view")) {
-					String filename = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-					if(FileSystem.isExist(FileSystem.LOC_SCRIPT + filename)) {
-						String code = FileSystem.readRawInline(FileSystem.LOC_SCRIPT + filename);
-						sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"忙式式式式式式式["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - "+filename+ChatColor.AQUA+""+ChatColor.BOLD+"]式式式式式式式忖");
-						code = code.replaceAll("\t", "   ");
-						code = SyntaxHighlighter.highlight(code);
-						sender.sendMessage(code);
-					} else {
-						sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] Script \""+filename+"\" is not exist.");
-					}
-					return true;
+			} else if(args.length >= 2 && args[0].equalsIgnoreCase("reload")) {
+				String filename = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+				if(FileSystem.isExist(FileSystem.LOC_SCRIPT + filename)) {
+					scripts.put(filename, new Script(filename));
+					sender.sendMessage(ChatColor.GREEN+""+ChatColor.BOLD+"[ArirangJS] File \""+filename+"\" was reloaded successfully!");
+				} else {
+					sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] Script \""+filename+"\" is not exist.");
 				}
 				
-				sender.sendMessage("");
-				sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"忙式式式式式式式[ArirangJS]式式式式式式式忖");
-				sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang list"+ChatColor.RESET+""+ChatColor.BOLD+" : List of the Scripts");
-				sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang reload [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : Reload the Script");
-				sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang view [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : View the Script");
-				sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"戌式式式式式式式[ArirangJS]式式式式式式式戎");
-				sender.sendMessage("");
+				helpMessage(sender);
+			} else if(args.length >= 2 && args[0].equalsIgnoreCase("view")) {
+				String filename = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+				if(FileSystem.isExist(FileSystem.LOC_SCRIPT + filename)) {
+					String code = FileSystem.readRawInline(FileSystem.LOC_SCRIPT + filename);
+					sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"忙式式式式式式式["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - "+filename+ChatColor.AQUA+""+ChatColor.BOLD+"]式式式式式式式忖");
+					code = code.replaceAll("\t", "   ");
+					code = SyntaxHighlighter.highlight(code);
+					sender.sendMessage(code);
+				} else {
+					sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] Script \""+filename+"\" is not exist.");
+				}
+				
+				return true;
 			} else {
-				sender.sendMessage("");
-				sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"忙式式式式式式式[ArirangJS]式式式式式式式忖");
-				sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang list"+ChatColor.RESET+""+ChatColor.BOLD+" : List of the Scripts");
-				sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang reload [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : Reload the Script");
-				sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang view [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : View the Script");
-				sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"戌式式式式式式式[ArirangJS]式式式式式式式戎");
-				sender.sendMessage("");
+				helpMessage(sender);
 			}
 			return true;
 		}
@@ -152,5 +148,15 @@ public class Main extends JavaPlugin {
 			}
 		}
 		return null;
+	}
+	
+	private void helpMessage(CommandSender sender) {
+		sender.sendMessage("");
+		sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"忙式式式式式式式[ArirangJS]式式式式式式式忖");
+		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang list"+ChatColor.RESET+""+ChatColor.BOLD+" : List of the Scripts");
+		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang reload [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : Reload the Script");
+		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang view [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : View the Script");
+		sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"戌式式式式式式式[ArirangJS]式式式式式式式戎");
+		sender.sendMessage("");
 	}
 }

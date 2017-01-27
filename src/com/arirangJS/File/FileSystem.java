@@ -118,7 +118,7 @@ public class FileSystem {
 		}
 	}
 	
-	public static boolean isExist(String filename){
+	public static boolean isExist (String filename){
 		return new File(filename).exists();
 	}
 }
