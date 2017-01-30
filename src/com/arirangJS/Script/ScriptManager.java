@@ -287,7 +287,7 @@ public class ScriptManager implements Listener {
 	public void onBlockIgnite(BlockIgniteEvent e) {
 		Main.isCancelled.put(e.getEventName(), e.isCancelled());
 		
-		callMethod("onBlockIgnite", e.getPlayer().getName(), blockToJSON(e.getBlock()), e.getCause().ordinal());
+		callMethod("onBlockIgnite", (e.getPlayer()==null?null:e.getPlayer().getName()), blockToJSON(e.getBlock()), e.getCause().ordinal());
 		
 		e.setCancelled(Main.isCancelled.get(e.getEventName()));
 	}
