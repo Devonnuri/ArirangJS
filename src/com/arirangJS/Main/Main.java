@@ -59,10 +59,10 @@ public class Main extends JavaPlugin {
 	
 	@EventHandler
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(label.equalsIgnoreCase("arirang") || label.equalsIgnoreCase("arirangjs") || label.equalsIgnoreCase("¾Æ¸®¶û")) {
+		if(label.equalsIgnoreCase("arirang") || label.equalsIgnoreCase("arirangjs") || label.equalsIgnoreCase("ì•„ë¦¬ëž‘")) {
 			if(args.length == 1) {
 				if(args[0].equalsIgnoreCase("list")) {
-					sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - File List"+ChatColor.AQUA+""+ChatColor.BOLD+"]¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤");
+					sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"========["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - File List"+ChatColor.AQUA+""+ChatColor.BOLD+"]========");
 					
 					int i=0;
 					for(File file : new File(FileSystem.LOC_SCRIPT).listFiles()) {
@@ -87,7 +87,7 @@ public class Main extends JavaPlugin {
 				String filename = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 				if(FileSystem.isExist(FileSystem.LOC_SCRIPT + filename)) {
 					String code = FileSystem.readRawInline(FileSystem.LOC_SCRIPT + filename);
-					sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - "+filename+ChatColor.AQUA+""+ChatColor.BOLD+"]¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤");
+					sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"========["+ChatColor.RESET+""+ChatColor.BOLD+"ArirangJS - "+filename+ChatColor.AQUA+""+ChatColor.BOLD+"]========");
 					code = code.replaceAll("\t", "   ");
 					code = SyntaxHighlighter.highlight(code);
 					sender.sendMessage(code);
@@ -106,7 +106,7 @@ public class Main extends JavaPlugin {
 	
 	@EventHandler
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		if(label.equalsIgnoreCase("arirang") || label.equalsIgnoreCase("arirangjs") || label.equalsIgnoreCase("¾Æ¸®¶û")) {
+		if(label.equalsIgnoreCase("arirang") || label.equalsIgnoreCase("arirangjs") || label.equalsIgnoreCase("ì•„ë¦¬ëž‘")) {
 			if(args.length == 1) {
 				String[] argsList = {"list", "reload", "view"};
 				ArrayList<String> list = new ArrayList<String>();
@@ -152,11 +152,10 @@ public class Main extends JavaPlugin {
 	
 	private void helpMessage(CommandSender sender) {
 		sender.sendMessage("");
-		sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡[ArirangJS]¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤");
+		sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"=========== [ArirangJS] ===========");
 		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang list"+ChatColor.RESET+""+ChatColor.BOLD+" : List of the Scripts");
 		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang reload [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : Reload the Script");
 		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang view [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : View the Script");
-		sender.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"¦¦¦¡¦¡¦¡¦¡¦¡¦¡¦¡[ArirangJS]¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¥");
 		sender.sendMessage("");
 	}
 }
