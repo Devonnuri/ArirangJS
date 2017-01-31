@@ -1,27 +1,22 @@
 package com.arirangJS.Main;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
+import com.arirangJS.Debug.Debug;
+import com.arirangJS.File.FileSystem;
+import com.arirangJS.Script.Classes._Var;
+import com.arirangJS.Script.Script;
+import com.arirangJS.Script.ScriptManager;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.arirangJS.Debug.Debug;
-import com.arirangJS.File.FileSystem;
-import com.arirangJS.Script.Script;
-import com.arirangJS.Script.ScriptManager;
-
-import net.md_5.bungee.api.ChatColor;
+import java.io.File;
+import java.util.*;
 
 public class Main extends JavaPlugin {
-	public static HashMap<String, Boolean> isCancelled = new HashMap<String, Boolean>();
+	public static HashMap<String, Boolean> isCancelled = new HashMap<>();
 	
 	public static String joinMessage = "";
 	public static String quitMessage = "";
@@ -29,8 +24,8 @@ public class Main extends JavaPlugin {
 	public static boolean instaBreak;
 	
 	public static final int MAX_ERRORS_NUM = 5;
-	
-	public static HashMap<String, Script> scripts = new HashMap<String, Script>();
+
+	public static HashMap<String, Script> scripts = new HashMap<>();
 	
 	public void onEnable() {
 		Bukkit.getPluginManager().registerEvents(new ScriptManager(), this);
@@ -46,6 +41,8 @@ public class Main extends JavaPlugin {
 			
 			Debug.success("File \""+file.getName()+"\" was loaded successfully!");
 		}
+
+		_Var.resetAll();
 		
 		Debug.success("ArirangJS was enabled successfully!");
 		Debug.success("Arirang Arirang Arariyo~");
@@ -109,7 +106,7 @@ public class Main extends JavaPlugin {
 		if(label.equalsIgnoreCase("arirang") || label.equalsIgnoreCase("arirangjs") || label.equalsIgnoreCase("아리랑")) {
 			if(args.length == 1) {
 				String[] argsList = {"list", "reload", "view"};
-				ArrayList<String> list = new ArrayList<String>();
+				ArrayList<String> list = new ArrayList<>();
 				
 				if(args[0].equals("")) {
 					list.addAll(Arrays.asList(argsList));
@@ -122,12 +119,11 @@ public class Main extends JavaPlugin {
 				}
 				
 				Collections.sort(list);
-				
 				return list;
 			} else if(args.length == 2) {
 				if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("view")) {
 					File[] fileList = new File(FileSystem.LOC_SCRIPT).listFiles();
-					ArrayList<String> list = new ArrayList<String>();
+					ArrayList<String> list = new ArrayList<>();
 					
 					if(args[1].equals("")) {
 						for(File file : fileList) {
@@ -142,7 +138,7 @@ public class Main extends JavaPlugin {
 							}
 						}
 					}
-					
+
 					return list;
 				}
 			}

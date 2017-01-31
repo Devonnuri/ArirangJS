@@ -1,11 +1,7 @@
 package com.arirangJS.Script.Classes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
+import com.arirangJS.Debug.Debug;
+import com.arirangJS.File.FileSystem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,8 +10,9 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
-import com.arirangJS.Debug.Debug;
-import com.arirangJS.File.FileSystem;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class _Var extends ScriptableObject {
 	/* 
@@ -25,7 +22,7 @@ public class _Var extends ScriptableObject {
 	 *       {
 	 *          "key": "test1",
 	 *          "value": "Hello, World!",
-	 *          "created": "2017-01-30 21:44"
+	 *          "created": "2017-01-30 21:44:32.285"
 	 *       }
 	 *    ]
 	 * }
@@ -58,8 +55,9 @@ public class _Var extends ScriptableObject {
 	
 	@JSFunction
 	public static void set(String key, String value) {
+		// Exception when the file is null
 		checkNull();
-		
+
 		JSONParser parser = new JSONParser();
 		JSONObject object;
 		try {
@@ -84,11 +82,26 @@ public class _Var extends ScriptableObject {
 		JSONArray variables = (JSONArray) object.get("variables");
 		
 		for(Object obj : variables) {
+			JSONObject resultSet = new JSONObject();
+			resultSet.put("key", key);
+			resultSet.put("value", value);
+			resultSet.put("created",  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+
 			JSONObject set = (JSONObject) obj;
 			if(key.equals(set.get("key"))) {
 				variables.remove(obj);
-				// TODO: 아직 안끝났으여!
 			}
+
+			variables.add(resultSet);
+		}
+	}
+
+	public static void resetAll() {
+		for(File file : new File(FileSystem.LOC_VAR).listFiles()) {
+			if(file.isDirectory()) break;
+			if(!file.getName().endsWith(".json")) break;
+
+			FileSystem.writeRaw(file, "");
 		}
 	}
 	
