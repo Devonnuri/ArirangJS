@@ -14,6 +14,7 @@ import com.arirangJS.Debug.Debug;
 public class FileSystem {
 	public static final String LOC_PLUGIN = "plugins/ArirangJS/";
 	public static final String LOC_SCRIPT = LOC_PLUGIN+"scripts/";
+	public static final String LOC_VAR = LOC_SCRIPT+"var/";
 	
 	public static String[] readRaw(String filename){
 		return readRaw(new File(filename));
@@ -47,42 +48,40 @@ public class FileSystem {
 	public static String readLine(String filename, int line){
 		String[] file = readRaw(filename);
 		if(file.length < line){
-			Debug.danger("주어진 줄 번호가 너무 큽니다.");
+			
 			return null;
 		}
 		
 		return file[line];
 	}
 	
-	public static void writeRaw(String filename, ArrayList<String> string){
+	public static void writeRaw(File file, ArrayList<String> string){
 		try{
-			Files.write(new File(filename).toPath(), string);
+			Files.write(file.toPath(), string);
 		}catch(IOException e){
-			Debug.danger("File("+filename+") Exception(IOException) Occured.");
+			Debug.danger("File("+file.getName()+") Exception(IOException) Occured.");
 			e.printStackTrace();
 		}
 	}
 	
-	public static void writeRaw(String filename, String... string){
+	public static void writeRaw(File file, String... string){
 		try{
-			Files.write(new File(filename).toPath(), Arrays.asList(string));
+			Files.write(file.toPath(), Arrays.asList(string));
 		}catch(IOException e){
-			Debug.danger("File("+filename+") Exception(IOException) Occured.");
+			Debug.danger("File("+file.getName()+") Exception(IOException) Occured.");
 			e.printStackTrace();
 		}
 	}
 	
-	public static void writeLine(String filename, int line, String str){
-		checkExist(filename);
-		
-		String[] result = readRaw(filename);
+	public static void writeLine(File file, int line, String str){
+		String[] result = readRaw(file);
 		if(result.length < line){
-			throw new IndexOutOfBoundsException("Given line number is out of string range: must be " + result.length + " < " + line);
+			throw new IndexOutOfBoundsException("Given line number is out of string range: " + result.length + " >= " + line);
 		}
 		
 		result[line] = str;
 		
-		writeRaw(filename, new ArrayList<String>(Arrays.asList(result)));
+		writeRaw(file, new ArrayList<String>(Arrays.asList(result)));
 	}
 	
 	public static boolean checkExist(String filename){
