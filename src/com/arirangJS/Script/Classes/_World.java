@@ -24,6 +24,9 @@ public class _World extends ScriptableObject {
 	}
 	
 	@JSConstructor
+	public _World() {}
+	
+	@JSConstructor
 	public _World(String name) {
 		world = Bukkit.getWorld(name);
 	}
@@ -106,5 +109,10 @@ public class _World extends ScriptableObject {
 	@JSFunction
 	public int getAnimalsSpawnLimit() {
 		return world.getAnimalSpawnLimit();
+	}
+	
+	@JSFunction
+	public int getBiome(int x, int z) {
+		return world.getBiome(x, z).ordinal();
 	}
 }

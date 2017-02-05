@@ -45,14 +45,21 @@ public class FileSystem {
 		return null;
 	}
 	
-	public static String readLine(String filename, int line){
-		String[] file = readRaw(filename);
-		if(file.length < line){
-			
-			return null;
-		}
+	public static String readLine(File file, int line){
+		String[] str = readRaw(file);
 		
-		return file[line];
+		if(str.length < line) return null;
+		
+		return str[line];
+	}
+	
+	public static String readLine(String filename, int line){
+		String[] str = readRaw(filename);
+		
+		if(str.length < line) return null;
+		if(str.length == 0) return null;
+		
+		return str[line];
 	}
 	
 	public static void writeRaw(File file, ArrayList<String> string){

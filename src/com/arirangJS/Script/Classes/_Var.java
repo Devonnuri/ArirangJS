@@ -1,7 +1,13 @@
 package com.arirangJS.Script.Classes;
 
-import com.arirangJS.Debug.Debug;
-import com.arirangJS.File.FileSystem;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -10,9 +16,8 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.arirangJS.Debug.Debug;
+import com.arirangJS.File.FileSystem;
 
 public class _Var extends ScriptableObject {
 	/* 
@@ -47,21 +52,20 @@ public class _Var extends ScriptableObject {
 	public _Var(String address) {
 		file = new File(FileSystem.LOC_VAR+address+".json");
 		
-		FileSystem.writeRaw(file,
-						"{",
-						"	\"variables\": []",
-						"}");
+		if(!file.exists()) {
+			FileSystem.writeRaw(file, "{\"variables\": []}");
+		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@JSFunction
 	public static void set(String key, String value) {
-		// Exception when the file is null
 		checkNull();
 
 		JSONParser parser = new JSONParser();
-		JSONObject object;
+		JSONObject json_root;
 		try {
-			object = (JSONObject) parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
+			json_root = (JSONObject) parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
 		} catch (ParseException e) {
 			Debug.danger("JSON Parsing failed");
 			e.printStackTrace();
@@ -72,28 +76,98 @@ public class _Var extends ScriptableObject {
 			return;
 		}
 		
-		if(object.get("variables") == null) {
-			FileSystem.writeRaw(file,
-					"{",
-					"	\"variables\": []",
-					"}");
-		}
+		JSONArray json_variables = (JSONArray) json_root.get("variables");
+		JSONObject keyset = new JSONObject();
+		keyset.put("key", key);
+		keyset.put("value", value);
+		keyset.put("created", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
 		
-		JSONArray variables = (JSONArray) object.get("variables");
-		
-		for(Object obj : variables) {
-			JSONObject resultSet = new JSONObject();
-			resultSet.put("key", key);
-			resultSet.put("value", value);
-			resultSet.put("created",  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
-
-			JSONObject set = (JSONObject) obj;
-			if(key.equals(set.get("key"))) {
-				variables.remove(obj);
+		int index = -1;
+		for(Object obj : json_variables) {
+			index++;
+			if(((JSONObject) obj).get("key").toString().equals(key)) {
+				break;
 			}
-
-			variables.add(resultSet);
 		}
+		
+		if(get(key) != null) {
+			json_variables.remove(index);
+		}
+		
+		json_variables.add(keyset);
+		json_root.put("variables", json_variables);
+		
+		FileSystem.writeRaw(file, json_root.toJSONString());
+	}
+	
+	@JSFunction
+	public static String get(String key) {
+		checkNull();
+		
+		JSONParser parser = new JSONParser();
+		JSONObject json_root;
+		try {
+			json_root = (JSONObject) parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
+		} catch (ParseException e) {
+			Debug.danger("JSON Parsing failed");
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			Debug.danger("IOException occured while parsing JSON");
+			e.printStackTrace();
+			return null;
+		}
+		
+		JSONArray json_variables = (JSONArray) json_root.get("variables");
+		for(Object obj : json_variables) {
+			JSONObject tmp = (JSONObject) obj;
+			
+			if(tmp.get("key").toString().equals(key))
+				return tmp.get("value").toString();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@JSFunction
+	public static void remove(String key) {
+		checkNull();
+
+		JSONParser parser = new JSONParser();
+		JSONObject json_root;
+		try {
+			json_root = (JSONObject) parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
+		} catch (ParseException e) {
+			Debug.danger("JSON Parsing failed");
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			Debug.danger("IOException occured while parsing JSON");
+			e.printStackTrace();
+			return;
+		}
+		
+		JSONArray json_variables = (JSONArray) json_root.get("variables");
+		JSONObject keyset = new JSONObject();
+		
+		int index = -1;
+		for(Object obj : json_variables) {
+			index++;
+			if(((JSONObject) obj).get("key").toString().equals(key)) {
+				break;
+			}
+		}
+		
+		if(get(key) == null) {
+			return;
+		}
+		
+		json_variables.remove(index);
+		
+		json_variables.add(keyset);
+		json_root.put("variables", json_variables);
+		
+		FileSystem.writeRaw(file, json_root.toJSONString());
 	}
 
 	public static void resetAll() {
@@ -101,7 +175,7 @@ public class _Var extends ScriptableObject {
 			if(file.isDirectory()) break;
 			if(!file.getName().endsWith(".json")) break;
 
-			FileSystem.writeRaw(file, "");
+			FileSystem.writeRaw(file, "{\"variables\": []}");
 		}
 	}
 	
