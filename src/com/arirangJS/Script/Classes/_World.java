@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.World;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.mozilla.javascript.ScriptableObject;
@@ -114,5 +115,106 @@ public class _World extends ScriptableObject {
 	@JSFunction
 	public int getBiome(int x, int z) {
 		return world.getBiome(x, z).ordinal();
+	}
+	
+	@JSFunction
+	public _Block getBlockAt(int x, int y, int z) {
+		return new _Block(world.getBlockAt(x, y, z));
+	}
+	
+	@SuppressWarnings("deprecation")
+	@JSFunction
+	public int getBlockTypeIdAt(int x, int y, int z) {
+		return world.getBlockTypeIdAt(x, y, z);
+	}
+	
+	/* TODO: Chunk getChunkAt(Block block)
+	 * TODO: Chunk getChunkAt(int x, int z)
+	 * No Chunk Class
+	 */
+	
+	@JSFunction
+	public int getDifficulty() {
+		return world.getDifficulty().ordinal();
+	}
+	
+	/* TODO: ChunkSnapshot getEmptyChunkSnapshot(int x, int z, boolean includeBiome, boolean includeBiomeTempRain)
+	 * No ChunkSnapshot Class
+	 */
+	
+	/* TODO: List<Entity> getEntities()
+	 * No Entity Class
+	 */
+	
+	@JSFunction
+	public int getEnvironment() {
+		return world.getEnvironment().ordinal();
+	}
+	
+	@JSFunction
+	public long getFullTime() {
+		return world.getFullTime();
+	}
+	
+	@JSFunction
+	public String[] getGameRules() {
+		return world.getGameRules();
+	}
+	
+	/* TODO: ChunkGenerator getGenerator()
+	 * No ChunkGenerator Class
+	 */
+	
+	@JSFunction
+	public _Block getHighestBlockAt(int x, int z) {
+		return new _Block(world.getHighestBlockAt(x, z));
+	}
+	
+	@JSFunction
+	public int getHighestBlockYAt(int x, int z) {
+		return world.getHighestBlockYAt(x, z);
+	}
+	
+	@JSFunction
+	public double getHumidity(int x, int z) {
+		return world.getHumidity(x, z);
+	}
+	
+	@JSFunction
+	public boolean getKeepSpawnInMemory() {
+		return world.getKeepSpawnInMemory();
+	}
+	
+	@JSFunction
+	public _LivingEntity[] getLivingEntities() {
+		_LivingEntity[] result = new _LivingEntity[world.getLivingEntities().size()];
+		
+		int index = 0;
+		for(LivingEntity entity : world.getLivingEntities()) {
+			result[index] = new _LivingEntity(entity);
+		}
+		
+		return result;
+	}
+	
+	@JSFunction
+	public int getMaxHeight() {
+		return world.getMaxHeight();
+	}
+	
+	@JSFunction
+	public int getMonsterSpawnLimit() {
+		return world.getMonsterSpawnLimit();
+	}
+	
+	@JSFunction
+	public String getName() {
+		return world.getName();
+	}
+	
+	public class Environment {
+		public static final int NORMAL	= 0,
+								NETHER	= 1,
+								THE_END	= 2;
 	}
 }

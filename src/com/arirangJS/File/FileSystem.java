@@ -1,15 +1,15 @@
 package com.arirangJS.File;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.arirangJS.Debug.Debug;
+import com.arirangJS.Lang.ErrReporter;
 
 public class FileSystem {
 	public static final String LOC_PLUGIN = "plugins/ArirangJS/";
@@ -24,7 +24,7 @@ public class FileSystem {
 		try{
 			return Files.readAllLines(file.toPath(), StandardCharsets.UTF_8).toArray(new String[0]);
 		}catch(IOException e){
-			Debug.danger("File("+file.getName()+") Exception(IOException) Occured.");
+			ErrReporter.send("err.io.read", file.getName());
 			e.printStackTrace();
 		}
 		return null;
@@ -38,7 +38,7 @@ public class FileSystem {
 		try{
 			return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 		}catch(IOException e){
-			Debug.danger("File("+file.getName()+") Exception(IOException) Occured.");
+			ErrReporter.send("err.io.read", file.getName());
 			Debug.danger(e.getMessage());
 		}
 		
@@ -66,7 +66,7 @@ public class FileSystem {
 		try{
 			Files.write(file.toPath(), string);
 		}catch(IOException e){
-			Debug.danger("File("+file.getName()+") Exception(IOException) Occured.");
+			ErrReporter.send("err.io.read", file.getName());
 			e.printStackTrace();
 		}
 	}
@@ -75,7 +75,7 @@ public class FileSystem {
 		try{
 			Files.write(file.toPath(), Arrays.asList(string));
 		}catch(IOException e){
-			Debug.danger("File("+file.getName()+") Exception(IOException) Occured.");
+			ErrReporter.send("err.io.write", file.getName());
 			e.printStackTrace();
 		}
 	}
@@ -83,12 +83,15 @@ public class FileSystem {
 	public static void writeLine(File file, int line, String str){
 		String[] result = readRaw(file);
 		if(result.length < line){
-			throw new IndexOutOfBoundsException("Given line number is out of string range: " + result.length + " >= " + line);
+			ErrReporter.send("err.io.incorrect.line", result.length+" >= "+line);
+			return;
+		} else if(0 > line) {
+			ErrReporter.send("err.io.incorrect.line", "0 <= "+line);
+			return;
 		}
 		
 		result[line] = str;
-		
-		writeRaw(file, new ArrayList<String>(Arrays.asList(result)));
+		writeRaw(file, result);
 	}
 	
 	public static boolean checkExist(String filename){
@@ -106,25 +109,16 @@ public class FileSystem {
 		}
 	}
 	
-	public static void copy(String src, String dest) {
+	public static void copy(File src, File dest) {
 		try {
-			FileInputStream input = new FileInputStream(src);
-			FileOutputStream output = new FileOutputStream(dest);
-			
-			int data = 0;
-			while((data = input.read())!=-1) {
-				output.write(data);
-			}
-			
-			input.close();
-			output.close();
+			Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch(IOException e) {
-			Debug.danger("An error(IOException) occured while copying files.");
+			ErrReporter.send("err.io.copy", src.getName());
 			e.printStackTrace();
 		}
 	}
 	
-	public static boolean isExist (String filename){
+	public static boolean isExist(String filename) {
 		return new File(filename).exists();
 	}
 }

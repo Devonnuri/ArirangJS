@@ -487,4 +487,11 @@ public class _Player extends ScriptableObject {
 	public _World getWorld() {
 		return new _World(player.getWorld());
 	}
+	
+	@JSFunction
+	public double[] getLocation() {
+		return new double[] {player.getLocation().getX(),
+							player.getLocation().getY(),
+							player.getLocation().getZ()};
+	}
 }

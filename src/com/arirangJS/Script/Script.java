@@ -16,6 +16,7 @@ import org.mozilla.javascript.ScriptableObject;
 
 import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
+import com.arirangJS.Lang.ErrReporter;
 import com.arirangJS.Main.SyntaxHighlighter;
 import com.arirangJS.Script.Classes._Action;
 import com.arirangJS.Script.Classes._Biome;
@@ -23,6 +24,7 @@ import com.arirangJS.Script.Classes._Block;
 import com.arirangJS.Script.Classes._BlockFace;
 import com.arirangJS.Script.Classes._Bukkit;
 import com.arirangJS.Script.Classes._ChatColor;
+import com.arirangJS.Script.Classes._Difficulty;
 import com.arirangJS.Script.Classes._Effect;
 import com.arirangJS.Script.Classes._Event;
 import com.arirangJS.Script.Classes._Inventory;
@@ -50,6 +52,7 @@ public class Script {
 			ScriptableObject.putProperty(scope, "BlockFace", constantsToObj(_BlockFace.class));
 			ScriptableObject.defineClass(scope, _Bukkit.class);
 			ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
+			ScriptableObject.putProperty(scope, "Difficulty", constantsToObj(_Difficulty.class));
 			ScriptableObject.defineClass(scope, _Effect.class);
 			ScriptableObject.defineClass(scope, _Event.class);
 			ScriptableObject.defineClass(scope, _Inventory.class);
@@ -60,6 +63,7 @@ public class Script {
 			ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_TreeType.class));
 			ScriptableObject.defineClass(scope, _Var.class);
 			ScriptableObject.defineClass(scope, _World.class);
+			ScriptableObject.putProperty(scope, "World.Environment", constantsToObj(_World.Environment.class));
 			
 			FileInputStream inStream = new FileInputStream(FileSystem.LOC_SCRIPT+filename);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
@@ -76,13 +80,13 @@ public class Script {
 			Debug.danger(e.getMessage());
 		} catch(IOException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
 			this.errors.add(e.getMessage());
-			Debug.danger("An error occured while compiling code.");
+			ErrReporter.send("err.compile", filename);
 		} finally {
 			Context.exit();
 		}
 	}
 	
-	public static ScriptableObject constantsToObj(Class<?> clazz) {
+	private static ScriptableObject constantsToObj(Class<?> clazz) {
 		ScriptableObject obj = new NativeObject();
 		for(Field field : clazz.getFields()) {
 			try {

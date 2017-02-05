@@ -20,6 +20,10 @@ public class _LivingEntity extends ScriptableObject {
 	
 	public _LivingEntity() {}
 	
+	public _LivingEntity(LivingEntity entity) {
+		this.entity = entity;
+	}
+	
 	@JSConstructor
 	public _LivingEntity(String uuid) {
 		this.entity = null;
