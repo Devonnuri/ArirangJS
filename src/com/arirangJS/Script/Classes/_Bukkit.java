@@ -1,5 +1,6 @@
 package com.arirangJS.Script.Classes;
 
+import org.bukkit.Bukkit;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSStaticFunction;
 
@@ -13,76 +14,81 @@ public class _Bukkit extends ScriptableObject {
 	
 	@JSStaticFunction
 	public static void broadcastMessage(String message) {
-		org.bukkit.Bukkit.broadcastMessage(message);
+		Bukkit.broadcastMessage(message);
 	}
 	
 	@JSStaticFunction
 	public static void banIP(String address) {
-		org.bukkit.Bukkit.banIP(address);
+		Bukkit.banIP(address);
 	}
 	
 	@JSStaticFunction
 	public static void clearRecipes() {
-		org.bukkit.Bukkit.clearRecipes();
+		Bukkit.clearRecipes();
 	}
 	
 	@JSStaticFunction
 	public static boolean getAllowEnd() {
-		return org.bukkit.Bukkit.getAllowEnd();
+		return Bukkit.getAllowEnd();
 	}
 	
 	@JSStaticFunction
 	public static boolean getAllowFlight() {
-		return org.bukkit.Bukkit.getAllowFlight();
+		return Bukkit.getAllowFlight();
 	}
 	
 	@JSStaticFunction
 	public static boolean getAllowNether() {
-		return org.bukkit.Bukkit.getAllowNether();
+		return Bukkit.getAllowNether();
 	}
 	
 	@JSStaticFunction
 	public static int getAmbientSpawnLimit() {
-		return org.bukkit.Bukkit.getAmbientSpawnLimit();
+		return Bukkit.getAmbientSpawnLimit();
 	}
 	
 	@JSStaticFunction
 	public static int getAnimalSpawnLimit() {
-		return org.bukkit.Bukkit.getAnimalSpawnLimit();
+		return Bukkit.getAnimalSpawnLimit();
 	}
 	
 	@JSStaticFunction
 	public static String getBukkitVersion() {
-		return org.bukkit.Bukkit.getBukkitVersion();
+		return Bukkit.getBukkitVersion();
 	}
 	
 	@JSStaticFunction
 	public static long getConnectionThrottle() {
-		return org.bukkit.Bukkit.getConnectionThrottle();
+		return Bukkit.getConnectionThrottle();
 	}
 	
 	@JSStaticFunction
 	public static boolean getGenerateStructures() {
-		return org.bukkit.Bukkit.getGenerateStructures();
+		return Bukkit.getGenerateStructures();
 	}
 	
 	@JSStaticFunction
 	public static int getIdleTimeout() {
-		return org.bukkit.Bukkit.getIdleTimeout();
+		return Bukkit.getIdleTimeout();
 	}
 	
 	@JSStaticFunction
 	public static String getIp() {
-		return org.bukkit.Bukkit.getIp();
+		return Bukkit.getIp();
 	}
 	
 	@JSStaticFunction
 	public static int getMaxPlayers() {
-		return org.bukkit.Bukkit.getMaxPlayers();
+		return Bukkit.getMaxPlayers();
 	}
 	
 	@JSStaticFunction
 	public static int getMonsterSpawnLimit() {
-		return org.bukkit.Bukkit.getMonsterSpawnLimit();
+		return Bukkit.getMonsterSpawnLimit();
+	}
+	
+	@JSStaticFunction
+	public static void sendConsole(String msg) {
+		Bukkit.getConsoleSender().sendMessage(msg);
 	}
 }

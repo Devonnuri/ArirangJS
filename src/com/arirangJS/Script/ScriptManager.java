@@ -1,6 +1,7 @@
 package com.arirangJS.Script;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,6 +33,7 @@ import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.inventory.ItemStack;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 
@@ -147,24 +149,21 @@ public class ScriptManager implements Listener {
 		return result;
 	}
 	
-	public static String arrayToStr(Object[] arr) {
-		String result = "[";
-		if(arr.length == 0) return "[]";
-		
-		for(Object obj : arr) {
-			result += obj.toString()+", ";
-		}
-		result = result.substring(0, result.length()-2);
-		result += "]";
-		return result;
-	}
-	
 	public static String blockStateToJSON(BlockState state) {
 		String blockJSON = blockToJSON(state.getBlock());
 		int lightLevel = state.getLightLevel();
 		
 		String result = String.format("({block: %s, lightLevel: %d})", blockJSON, lightLevel);
 		return result;
+	}
+	
+	public static String strArrayToJSON(String[] strArray) {
+		String[] result = strArray;
+		for(int i=0; i<strArray.length; i++) {
+			result[i] = "\""+strArray[i]+"\"";
+		}
+		
+		return Arrays.toString(result);
 	}
 	
 	public static String enchantListToJSON(Map<Enchantment, Integer> map) {
@@ -209,13 +208,13 @@ public class ScriptManager implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerChat(AsyncPlayerChatEvent e) {
-		Main.isCancelled.put(e.getEventName(), e.isCancelled());
+		Main.isCancelled.put("PlayerChatEvent", e.isCancelled());
 		Main.chatFormat = e.getFormat();
 		
 		callMethod("onPlayerChat", e.getPlayer().getName(), e.getMessage());
 		
 		e.setFormat(Main.chatFormat);
-		e.setCancelled(Main.isCancelled.get(e.getEventName()));
+		e.setCancelled(Main.isCancelled.get("PlayerChatEvent"));
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -335,7 +334,7 @@ public class ScriptManager implements Listener {
 		if(e.getMessage().contains(" "))
 			args = e.getMessage().substring(label.length()+2).split(" ");
 		
-		callMethod("onCommand", e.getPlayer().getName(), label, arrayToStr(args));
+		callMethod("onCommand", e.getPlayer().getName(), label, new NativeArray(args));
 		e.setCancelled(Main.isCancelled.get("CommandEvent"));
 	}
 	
@@ -347,9 +346,9 @@ public class ScriptManager implements Listener {
 		String[] args = {};
 		
 		if(e.getCommand().contains(" "))
-			args = e.getCommand().substring(label.length()+2).split(" ");
+			args = e.getCommand().substring(label.length()+1).split(" ");
 		
-		callMethod("onCommand", "<server>", label, arrayToStr(args));
+		callMethod("onCommand", "<server>", label, new NativeArray(args));
 		e.setCancelled(Main.isCancelled.get("CommandEvent"));
 	}
 }

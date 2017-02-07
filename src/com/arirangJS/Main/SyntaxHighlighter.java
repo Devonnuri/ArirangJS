@@ -9,9 +9,6 @@ public class SyntaxHighlighter {
 	public static String highlight(String code) {
 		String result = code;
 		
-		result = find(result, "(^|[^\\\\])\\/\\*[\\w\\W]*?\\*\\/+", ChatColor.GRAY+"");
-		result = find(result, "(^|[^\\\\:])\\/\\/.*", ChatColor.GRAY+"");
-		
 		result = find(result, "([\"\'])(\\\\(?:\\r\\n|[\\s\\S])|(?!\\1)[^\\\\\\r\\n])*\\1+", ChatColor.GREEN+"");
 		
 		result = find(result, "\\b-?(0x[\\dA-Fa-f]+|0b[01]+|0o[0-7]+|\\d*\\.?\\d+([Ee][+-]?\\d+)?|NaN|Infinity)\\b", ChatColor.GREEN+"");
@@ -22,12 +19,18 @@ public class SyntaxHighlighter {
 		result = find(result, "\\b(true|false)\\b", ChatColor.GOLD+"");
 		
 		result = find(result, "--?|\\+\\+?|!=?=?|<=?|>=?|==?=?|&&?|\\|\\|?|\\?|\\*\\*?|\\/|~|\\^|%|\\.{3}", ChatColor.BOLD+"");
+
+		result = find(result, "(^|[^\\\\])\\/\\*[\\w\\W]*?\\*\\/+", ChatColor.GRAY+"");
+		result = find(result, "(^|[^\\\\:])\\/\\/.*", ChatColor.GRAY+"");
 		
 		return result;
 	}
 	
 	private static String find(String origin, String regex, String color) {
 		String result = origin;
+		
+		if(origin == null) return "";
+		
 		Matcher matcher = Pattern.compile(regex).matcher(origin);
 		
 		int temp=0;
