@@ -1,5 +1,6 @@
 package com.arirangJS.Script.Classes;
 
+@SuppressWarnings("unused")
 public class _ChatColor {
 	public static final String BEGIN 			= "\u00a7";
 	public static final String BLACK 			= BEGIN + "0",

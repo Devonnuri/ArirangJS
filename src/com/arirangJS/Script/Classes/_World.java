@@ -13,6 +13,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
+@SuppressWarnings("unused")
 public class _World extends ScriptableObject {
 
 	private static final long serialVersionUID = 7701770472409202118L;
@@ -212,9 +213,7 @@ public class _World extends ScriptableObject {
 		return world.getName();
 	}
 	
-	public class Environment {
-		public static final int NORMAL	= 0,
-								NETHER	= 1,
-								THE_END	= 2;
+	public enum Environment {
+	    NORMAL, NETHER, THE_END
 	}
 }

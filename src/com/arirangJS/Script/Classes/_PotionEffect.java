@@ -6,6 +6,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
+@SuppressWarnings("unused")
 public class _PotionEffect extends ScriptableObject {
 
 	private static final long serialVersionUID = -350575615822544497L;

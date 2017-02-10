@@ -10,6 +10,7 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
 import net.minecraft.server.v1_10_R1.PacketPlayOutTitle;
 import net.minecraft.server.v1_10_R1.PacketPlayOutTitle.EnumTitleAction;
 
+@SuppressWarnings("unused")
 public class _Effect extends ScriptableObject{
 
 	private static final long serialVersionUID = -1992104712460419487L;

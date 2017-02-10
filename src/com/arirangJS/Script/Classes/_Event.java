@@ -6,6 +6,7 @@ import org.mozilla.javascript.annotations.JSStaticFunction;
 
 import com.arirangJS.Main.Main;
 
+@SuppressWarnings("unused")
 public class _Event extends ScriptableObject {
 	
 	private static final long serialVersionUID = -3043165829405454351L;

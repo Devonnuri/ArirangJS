@@ -7,6 +7,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
+@SuppressWarnings("unused")
 public class _LivingEntity extends ScriptableObject {
 
 	private static final long serialVersionUID = 2485571018791985097L;
@@ -17,24 +18,12 @@ public class _LivingEntity extends ScriptableObject {
 	public String getClassName() {
 		return "LivingEntity";
 	}
-	
+
+	@JSConstructor
 	public _LivingEntity() {}
 	
 	public _LivingEntity(LivingEntity entity) {
 		this.entity = entity;
-	}
-	
-	@JSConstructor
-	public _LivingEntity(String uuid) {
-		this.entity = null;
-		for(World world : Bukkit.getWorlds()) {
-			for(LivingEntity entity : world.getLivingEntities()) {
-				if(entity.getUniqueId().toString().equals(uuid)) {
-					this.entity = entity;
-					break;
-				}
-			}
-		}
 	}
 	
 	@JSFunction

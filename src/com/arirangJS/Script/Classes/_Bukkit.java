@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSStaticFunction;
 
+@SuppressWarnings("unused")
 public class _Bukkit extends ScriptableObject {
 	private static final long serialVersionUID = -3993427606107770469L;
 	

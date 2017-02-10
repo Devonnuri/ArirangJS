@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import com.arirangJS.Script.Classes.*;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.RhinoException;
@@ -18,23 +19,6 @@ import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
 import com.arirangJS.Lang.ErrReporter;
 import com.arirangJS.Main.SyntaxHighlighter;
-import com.arirangJS.Script.Classes._Action;
-import com.arirangJS.Script.Classes._Biome;
-import com.arirangJS.Script.Classes._Block;
-import com.arirangJS.Script.Classes._BlockFace;
-import com.arirangJS.Script.Classes._Bukkit;
-import com.arirangJS.Script.Classes._ChatColor;
-import com.arirangJS.Script.Classes._Difficulty;
-import com.arirangJS.Script.Classes._Effect;
-import com.arirangJS.Script.Classes._Event;
-import com.arirangJS.Script.Classes._Inventory;
-import com.arirangJS.Script.Classes._LivingEntity;
-import com.arirangJS.Script.Classes._Player;
-import com.arirangJS.Script.Classes._PotionEffect;
-import com.arirangJS.Script.Classes._Request;
-import com.arirangJS.Script.Classes._TreeType;
-import com.arirangJS.Script.Classes._Var;
-import com.arirangJS.Script.Classes._World;
 
 public class Script {
 	public String filename;
@@ -46,24 +30,7 @@ public class Script {
 		Scriptable scope = context.initStandardObjects();
 		
 		try {
-			ScriptableObject.putProperty(scope, "Action", constantsToObj(_Action.class));
-			ScriptableObject.putProperty(scope, "Biome", constantsToObj(_Biome.class));
-			ScriptableObject.defineClass(scope, _Block.class);
-			ScriptableObject.putProperty(scope, "BlockFace", constantsToObj(_BlockFace.class));
-			ScriptableObject.defineClass(scope, _Bukkit.class);
-			ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
-			ScriptableObject.putProperty(scope, "Difficulty", constantsToObj(_Difficulty.class));
-			ScriptableObject.defineClass(scope, _Effect.class);
-			ScriptableObject.defineClass(scope, _Event.class);
-			ScriptableObject.defineClass(scope, _Inventory.class);
-			ScriptableObject.defineClass(scope, _LivingEntity.class);
-			ScriptableObject.defineClass(scope, _Player.class);
-			ScriptableObject.defineClass(scope, _PotionEffect.class);
-			ScriptableObject.defineClass(scope, _Request.class);
-			ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_TreeType.class));
-			ScriptableObject.defineClass(scope, _Var.class);
-			ScriptableObject.defineClass(scope, _World.class);
-			ScriptableObject.putProperty(scope, "World.Environment", constantsToObj(_World.Environment.class));
+			defineClass(scope);
 			
 			FileInputStream inStream = new FileInputStream(FileSystem.LOC_SCRIPT+filename);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
@@ -76,7 +43,7 @@ public class Script {
 			Debug.log(SyntaxHighlighter.highlight(FileSystem.readLine(FileSystem.LOC_SCRIPT+filename, e.lineNumber())));
 			
 			String gap = new String(new char[e.columnNumber()]).replace("\0", " ");
-			Debug.log(gap+"ก่");
+			Debug.log(gap+"| Here");
 			Debug.danger(e.getMessage());
 		} catch(IOException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
 			this.errors.add(e.getMessage());
@@ -85,6 +52,29 @@ public class Script {
 			Context.exit();
 		}
 	}
+
+	private static void defineClass(Scriptable scope) throws IllegalAccessException, InstantiationException, InvocationTargetException{
+        ScriptableObject.putProperty(scope, "Action", enumClassToObj(_Action.class));
+        ScriptableObject.putProperty(scope, "Biome", enumClassToObj(_Biome.class));
+        ScriptableObject.defineClass(scope, _Block.class);
+        ScriptableObject.putProperty(scope, "BlockFace", enumClassToObj(_BlockFace.class));
+        ScriptableObject.defineClass(scope, _Bukkit.class);
+        ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
+        ScriptableObject.putProperty(scope, "Difficulty", enumClassToObj(_Difficulty.class));
+        ScriptableObject.defineClass(scope, _Effect.class);
+        ScriptableObject.defineClass(scope, _Entity.class);
+        ScriptableObject.putProperty(scope, "EntityType", enumClassToObj(_EntityType.class));
+        ScriptableObject.defineClass(scope, _Event.class);
+        ScriptableObject.defineClass(scope, _Inventory.class);
+        ScriptableObject.defineClass(scope, _LivingEntity.class);
+        ScriptableObject.defineClass(scope, _Player.class);
+        ScriptableObject.defineClass(scope, _PotionEffect.class);
+        ScriptableObject.defineClass(scope, _Request.class);
+        ScriptableObject.putProperty(scope, "TreeType", enumClassToObj(_TreeType.class));
+        ScriptableObject.defineClass(scope, _Var.class);
+        ScriptableObject.defineClass(scope, _World.class);
+        ScriptableObject.putProperty(scope, "World.Environment", enumClassToObj(_World.Environment.class));
+    }
 	
 	private static ScriptableObject constantsToObj(Class<?> clazz) {
 		ScriptableObject obj = new NativeObject();
@@ -92,10 +82,48 @@ public class Script {
 			try {
 				obj.putConst(field.getName(), obj, field.get(null));
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				Debug.danger("An error occured translate class to jsObject");
+				ErrReporter.send("err.compile.translateObj");
 				e.printStackTrace();
 			}
 		}
 		return obj;
 	}
+
+	private static ScriptableObject enumClassToObj(Class<?> clazz) {
+		ScriptableObject obj = new NativeObject();
+		for(Object temp: clazz.getEnumConstants()) {
+			try {
+				Enum _enum = (Enum) temp;
+				obj.putConst(_enum.name(), obj, _enum.ordinal());
+			} catch (IllegalArgumentException e) {
+				ErrReporter.send("err.compile.translateObj");
+				e.printStackTrace();
+			}
+		}
+		return obj;
+	}
+
+	public static String test(String code) {
+        Context context = Context.enter();
+        Scriptable scope = context.initStandardObjects();
+        Object result = null;
+
+        try {
+            defineClass(scope);
+            result = context.evaluateString(scope, code, "<test>", 1, null);
+        } catch(RhinoException e) {
+            Debug.log(SyntaxHighlighter.highlight(code));
+
+            String gap = new String(new char[e.columnNumber()]).replace("\0", " ");
+            Debug.log(gap+"| Here");
+            Debug.danger(e.getMessage());
+        } catch(IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            ErrReporter.send("err.compile", "<test>");
+        } finally {
+            Context.exit();
+        }
+
+        if(result == null) return null;
+        return result.toString();
+    }
 }

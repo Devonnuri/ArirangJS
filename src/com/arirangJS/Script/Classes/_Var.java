@@ -19,6 +19,7 @@ import org.mozilla.javascript.annotations.JSFunction;
 import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
 
+@SuppressWarnings("unused")
 public class _Var extends ScriptableObject {
 	/* 
 	 * Example

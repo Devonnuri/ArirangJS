@@ -2,11 +2,14 @@ package com.arirangJS.Script.Classes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
+
+@SuppressWarnings("unused")
 public class _Player extends ScriptableObject {
 	
 	private static final long serialVersionUID = 583488239536525223L;
@@ -472,26 +475,224 @@ public class _Player extends ScriptableObject {
 	}
 	
 	//Methods inherited from interface org.bukkit.entity.Entity
-	
-	@JSFunction
-	public void teleport(double x, double y, double z) {
-		player.teleport(new Location(player.getWorld(), x, y, z));
-	}
-	
-	@JSFunction
-	public void teleportEye(double x, double y, double z, double yaw, double pitch) {
-		player.teleport(new Location(player.getWorld(), x, y, z, (float) yaw, (float) pitch));
-	}
-	
-	@JSFunction
-	public _World getWorld() {
-		return new _World(player.getWorld());
-	}
-	
-	@JSFunction
-	public double[] getLocation() {
-		return new double[] {player.getLocation().getX(),
-							player.getLocation().getY(),
-							player.getLocation().getZ()};
-	}
+
+    @JSFunction
+    public boolean addScoreboardTag(String tag) {
+        return player.addScoreboardTag(tag);
+    }
+
+    @JSFunction
+    public boolean eject() {
+        return player.eject();
+    }
+
+    @JSFunction
+    public int getEntityId() {
+        return player.getEntityId();
+    }
+
+    @JSFunction
+    public double getFallDistance() {
+        return player.getFallDistance();
+    }
+
+    @JSFunction
+    public int getFireTicks() {
+        return player.getFireTicks();
+    }
+
+    @JSFunction
+    public double[] getLocation() {
+        return new double[] {
+                player.getLocation().getX(),
+                player.getLocation().getY(),
+                player.getLocation().getZ(),
+                player.getLocation().getYaw(),
+                player.getLocation().getPitch()
+        };
+    }
+
+    @JSFunction
+    public int getMaxFireTicks() {
+        return player.getMaxFireTicks();
+    }
+
+    @JSFunction
+    public _Entity[] getNearbyEntities(double x, double y, double z) {
+        Entity[] entities = (Entity[]) player.getNearbyEntities(x, y, z).toArray();
+        _Entity[] result = new _Entity[entities.length];
+
+        int index = 0;
+        for(Entity temp : entities) {
+            result[index] = new _Entity(temp);
+            index++;
+        }
+
+        return result;
+    }
+
+    @JSFunction
+    public _Entity getPassenger() {
+        return new _Entity(player.getPassenger());
+    }
+
+    @JSFunction
+    public int getPortalCooldown() {
+        return player.getPortalCooldown();
+    }
+
+    @JSFunction
+    public String[] getScoreboardTags() {
+        return player.getScoreboardTags().toArray(new String[0]);
+    }
+
+    @JSFunction
+    public int getTicksLived() {
+        return player.getTicksLived();
+    }
+
+    @JSFunction
+    public int getType() {
+        return player.getType().ordinal();
+    }
+
+    @JSFunction
+    public String getUniqueId() {
+        return player.getUniqueId().toString();
+    }
+
+    @JSFunction
+    public _Entity getVehicle() {
+        return new _Entity(player.getVehicle());
+    }
+
+    /*
+     * TODO: Vector getVector()
+     * No Vector Class
+     */
+
+    @JSFunction
+    public _World getWorld() {
+        return new _World(player.getWorld());
+    }
+
+    @JSFunction
+    public boolean hasGravity() {
+        return player.hasGravity();
+    }
+
+    @JSFunction
+    public boolean isCustomNameVisible() {
+        return player.isCustomNameVisible();
+    }
+
+    @JSFunction
+    public boolean isDead() {
+        return player.isDead();
+    }
+
+    @JSFunction
+    public boolean isEmpty() {
+        return player.isEmpty();
+    }
+
+    @JSFunction
+    public boolean isGlowing() {
+        return player.isGlowing();
+    }
+
+    @JSFunction
+    public boolean isInsideVehicle() {
+        return player.isInsideVehicle();
+    }
+
+    @JSFunction
+    public boolean isInvulnerable() {
+        return player.isInvulnerable();
+    }
+
+    @JSFunction
+    public boolean isSilent() {
+        return player.isSilent();
+    }
+
+    @JSFunction
+    public boolean isValid() {
+        return player.isValid();
+    }
+
+    @JSFunction
+    public boolean leaveVehicle() {
+        return player.leaveVehicle();
+    }
+
+    @JSFunction
+    public boolean removeScoreboardTag(String tag) {
+        return player.removeScoreboardTag(tag);
+    }
+
+    @JSFunction
+    public void setCustomNameVisible(boolean flag) {
+        player.setCustomNameVisible(flag);
+    }
+
+    @JSFunction
+    public void setFallDistance(double distance) {
+        player.setFallDistance((float) distance);
+    }
+
+    @JSFunction
+    public void setFireTicks(int ticks) {
+        player.setFireTicks(ticks);
+    }
+
+    @JSFunction
+    public void setGlowing(boolean flag) {
+        player.setGlowing(flag);
+    }
+
+    @JSFunction
+    public void setGravity(boolean gravity) {
+        player.setGravity(gravity);
+    }
+
+    @JSFunction
+    public void setInvulnerable(boolean flag) {
+        player.setInvulnerable(flag);
+    }
+
+    @JSFunction
+    public boolean setPassenger(_Entity passenger) {
+        return player.setPassenger(passenger.entity);
+    }
+
+    @JSFunction
+    public void setPortalCooldown(int cooldown) {
+        player.setPortalCooldown(cooldown);
+    }
+
+    @JSFunction
+    public void setSilent(boolean flag) {
+        player.setSilent(flag);
+    }
+
+    @JSFunction
+    public void setTicksLived(int value) {
+        player.setTicksLived(value);
+    }
+
+    /*
+     * TODO: void setVelocity(Vector velocity)
+     * No Vector Class
+     */
+
+    @JSFunction
+    public boolean teleport(_Entity destination) {
+        return player.teleport(destination.entity);
+    }
+
+    @JSFunction
+    public boolean teleport채Coord(double x, double y, double z) {
+        return player.teleport(new Location(player.getWorld(), x, y, z));
+    }
 }

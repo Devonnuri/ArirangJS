@@ -13,6 +13,7 @@ import org.mozilla.javascript.annotations.JSStaticFunction;
 
 import com.arirangJS.Debug.Debug;
 
+@SuppressWarnings("unused")
 public class _Request extends ScriptableObject {
 	
 	private static final long serialVersionUID = -1355237397792687743L;
