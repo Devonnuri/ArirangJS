@@ -1,4 +1,4 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit.entity;
 
 /**
  * Created by devonnuri on 17. 2. 9.

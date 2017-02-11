@@ -1,4 +1,4 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit;
 
 import org.bukkit.Bukkit;
 import org.mozilla.javascript.ScriptableObject;

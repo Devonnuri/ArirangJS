@@ -1,5 +1,6 @@
 package com.arirangJS.Script.Classes;
 
+import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;

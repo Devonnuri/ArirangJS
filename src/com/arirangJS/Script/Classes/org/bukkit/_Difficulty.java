@@ -1,4 +1,4 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit;
 
 public enum _Difficulty {
 	PEACEFUL,

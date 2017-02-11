@@ -1,5 +1,7 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit.potion;
 
+import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
+import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.mozilla.javascript.ScriptableObject;

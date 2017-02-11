@@ -1,4 +1,4 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit.block;
 
 public enum _BlockFace {
 	NORTH,

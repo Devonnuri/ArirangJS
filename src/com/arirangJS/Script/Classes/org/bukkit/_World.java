@@ -1,7 +1,9 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit;
 
 import java.util.Arrays;
 
+import com.arirangJS.Script.Classes.org.bukkit.block._Block;
+import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.TreeType;

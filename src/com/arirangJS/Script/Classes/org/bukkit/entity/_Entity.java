@@ -1,5 +1,6 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit.entity;
 
+import com.arirangJS.Script.Classes.org.bukkit._World;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.mozilla.javascript.ScriptableObject;
@@ -10,7 +11,7 @@ import org.mozilla.javascript.annotations.JSFunction;
  * Created by devonnuri on 17. 2. 7.
  */
 @SuppressWarnings("unused")
-public class _Entity extends ScriptableObject {
+public class _Entity extends ScriptableObject implements _IEntity {
     Entity entity;
 
     @Override

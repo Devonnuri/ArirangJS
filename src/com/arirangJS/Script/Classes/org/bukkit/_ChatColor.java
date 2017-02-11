@@ -1,4 +1,4 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit;
 
 @SuppressWarnings("unused")
 public class _ChatColor {

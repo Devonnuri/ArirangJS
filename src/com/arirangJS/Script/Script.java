@@ -9,6 +9,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import com.arirangJS.Script.Classes.*;
+import com.arirangJS.Script.Classes.org.bukkit.*;
+import com.arirangJS.Script.Classes.org.bukkit.block._Block;
+import com.arirangJS.Script.Classes.org.bukkit.block._BlockFace;
+import com.arirangJS.Script.Classes.org.bukkit.entity._Entity;
+import com.arirangJS.Script.Classes.org.bukkit.entity._EntityType;
+import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
+import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
+import com.arirangJS.Script.Classes.org.bukkit.event.block._Action;
+import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
+import com.arirangJS.Script.Classes.org.bukkit.potion._PotionEffect;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.RhinoException;
@@ -55,7 +65,7 @@ public class Script {
 
 	private static void defineClass(Scriptable scope) throws IllegalAccessException, InstantiationException, InvocationTargetException{
         ScriptableObject.putProperty(scope, "Action", enumClassToObj(_Action.class));
-        ScriptableObject.putProperty(scope, "Biome", enumClassToObj(_Biome.class));
+        ScriptableObject.putProperty(scope, "Biome", enumClassToObj(_Block._Biome.class));
         ScriptableObject.defineClass(scope, _Block.class);
         ScriptableObject.putProperty(scope, "BlockFace", enumClassToObj(_BlockFace.class));
         ScriptableObject.defineClass(scope, _Bukkit.class);

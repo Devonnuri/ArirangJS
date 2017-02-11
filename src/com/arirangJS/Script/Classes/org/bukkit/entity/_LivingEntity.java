@@ -1,14 +1,13 @@
-package com.arirangJS.Script.Classes;
+package com.arirangJS.Script.Classes.org.bukkit.entity;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
+import com.arirangJS.Script.Classes.org.bukkit.potion._PotionEffect;
 import org.bukkit.entity.LivingEntity;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
 @SuppressWarnings("unused")
-public class _LivingEntity extends ScriptableObject {
+public abstract class _LivingEntity extends ScriptableObject implements _ILivingEntity {
 
 	private static final long serialVersionUID = 2485571018791985097L;
 
