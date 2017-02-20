@@ -1,29 +1,26 @@
 package com.arirangJS.Script.Classes.org.bukkit.entity;
 
-import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
+import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
 
-@SuppressWarnings("unused")
-public class _Player extends ScriptableObject implements _IPlayer {
+public class _Player extends _LivingEntity {
 	
 	private static final long serialVersionUID = 583488239536525223L;
-	
-	public Player player;
 	
 	public _Player() {}
 	
 	@JSConstructor
 	public _Player(String name) {
-		player = Bukkit.getPlayer(name);
+		e = Bukkit.getPlayer(name);
 	}
 	
 	public _Player(Player player) {
-		this.player = player;
+		this.e = player;
+		super.e = player;
 	}
 	
 	@Override
@@ -33,302 +30,302 @@ public class _Player extends ScriptableObject implements _IPlayer {
 	
 	@JSFunction
 	public boolean canSee(_Player player) {
-		return this.player.canSee(player.player);
+		return this.e.canSee(player.e);
 	}
 	
 	@JSFunction
 	public void chat(String msg) {
-		player.chat(msg);
+		e.chat(msg);
 	}
 	
 	@JSFunction
 	public boolean getAllowFlight() {
-		return player.getAllowFlight();
+		return e.getAllowFlight();
 	}
 	
 	@JSFunction
 	public String getDisplayName() {
-		return player.getDisplayName();
+		return e.getDisplayName();
 	}
 	
 	@JSFunction
 	public double getExhaustion() {
-		return player.getExhaustion();
+		return e.getExhaustion();
 	}
 	
 	@JSFunction
 	public double getExp() {
-		return player.getExp();
+		return e.getExp();
 	}
 	
 	@JSFunction
 	public double getFlySpeed() {
-		return player.getFlySpeed();
+		return e.getFlySpeed();
 	}
 	
 	@JSFunction
 	public double getFoodLevel() {
-		return player.getFoodLevel();
+		return e.getFoodLevel();
 	}
 	
 	@JSFunction
 	public double getHealthScale() {
-		return (double) player.getHealthScale();
+		return (double) e.getHealthScale();
 	}
 	
 	@JSFunction
 	public int getLevel() {
-		return player.getLevel();
+		return e.getLevel();
 	}
 	
 	@JSFunction
 	public String getPlayerListName() {
-		return player.getPlayerListName();
+		return e.getPlayerListName();
 	}
 	
 	@JSFunction
 	public int getPlayerTime() {
-		return (int) player.getPlayerTime();
+		return (int) e.getPlayerTime();
 	}
 	
 	@JSFunction
 	public int getPlayerTimeOffset() {
-		return (int) player.getPlayerTimeOffset();
+		return (int) e.getPlayerTimeOffset();
 	}
 	
 	@JSFunction
 	public double getSaturation() {
-		return player.getSaturation();
+		return e.getSaturation();
 	}
 	
 	@JSFunction
 	public int getTotalExperience() {
-		return player.getTotalExperience();
+		return e.getTotalExperience();
 	}
 	
 	@JSFunction
 	public double getWalkSpeed() {
-		return player.getWalkSpeed();
+		return e.getWalkSpeed();
 	}
 	
 	@JSFunction
 	public void giveExp(int amount) {
-		player.giveExp(amount);
+		e.giveExp(amount);
 	}
 	
 	@JSFunction
 	public void giveExpLevels(int amount) {
-		player.giveExpLevels(amount);
+		e.giveExpLevels(amount);
 	}
 	
 	@JSFunction
 	public void hidePlayer(_Player player) {
-		this.player.hidePlayer(player.player);
+		this.e.hidePlayer(player.e);
 	}
 	
 	@JSFunction
 	public boolean isFlying() {
-		return player.isFlying();
+		return e.isFlying();
 	}
 	
 	@JSFunction
 	public boolean isHealthScaled() {
-		return player.isHealthScaled();
+		return e.isHealthScaled();
 	}
 	
 	@JSFunction
 	public boolean isPlayerTimeRelative() {
-		return player.isPlayerTimeRelative();
+		return e.isPlayerTimeRelative();
 	}
 	
 	@JSFunction
 	public boolean isSleepingIgnored() {
-		return player.isSleepingIgnored();
+		return e.isSleepingIgnored();
 	}
 	
 	@JSFunction
 	public boolean isSneaking() {
-		return player.isSneaking();
+		return e.isSneaking();
 	}
 	
 	@JSFunction
 	public boolean isSprinting() {
-		return player.isSprinting();
+		return e.isSprinting();
 	}
 	
 	@JSFunction
 	public void kickPlayer(String message) {
-		player.kickPlayer(message);
+		e.kickPlayer(message);
 	}
 	
 	@JSFunction
 	public void loadData() {
-		player.loadData();
+		e.loadData();
 	}
 	
 	@JSFunction
 	public boolean performCommand(String command) {
-		return player.performCommand(command);
+		return e.performCommand(command);
 	}
 	
 	@JSFunction
 	public void resetPlayerTime() {
-		player.resetPlayerTime();
+		e.resetPlayerTime();
 	}
 	
 	@JSFunction
 	public void resetPlayerWeather() {
-		player.resetPlayerWeather();
+		e.resetPlayerWeather();
 	}
 	
 	@JSFunction
 	public void saveData() {
-		player.saveData();
+		e.saveData();
 	}
 
 	@JSFunction
 	public void sendRawMessage(String message) {
-		player.sendRawMessage(message);
+		e.sendRawMessage(message);
 	}
 	
 	@JSFunction
 	public void setAllowFlight(boolean flight) {
-		player.setAllowFlight(flight);
+		e.setAllowFlight(flight);
 	}
 	
 	@JSFunction
 	public void setDisplayName(String name) {
-		player.setDisplayName(name);
+		e.setDisplayName(name);
 	}
 	
 	@JSFunction
 	public void setExhaustion(double value) {
-		player.setExhaustion((float) value);
+		e.setExhaustion((float) value);
 	}
 	
 	@JSFunction
 	public void setExp(double exp) {
-		player.setExp((float) exp);
+		e.setExp((float) exp);
 	}
 	
 	@JSFunction
 	public void setFlying(boolean value) {
-		player.setFlying(value);
+		e.setFlying(value);
 	}
 	
 	@JSFunction
 	public void setFlySpeed(double value) {
-		player.setFlySpeed((float) value);
+		e.setFlySpeed((float) value);
 	}
 	
 	@JSFunction
 	public void setFoodLevel(int value) {
-		player.setFoodLevel(value);
+		e.setFoodLevel(value);
 	}
 	
 	@JSFunction
 	public void setHealthScale(double scale) {
-		player.setHealthScale(scale);
+		e.setHealthScale(scale);
 	}
 	
 	@JSFunction
 	public void setHealthScaled(boolean scale) {
-		player.setHealthScaled(scale);
+		e.setHealthScaled(scale);
 	}
 	
 	@JSFunction
 	public void setLevel(int level) {
-		player.setLevel(level);
+		e.setLevel(level);
 	}
 	
 	@JSFunction
 	public void setPlayerListName(String name) {
-		player.setPlayerListName(name);
+		e.setPlayerListName(name);
 	}
 	
 	@JSFunction
 	public void setPlayerTime(int time, boolean relative) {
-		player.setPlayerTime(time, relative);
+		e.setPlayerTime(time, relative);
 	}
 	
 	@JSFunction
 	public void setResourcePack(String url) {
-		player.setResourcePack(url);
+		e.setResourcePack(url);
 	}
 	
 	@JSFunction
 	public void setSaturation(double value) {
-		player.setSaturation((float) value);
+		e.setSaturation((float) value);
 	}
 	
 	@JSFunction
 	public void setSleepingIgnored(boolean isSleeping) {
-		player.setSleepingIgnored(isSleeping);
+		e.setSleepingIgnored(isSleeping);
 	}
 	
 	@JSFunction
 	public void setSneaking(boolean sneak) {
-		player.setSneaking(sneak);
+		e.setSneaking(sneak);
 	}
 	
 	@JSFunction
 	public void setSprinting(boolean sprint) {
-		player.setSprinting(sprint);
+		e.setSprinting(sprint);
 	}
 	
 	@JSFunction
 	public void setTotalExperience(int exp) {
-		player.setTotalExperience(exp);
+		e.setTotalExperience(exp);
 	}
 	
 	@JSFunction
 	public void setWalkSpeed(double value) {
-		player.setWalkSpeed((float) value);
+		e.setWalkSpeed((float) value);
 	}
 	
 	@JSFunction
 	public void showPlayer(_Player player) {
-		this.player.showPlayer(player.player);
+		this.e.showPlayer(player.e);
 	}
 	
 	// Methods inherited from interface org.bukkit.entity.HumanEntity
 	@JSFunction
 	public void closeInventory() {
-		player.closeInventory();
+		e.closeInventory();
 	}
 	
 	@JSFunction
 	public void openInventory(_Inventory inv) {
-		player.openInventory(inv.inv);
+		e.openInventory(inv.inv);
 	}
 	
 	@JSFunction
 	public _Inventory getInventory() {
-		return new _Inventory(player);
+		return new _Inventory(e);
 	}
 	
 	@JSFunction
 	public int getExpToLevel() {
-		return player.getExpToLevel();
+		return e.getExpToLevel();
 	}
 	
 	@JSFunction
 	public String getName() {
-		return player.getName();
+		return e.getName();
 	}
 	
 	@JSFunction
 	public int getSleepTicks() {
-		return player.getSleepTicks();
+		return e.getSleepTicks();
 	}
 	
 	@JSFunction
 	public boolean isBlocking() {
-		return player.isBlocking();
+		return e.isBlocking();
 	}
 	
 	@JSFunction
 	public boolean isSleeping() {
-		return player.isSleeping();
+		return e.isSleeping();
 	}
 }

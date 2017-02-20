@@ -11,7 +11,6 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
 import net.minecraft.server.v1_10_R1.PacketPlayOutTitle;
 import net.minecraft.server.v1_10_R1.PacketPlayOutTitle.EnumTitleAction;
 
-@SuppressWarnings("unused")
 public class _Effect extends ScriptableObject{
 
 	private static final long serialVersionUID = -1992104712460419487L;
@@ -27,18 +26,18 @@ public class _Effect extends ScriptableObject{
 	@JSStaticFunction
 	public static void displayActionBar(_Player player, String message){
 		PacketPlayOutChat packet = new PacketPlayOutChat(ChatSerializer.a(message), (byte) 2);
-		((CraftPlayer) player.player).getHandle().playerConnection.sendPacket(packet);
+		((CraftPlayer) player.e).getHandle().playerConnection.sendPacket(packet);
 	}
 	
 	@JSStaticFunction
 	public static void displayTitle(_Player player, String message, int fadeIn, int duration, int fadeOut){
 		PacketPlayOutTitle packet = new PacketPlayOutTitle(EnumTitleAction.TITLE, ChatSerializer.a("{\"text\":\""+message+"\"}"), fadeIn, duration, fadeOut);
-		((CraftPlayer) player.player).getHandle().playerConnection.sendPacket(packet);
+		((CraftPlayer) player.e).getHandle().playerConnection.sendPacket(packet);
 	}
 
 	@JSStaticFunction
 	public static void displaySubtitle(_Player player, String message, int fadeIn, int duration, int fadeOut){
 		PacketPlayOutTitle packet = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, ChatSerializer.a("{\"text\":\""+message+"\"}"), fadeIn, duration, fadeOut);
-		((CraftPlayer) player.player).getHandle().playerConnection.sendPacket(packet);
+		((CraftPlayer) player.e).getHandle().playerConnection.sendPacket(packet);
 	}
 }

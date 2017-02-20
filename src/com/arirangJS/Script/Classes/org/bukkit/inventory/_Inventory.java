@@ -14,7 +14,6 @@ import org.mozilla.javascript.annotations.JSFunction;
 
 import com.arirangJS.Script.ScriptManager;
 
-@SuppressWarnings("unused")
 public class _Inventory extends ScriptableObject {
 
 	private static final long serialVersionUID = -8479061051661200182L;

@@ -4,7 +4,8 @@ import org.bukkit.Bukkit;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSStaticFunction;
 
-@SuppressWarnings("unused")
+import com.arirangJS.Script.Classes.org.bukkit.command._CommandSender;
+
 public class _Bukkit extends ScriptableObject {
 	private static final long serialVersionUID = -3993427606107770469L;
 	
@@ -91,5 +92,10 @@ public class _Bukkit extends ScriptableObject {
 	@JSStaticFunction
 	public static void sendConsole(String msg) {
 		Bukkit.getConsoleSender().sendMessage(msg);
+	}
+	
+	@JSStaticFunction
+	public static _CommandSender getConsoleSender() {
+		return new _CommandSender(Bukkit.getConsoleSender());
 	}
 }

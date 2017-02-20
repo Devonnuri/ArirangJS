@@ -8,17 +8,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-import com.arirangJS.Script.Classes.*;
-import com.arirangJS.Script.Classes.org.bukkit.*;
-import com.arirangJS.Script.Classes.org.bukkit.block._Block;
-import com.arirangJS.Script.Classes.org.bukkit.block._BlockFace;
-import com.arirangJS.Script.Classes.org.bukkit.entity._Entity;
-import com.arirangJS.Script.Classes.org.bukkit.entity._EntityType;
-import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
-import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
-import com.arirangJS.Script.Classes.org.bukkit.event.block._Action;
-import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
-import com.arirangJS.Script.Classes.org.bukkit.potion._PotionEffect;
+import org.bukkit.Difficulty;
+import org.bukkit.Sound;
+import org.bukkit.TreeType;
+import org.bukkit.World;
+import org.bukkit.WorldType;
+import org.bukkit.block.Biome;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
+import org.bukkit.event.block.Action;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.RhinoException;
@@ -29,6 +27,19 @@ import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
 import com.arirangJS.Lang.ErrReporter;
 import com.arirangJS.Main.SyntaxHighlighter;
+import com.arirangJS.Script.Classes._Effect;
+import com.arirangJS.Script.Classes._Event;
+import com.arirangJS.Script.Classes._Request;
+import com.arirangJS.Script.Classes._Var;
+import com.arirangJS.Script.Classes.org.bukkit._Bukkit;
+import com.arirangJS.Script.Classes.org.bukkit._ChatColor;
+import com.arirangJS.Script.Classes.org.bukkit._World;
+import com.arirangJS.Script.Classes.org.bukkit.block._Block;
+import com.arirangJS.Script.Classes.org.bukkit.entity._Entity;
+import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
+import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
+import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
+import com.arirangJS.Script.Classes.org.bukkit.potion._PotionEffect;
 
 public class Script {
 	public String filename;
@@ -64,26 +75,29 @@ public class Script {
 	}
 
 	private static void defineClass(Scriptable scope) throws IllegalAccessException, InstantiationException, InvocationTargetException{
-        ScriptableObject.putProperty(scope, "Action", enumClassToObj(_Action.class));
-        ScriptableObject.putProperty(scope, "Biome", enumClassToObj(_Block._Biome.class));
+        ScriptableObject.putProperty(scope, "Action", enumClassToObj(Action.class));
+        ScriptableObject.putProperty(scope, "Biome", enumClassToObj(Biome.class));
         ScriptableObject.defineClass(scope, _Block.class);
-        ScriptableObject.putProperty(scope, "BlockFace", enumClassToObj(_BlockFace.class));
+        ScriptableObject.putProperty(scope, "BlockFace", enumClassToObj(BlockFace.class));
         ScriptableObject.defineClass(scope, _Bukkit.class);
         ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
-        ScriptableObject.putProperty(scope, "Difficulty", enumClassToObj(_Difficulty.class));
+        ScriptableObject.putProperty(scope, "Difficulty", enumClassToObj(Difficulty.class));
+        ScriptableObject.defineClass(scope, _Effect.class);
         ScriptableObject.defineClass(scope, _Effect.class);
         ScriptableObject.defineClass(scope, _Entity.class);
-        ScriptableObject.putProperty(scope, "EntityType", enumClassToObj(_EntityType.class));
+        ScriptableObject.putProperty(scope, "EntityType", enumClassToObj(EntityType.class));
         ScriptableObject.defineClass(scope, _Event.class);
         ScriptableObject.defineClass(scope, _Inventory.class);
         ScriptableObject.defineClass(scope, _LivingEntity.class);
         ScriptableObject.defineClass(scope, _Player.class);
         ScriptableObject.defineClass(scope, _PotionEffect.class);
         ScriptableObject.defineClass(scope, _Request.class);
-        ScriptableObject.putProperty(scope, "TreeType", enumClassToObj(_TreeType.class));
+        ScriptableObject.putProperty(scope, "Sound", enumClassToObj(Sound.class));
+        ScriptableObject.putProperty(scope, "TreeType", enumClassToObj(TreeType.class));
         ScriptableObject.defineClass(scope, _Var.class);
         ScriptableObject.defineClass(scope, _World.class);
-        ScriptableObject.putProperty(scope, "World.Environment", enumClassToObj(_World.Environment.class));
+        ScriptableObject.putProperty(scope, "WorldType", enumClassToObj(WorldType.class));
+        ScriptableObject.putProperty(scope, "World.Environment", enumClassToObj(World.Environment.class));
     }
 	
 	private static ScriptableObject constantsToObj(Class<?> clazz) {
@@ -103,7 +117,7 @@ public class Script {
 		ScriptableObject obj = new NativeObject();
 		for(Object temp: clazz.getEnumConstants()) {
 			try {
-				Enum _enum = (Enum) temp;
+				Enum<?> _enum = (Enum<?>) temp;
 				obj.putConst(_enum.name(), obj, _enum.ordinal());
 			} catch (IllegalArgumentException e) {
 				ErrReporter.send("err.compile.translateObj");

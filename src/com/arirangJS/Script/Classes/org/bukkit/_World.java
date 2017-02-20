@@ -1,21 +1,30 @@
 package com.arirangJS.Script.Classes.org.bukkit;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
-import com.arirangJS.Script.Classes.org.bukkit.block._Block;
-import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.TreeType;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
-@SuppressWarnings("unused")
+import com.arirangJS.Script.Classes.org.bukkit.block._Block;
+import com.arirangJS.Script.Classes.org.bukkit.entity._Entity;
+import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
+import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
+
 public class _World extends ScriptableObject {
 
 	private static final long serialVersionUID = 7701770472409202118L;
@@ -145,9 +154,17 @@ public class _World extends ScriptableObject {
 	 * No ChunkSnapshot Class
 	 */
 	
-	/* TODO: List<Entity> getEntities()
-	 * No Entity Class
-	 */
+	@JSFunction
+	public _Entity[] getEntities() {
+		List<Entity> list = world.getEntities();
+		_Entity[] result = new _Entity[list.size()];
+		
+		for(int i=0; i<list.size(); i++) {
+			result[i] = new _Entity(list.get(i));
+		}
+		
+		return result;
+	}
 	
 	@JSFunction
 	public int getEnvironment() {
@@ -190,11 +207,11 @@ public class _World extends ScriptableObject {
 	
 	@JSFunction
 	public _LivingEntity[] getLivingEntities() {
-		_LivingEntity[] result = new _LivingEntity[world.getLivingEntities().size()];
+		List<LivingEntity> list = world.getLivingEntities();
+		_LivingEntity[] result = new _LivingEntity[list.size()];
 		
-		int index = 0;
-		for(LivingEntity entity : world.getLivingEntities()) {
-			result[index] = new _LivingEntity(entity);
+		for(int i=0; i<list.size(); i++) {
+			result[i] = new _LivingEntity(list.get(i));
 		}
 		
 		return result;
@@ -215,7 +232,213 @@ public class _World extends ScriptableObject {
 		return world.getName();
 	}
 	
-	public enum Environment {
-	    NORMAL, NETHER, THE_END
+	@JSFunction
+	public _Entity[] getNearbyEntities(double x, double y, double z, double offsetX, double offsetY, double offsetZ) {
+		Collection<Entity> list = world.getNearbyEntities(new Location(world, x, y, z), offsetX, offsetY, offsetZ);
+		_Entity[] result = new _Entity[list.size()];
+		
+		int index=0;
+		for(Entity entity : list) {
+			result[index] = new _Entity(entity);
+		}
+		
+		return result;
+	}
+	
+	@JSFunction
+	public _Player[] getPlayers() {
+		List<Player> list = world.getPlayers();
+		_Player[] result = new _Player[list.size()];
+		
+		for(int i=0; i<list.size(); i++) {
+			result[i] = new _Player(list.get(i));
+		}
+		
+		return result;
+	}
+	
+	@JSFunction
+	public boolean getPVP() {
+		return world.getPVP();
+	}
+	
+	@JSFunction
+	public int getSeaLevel() {
+		return world.getSeaLevel();
+	}
+	
+	@JSFunction
+	public int getSeed() {
+		return (int) world.getSeed();
+	}
+	
+	@JSFunction
+	public double[] getSpawnLocation() {
+		Location loc = world.getSpawnLocation();
+		return new double[] {
+			loc.getX(),
+			loc.getY(),
+			loc.getZ()
+		};
+	}
+	
+	@JSFunction
+	public double getTemperature(int x, int z) {
+		return world.getTemperature(x, z);
+	}
+	
+	@JSFunction
+	public int getThunderDuration() {
+		return world.getThunderDuration();
+	}
+	
+	@JSFunction
+	public int getTicksPerAnimalSpawns() {
+		return (int) world.getTicksPerAnimalSpawns();
+	}
+	
+	@JSFunction
+	public int getTicksPerMonsterSpawns() {
+		return (int) world.getTicksPerMonsterSpawns();
+	}
+	
+	@JSFunction
+	public int getTime() {
+		return (int) world.getTime();
+	}
+	
+	@JSFunction
+	public String getUID() {
+		return world.getUID().toString();
+	}
+	
+	@JSFunction
+	public int getWaterAnimalSpawnLimit() {
+		return world.getWaterAnimalSpawnLimit();
+	}
+	
+	@JSFunction
+	public int getWeatherDuration() {
+		return world.getWeatherDuration();
+	}
+	
+	@JSFunction
+	public int getWorldType() {
+		return world.getWorldType().ordinal();
+	}
+	
+	@JSFunction
+	public boolean hasStorm() {
+		return world.hasStorm();
+	}
+	
+	@JSFunction
+	public boolean isAutoSave() {
+		return world.isAutoSave();
+	}
+	
+	@JSFunction
+	public boolean isChunkInUse(int x, int z) {
+		return world.isChunkInUse(x, z);
+	}
+	
+	@JSFunction
+	public boolean isChunkLoaded(int x, int z) {
+		return world.isChunkLoaded(x, z);
+	}
+	
+	@JSFunction
+	public boolean isGameRule(String rule) {
+		return world.isGameRule(rule);
+	}
+	
+	@JSFunction
+	public boolean isThundering() {
+		return world.isThundering();
+	}
+	
+	@JSFunction
+	public void loadChunk(int x, int z) {
+		world.loadChunk(x, z);
+	}
+	
+	@JSFunction
+	public boolean loadChunk2(int x, int z, boolean generate) {
+		return world.loadChunk(x, z, generate);
+	}
+	
+	@JSFunction
+	public void playSound(double x, double y, double z, int sound, double volume, double pitch) {
+		 world.playSound(new Location(world, x, y, z), Sound.values()[sound], (float) volume, (float) pitch);
+	}
+	
+	@JSFunction
+	public void playSoundStr(double x, double y, double z, String sound, double volume, double pitch) {
+		 world.playSound(new Location(world, x, y, z), sound, (float) volume, (float) pitch);
+	}
+	
+	@JSFunction
+	public boolean regenerateChunk(int x, int z) {
+		return world.regenerateChunk(x, z);
+	}
+	
+	@JSFunction
+	public void save() {
+		world.save();
+	}
+	
+	@JSFunction
+	public void setAmbientSpawnLimit(int limit) {
+		world.setAmbientSpawnLimit(limit);
+	}
+	
+	@JSFunction
+	public void setAnimalSpawnLimit(int limit) {
+		world.setAnimalSpawnLimit(limit);
+	}
+	
+	@JSFunction
+	public void setAutoSave(boolean value) {
+		world.setAutoSave(value);
+	}
+	
+	@JSFunction
+	public void setBiome(int x, int z, int bio) {
+		world.setBiome(x, z, Biome.values()[bio]);
+	}
+	
+	@JSFunction
+	public void setDifficulty(int difficulty) {
+		world.setDifficulty(Difficulty.values()[difficulty]);
+	}
+	
+	@JSFunction
+	public void setFullTime(int time) {
+		world.setFullTime((long) time);
+	}
+	
+	@JSFunction
+	public boolean setGameRuleValue(String rule, String value) {
+		return world.setGameRuleValue(rule, value);
+	}
+	
+	@JSFunction
+	public void setKeepSpawnInMemory(boolean keepLoaded) {
+		world.setKeepSpawnInMemory(keepLoaded);
+	}
+	
+	@JSFunction
+	public void setMonsterSpawnLimit(int limit) {
+		world.setMonsterSpawnLimit(limit);
+	}
+	
+	@JSFunction
+	public void setStorm(boolean hasStorm) {
+		world.setStorm(hasStorm);
+	}
+	
+	@JSFunction
+	public void setThunderDuration(int duration) {
+		world.setThunderDuration(duration);
 	}
 }

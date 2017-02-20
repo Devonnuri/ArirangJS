@@ -1,6 +1,7 @@
 package com.arirangJS.Script.Classes.org.bukkit.command;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
@@ -8,8 +9,11 @@ import org.mozilla.javascript.annotations.JSFunction;
 /**
  * Created by devonnuri on 17. 2. 10.
  */
-public class _CommandSender extends ScriptableObject implements  _ICommandSender{
-    CommandSender sender;
+public class _CommandSender extends ScriptableObject {
+	
+	private static final long serialVersionUID = -8068902219758323716L;
+	
+	public Player e;
 
     @Override
     public String getClassName() {
@@ -20,21 +24,16 @@ public class _CommandSender extends ScriptableObject implements  _ICommandSender
     public _CommandSender() {}
 
     public _CommandSender(CommandSender sender) {
-        this.sender = sender;
+        this.e = (Player) sender;
     }
 
     @JSFunction
-    public String getName() {
-        return sender.getName();
+    public String entity() {
+        return e.getName();
     }
 
     @JSFunction
     public void sendMessage(String message) {
-        sender.sendMessage(message);
-    }
-
-    @JSFunction
-    public void sendMessage(String[] messages) {
-        sender.sendMessage(messages);
+    	e.sendMessage(message);
     }
 }

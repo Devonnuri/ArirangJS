@@ -40,8 +40,13 @@ public class Main extends JavaPlugin {
 		
 		for(File file : folder_script.listFiles()) {
 			if(file.isDirectory()) continue;
-			scripts.put(file.getName(), new Script(file.getName()));
+			Script script = new Script(file.getName());
+			if(script.errors.size() > 0) {
+				Debug.warn("File \""+file.getName()+"\" was not loaded successfully!");
+				continue;
+			}
 			
+			scripts.put(file.getName(), script);
 			Debug.success("File \""+file.getName()+"\" was loaded successfully!");
 		}
 

@@ -1,19 +1,17 @@
 package com.arirangJS.Script.Classes.org.bukkit.entity;
 
-import com.arirangJS.Script.Classes.org.bukkit._World;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.mozilla.javascript.ScriptableObject;
+import org.bukkit.entity.Player;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
-/**
- * Created by devonnuri on 17. 2. 7.
- */
-@SuppressWarnings("unused")
-public class _Entity extends ScriptableObject implements _IEntity {
-    Entity entity;
+import com.arirangJS.Script.Classes.org.bukkit._World;
+import com.arirangJS.Script.Classes.org.bukkit.command._CommandSender;
 
+public class _Entity extends _CommandSender {
+	private static final long serialVersionUID = 6636356115866447346L;
+	
     @Override
     public String getClassName() {
         return "Entity";
@@ -23,53 +21,48 @@ public class _Entity extends ScriptableObject implements _IEntity {
     public _Entity() {}
 
     public _Entity(Entity entity) {
-        this.entity = entity;
-    }
-
-    @JSFunction
-    public boolean addScoreboardTag(String tag) {
-        return entity.addScoreboardTag(tag);
+        this.e = (Player) entity;
     }
 
     @JSFunction
     public boolean eject() {
-        return entity.eject();
+        return e.eject();
     }
 
     @JSFunction
     public int getEntityId() {
-        return entity.getEntityId();
+        return e.getEntityId();
     }
 
     @JSFunction
     public double getFallDistance() {
-        return entity.getFallDistance();
+        return e.getFallDistance();
     }
 
     @JSFunction
     public int getFireTicks() {
-        return entity.getFireTicks();
+        return e.getFireTicks();
     }
 
     @JSFunction
     public double[] getLocation() {
         return new double[] {
-                entity.getLocation().getX(),
-                entity.getLocation().getY(),
-                entity.getLocation().getZ(),
-                entity.getLocation().getYaw(),
-                entity.getLocation().getPitch()
+                e.getLocation().getX(),
+                e.getLocation().getY(),
+                e.getLocation().getZ(),
+                e.getLocation().getYaw(),
+                e.getLocation().getPitch()
         };
     }
 
     @JSFunction
     public int getMaxFireTicks() {
-        return entity.getMaxFireTicks();
+        return e.getMaxFireTicks();
     }
 
     @JSFunction
     public _Entity[] getNearbyEntities(double x, double y, double z) {
-        Entity[] entities = (Entity[]) entity.getNearbyEntities(x, y, z).toArray();
+        Entity[] entities = (Entity[]) e.getNearbyEntities(x, y, z).toArray();
         _Entity[] result = new _Entity[entities.length];
 
         int index = 0;
@@ -83,37 +76,32 @@ public class _Entity extends ScriptableObject implements _IEntity {
 
     @JSFunction
     public _Entity getPassenger() {
-        return new _Entity(entity.getPassenger());
-    }
-
-    @JSFunction
-    public int getPortalCooldown() {
-        return entity.getPortalCooldown();
-    }
-
-    @JSFunction
-    public String[] getScoreboardTags() {
-        return entity.getScoreboardTags().toArray(new String[0]);
+        return new _Entity(e.getPassenger());
     }
 
     @JSFunction
     public int getTicksLived() {
-        return entity.getTicksLived();
+        return e.getTicksLived();
     }
 
     @JSFunction
-    public int getType() {
-        return entity.getType().ordinal();
+    public String getType() {
+        return e.getType().toString();
+    }
+    
+    @JSFunction
+    public int getTypeId() {
+        return e.getType().ordinal();
     }
 
     @JSFunction
     public String getUniqueId() {
-        return entity.getUniqueId().toString();
+        return e.getUniqueId().toString();
     }
 
     @JSFunction
     public _Entity getVehicle() {
-        return new _Entity(entity.getVehicle());
+        return new _Entity(e.getVehicle());
     }
 
     /*
@@ -123,117 +111,102 @@ public class _Entity extends ScriptableObject implements _IEntity {
 
     @JSFunction
     public _World getWorld() {
-        return new _World(entity.getWorld());
+        return new _World(e.getWorld());
     }
 
     @JSFunction
     public boolean hasGravity() {
-        return entity.hasGravity();
+        return e.hasGravity();
     }
 
     @JSFunction
     public boolean isCustomNameVisible() {
-        return entity.isCustomNameVisible();
+        return e.isCustomNameVisible();
     }
 
     @JSFunction
     public boolean isDead() {
-        return entity.isDead();
+        return e.isDead();
     }
 
     @JSFunction
     public boolean isEmpty() {
-        return entity.isEmpty();
+        return e.isEmpty();
     }
 
     @JSFunction
     public boolean isGlowing() {
-        return entity.isGlowing();
+        return e.isGlowing();
     }
 
     @JSFunction
     public boolean isInsideVehicle() {
-        return entity.isInsideVehicle();
+        return e.isInsideVehicle();
     }
 
     @JSFunction
     public boolean isInvulnerable() {
-        return entity.isInvulnerable();
-    }
-
-    @JSFunction
-    public boolean isOnGround() {
-        return entity.isOnGround();
+        return e.isInvulnerable();
     }
 
     @JSFunction
     public boolean isSilent() {
-        return entity.isSilent();
+        return e.isSilent();
     }
 
     @JSFunction
     public boolean isValid() {
-        return entity.isValid();
+        return e.isValid();
     }
 
     @JSFunction
     public boolean leaveVehicle() {
-        return entity.leaveVehicle();
-    }
-
-    @JSFunction
-    public boolean removeScoreboardTag(String tag) {
-        return entity.removeScoreboardTag(tag);
+        return e.leaveVehicle();
     }
 
     @JSFunction
     public void setCustomNameVisible(boolean flag) {
-        entity.setCustomNameVisible(flag);
+        e.setCustomNameVisible(flag);
     }
 
     @JSFunction
     public void setFallDistance(double distance) {
-        entity.setFallDistance((float) distance);
+        e.setFallDistance((float) distance);
     }
 
     @JSFunction
     public void setFireTicks(int ticks) {
-        entity.setFireTicks(ticks);
+        e.setFireTicks(ticks);
     }
 
     @JSFunction
     public void setGlowing(boolean flag) {
-        entity.setGlowing(flag);
+        e.setGlowing(flag);
     }
 
     @JSFunction
     public void setGravity(boolean gravity) {
-        entity.setGravity(gravity);
+        e.setGravity(gravity);
     }
 
     @JSFunction
     public void setInvulnerable(boolean flag) {
-        entity.setInvulnerable(flag);
+        e.setInvulnerable(flag);
     }
 
     @JSFunction
     public boolean setPassenger(_Entity passenger) {
-        return entity.setPassenger(passenger.entity);
-    }
-
-    @JSFunction
-    public void setPortalCooldown(int cooldown) {
-        entity.setPortalCooldown(cooldown);
+        return e.setPassenger(passenger.e);
     }
 
     @JSFunction
     public void setSilent(boolean flag) {
-        entity.setSilent(flag);
+        e.setSilent(flag);
     }
 
     @JSFunction
     public void setTicksLived(int value) {
-        entity.setTicksLived(value);
+        e.setTicksLived(value);
     }
 
     /*
@@ -243,11 +216,11 @@ public class _Entity extends ScriptableObject implements _IEntity {
 
     @JSFunction
     public boolean teleport(_Entity destination) {
-        return entity.teleport(destination.entity);
+        return e.teleport(destination.e);
     }
 
     @JSFunction
     public boolean teleportCoord(double x, double y, double z) {
-        return entity.teleport(new Location(entity.getWorld(), x, y, z));
+        return e.teleport(new Location(e.getWorld(), x, y, z));
     }
 }

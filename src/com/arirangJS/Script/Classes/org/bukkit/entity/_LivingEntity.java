@@ -1,17 +1,15 @@
 package com.arirangJS.Script.Classes.org.bukkit.entity;
 
-import com.arirangJS.Script.Classes.org.bukkit.potion._PotionEffect;
 import org.bukkit.entity.LivingEntity;
-import org.mozilla.javascript.ScriptableObject;
+import org.bukkit.entity.Player;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
-@SuppressWarnings("unused")
-public abstract class _LivingEntity extends ScriptableObject implements _ILivingEntity {
+import com.arirangJS.Script.Classes.org.bukkit.potion._PotionEffect;
+
+public class _LivingEntity extends _Entity {
 
 	private static final long serialVersionUID = 2485571018791985097L;
-
-	public LivingEntity entity;
 	
 	@Override
 	public String getClassName() {
@@ -22,126 +20,126 @@ public abstract class _LivingEntity extends ScriptableObject implements _ILiving
 	public _LivingEntity() {}
 	
 	public _LivingEntity(LivingEntity entity) {
-		this.entity = entity;
+		this.e = (Player) entity;
 	}
 	
 	@JSFunction
 	public boolean addPotionEffect(_PotionEffect effect) {
-		return entity.addPotionEffect(effect.potionEffect);
+		return e.addPotionEffect(effect.potionEffect);
 	}
 	
 	@JSFunction
 	public boolean addPotionEffectForce(_PotionEffect effect) {
-		return entity.addPotionEffect(effect.potionEffect, true);
+		return e.addPotionEffect(effect.potionEffect, true);
 	}
 	
 	@JSFunction
 	public boolean getCanPickupItems() {
-		return entity.getCanPickupItems();
+		return e.getCanPickupItems();
 	}
 	
 	@JSFunction
 	public double getEyeHeight() {
-		return entity.getEyeHeight();
+		return e.getEyeHeight();
 	}
 	
 	@JSFunction
 	public double getEyeHeightIgnoreSneak() {
-		return entity.getEyeHeight(true);
+		return e.getEyeHeight(true);
 	}
 	
 	@JSFunction
 	public _Player getKiller() {
-		return new _Player(entity.getKiller());
+		return new _Player(e.getKiller());
 	}
 	
 	@JSFunction
 	public double getLastDamage() {
-		return entity.getLastDamage();
+		return e.getLastDamage();
 	}
 	
 	@JSFunction
 	public int getMaximumAir() {
-		return entity.getMaximumAir();
+		return e.getMaximumAir();
 	}
 	
 	@JSFunction
 	public int getMaximumNoDamageTicks() {
-		return entity.getMaximumNoDamageTicks();
+		return e.getMaximumNoDamageTicks();
 	}
 	
 	@JSFunction
 	public int getNoDamageTicks() {
-		return entity.getNoDamageTicks();
+		return e.getNoDamageTicks();
 	}
 	
 	@JSFunction
 	public boolean hasAI() {
-		return entity.hasAI();
+		return e.hasAI();
 	}
 	
 	@JSFunction
 	public boolean isCollidable() {
-		return entity.isCollidable();
+		return e.isCollidable();
 	}
 	
 	@JSFunction
 	public boolean isGliding() {
-		return entity.isGliding();
+		return e.isGliding();
 	}
 	
 	@JSFunction
 	public boolean isLeashed() {
-		return entity.isLeashed();
+		return e.isLeashed();
 	}
 	
 	@JSFunction
 	public void setAI(boolean ai) {
-		entity.setAI(ai);
+		e.setAI(ai);
 	}
 	
 	@JSFunction
 	public void setCanPickupItems(boolean pickup) {
-		entity.setCanPickupItems(pickup);
+		e.setCanPickupItems(pickup);
 	}
 	
 	@JSFunction
 	public void setCollidable(boolean collidable) {
-		entity.setCollidable(collidable);
+		e.setCollidable(collidable);
 	}
 	
 	@JSFunction
 	public void setGliding(boolean gliding) {
-		entity.setGliding(gliding);
+		e.setGliding(gliding);
 	}
 	
 	@JSFunction
 	public void setLastDamage(double damage) {
-		entity.setLastDamage(damage);
+		e.setLastDamage(damage);
 	}
 	
 	@JSFunction
 	public void setMaximumAir(int ticks) {
-		entity.setMaximumAir(ticks);
+		e.setMaximumAir(ticks);
 	}
 	
 	@JSFunction
 	public void setMaximumNoDamageTicks(int ticks) {
-		entity.setMaximumNoDamageTicks(ticks);
+		e.setMaximumNoDamageTicks(ticks);
 	}
 	
 	@JSFunction
 	public void setNoDamageTicks(int ticks) {
-		entity.setNoDamageTicks(ticks);
+		e.setNoDamageTicks(ticks);
 	}
 	
 	@JSFunction
 	public void setRemainingAir(int ticks) {
-		entity.setRemainingAir(ticks);
+		e.setRemainingAir(ticks);
 	}
 	
 	@JSFunction
 	public void setRemoveWhenFarAway(boolean remove) {
-		entity.setRemoveWhenFarAway(remove);
+		e.setRemoveWhenFarAway(remove);
 	}
 }

@@ -279,7 +279,7 @@ public class FunctionObject extends BaseFunction
             // getDeclaredMethods may be rejected by the security manager
             // but getMethods is more expensive
             if (!sawSecurityException)
-                methods = clazz.getDeclaredMethods();
+                methods = clazz.getMethods();
         } catch (SecurityException e) {
             // If we get an exception once, give up on getDeclaredMethods
             sawSecurityException = true;
