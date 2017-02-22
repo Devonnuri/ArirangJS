@@ -1,10 +1,9 @@
 package com.arirangJS.Script.Classes.org.bukkit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSStaticFunction;
-
-import com.arirangJS.Script.Classes.org.bukkit.command._CommandSender;
 
 public class _Bukkit extends ScriptableObject {
 	private static final long serialVersionUID = -3993427606107770469L;
@@ -95,7 +94,7 @@ public class _Bukkit extends ScriptableObject {
 	}
 	
 	@JSStaticFunction
-	public static _CommandSender getConsoleSender() {
-		return new _CommandSender(Bukkit.getConsoleSender());
+	public static CommandSender getConsoleSender() {
+		return Bukkit.getConsoleSender();
 	}
 }

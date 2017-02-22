@@ -128,10 +128,12 @@ public class FunctionObject extends BaseFunction
                 typeTags = new byte[arity];
                 for (int i = 0; i != arity; ++i) {
                     int tag = getTypeTag(types[i]);
+                    /*
                     if (tag == JAVA_UNSUPPORTED_TYPE) {
                         throw Context.reportRuntimeError2(
                             "msg.bad.parms", types[i].getName(), methodName);
                     }
+                    */
                     typeTags[i] = (byte)tag;
                 }
             }
@@ -208,7 +210,7 @@ public class FunctionObject extends BaseFunction
           case JAVA_OBJECT_TYPE:
             return arg;
           default:
-            throw new IllegalArgumentException();
+            return arg;
         }
     }
 

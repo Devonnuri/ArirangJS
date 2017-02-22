@@ -1,8 +1,6 @@
 package com.arirangJS.Script.Classes.org.bukkit;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
@@ -21,9 +19,6 @@ import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
 import com.arirangJS.Script.Classes.org.bukkit.block._Block;
-import com.arirangJS.Script.Classes.org.bukkit.entity._Entity;
-import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
-import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
 
 public class _World extends ScriptableObject {
 
@@ -155,15 +150,8 @@ public class _World extends ScriptableObject {
 	 */
 	
 	@JSFunction
-	public _Entity[] getEntities() {
-		List<Entity> list = world.getEntities();
-		_Entity[] result = new _Entity[list.size()];
-		
-		for(int i=0; i<list.size(); i++) {
-			result[i] = new _Entity(list.get(i));
-		}
-		
-		return result;
+	public Entity[] getEntities() {
+		return world.getEntities().toArray(new Entity[0]);
 	}
 	
 	@JSFunction
@@ -206,15 +194,8 @@ public class _World extends ScriptableObject {
 	}
 	
 	@JSFunction
-	public _LivingEntity[] getLivingEntities() {
-		List<LivingEntity> list = world.getLivingEntities();
-		_LivingEntity[] result = new _LivingEntity[list.size()];
-		
-		for(int i=0; i<list.size(); i++) {
-			result[i] = new _LivingEntity(list.get(i));
-		}
-		
-		return result;
+	public LivingEntity[] getLivingEntities() {
+		return world.getLivingEntities().toArray(new LivingEntity[0]);
 	}
 	
 	@JSFunction
@@ -233,28 +214,13 @@ public class _World extends ScriptableObject {
 	}
 	
 	@JSFunction
-	public _Entity[] getNearbyEntities(double x, double y, double z, double offsetX, double offsetY, double offsetZ) {
-		Collection<Entity> list = world.getNearbyEntities(new Location(world, x, y, z), offsetX, offsetY, offsetZ);
-		_Entity[] result = new _Entity[list.size()];
-		
-		int index=0;
-		for(Entity entity : list) {
-			result[index] = new _Entity(entity);
-		}
-		
-		return result;
+	public Entity[] getNearbyEntities(double x, double y, double z, double offsetX, double offsetY, double offsetZ) {
+		return world.getNearbyEntities(new Location(world, x, y, z), offsetX, offsetY, offsetZ).toArray(new Entity[0]);
 	}
 	
 	@JSFunction
-	public _Player[] getPlayers() {
-		List<Player> list = world.getPlayers();
-		_Player[] result = new _Player[list.size()];
-		
-		for(int i=0; i<list.size(); i++) {
-			result[i] = new _Player(list.get(i));
-		}
-		
-		return result;
+	public Player[] getPlayers() {
+		return world.getPlayers().toArray(new Player[0]);
 	}
 	
 	@JSFunction

@@ -50,10 +50,8 @@ public class ScriptManager implements Listener {
 			
 			if(script.errors.size() >= Main.MAX_ERRORS_NUM)
 				continue;
-			
 			if(script.scope == null)
 				continue;
-			
 			
 			try {
 				Object object = scope.get(functionName, scope);
@@ -211,7 +209,7 @@ public class ScriptManager implements Listener {
 		Main.isCancelled.put("PlayerChatEvent", e.isCancelled());
 		Main.chatFormat = e.getFormat();
 		
-		callMethod("onPlayerChat", e.getPlayer().getName(), e.getMessage());
+		callMethod("onPlayerChat", e.getPlayer(), e.getMessage());
 		
 		e.setFormat(Main.chatFormat);
 		e.setCancelled(Main.isCancelled.get("PlayerChatEvent"));
@@ -334,7 +332,7 @@ public class ScriptManager implements Listener {
 		if(e.getMessage().contains(" "))
 			args = e.getMessage().substring(label.length()+2).split(" ");
 		
-		callMethod("onCommand", e.getPlayer().getName(), label, new NativeArray(args));
+		callMethod("onCommand", e.getPlayer(), label, new NativeArray(args));
 		e.setCancelled(Main.isCancelled.get("CommandEvent"));
 	}
 	
@@ -348,7 +346,7 @@ public class ScriptManager implements Listener {
 		if(e.getCommand().contains(" "))
 			args = e.getCommand().substring(label.length()+1).split(" ");
 		
-		callMethod("onCommand", "<server>", label, new NativeArray(args));
+		callMethod("onCommand", e.getSender(), label, new NativeArray(args));
 		e.setCancelled(Main.isCancelled.get("CommandEvent"));
 	}
 }

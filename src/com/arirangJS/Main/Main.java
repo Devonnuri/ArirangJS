@@ -2,6 +2,7 @@ package com.arirangJS.Main;
 
 import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
+import com.arirangJS.Lang.ErrReporter;
 import com.arirangJS.Script.Classes._Var;
 import com.arirangJS.Script.Script;
 import com.arirangJS.Script.ScriptManager;
@@ -42,24 +43,23 @@ public class Main extends JavaPlugin {
 			if(file.isDirectory()) continue;
 			Script script = new Script(file.getName());
 			if(script.errors.size() > 0) {
-				Debug.warn("File \""+file.getName()+"\" was not loaded successfully!");
+				Debug.warn(ErrReporter.get("script.not.load", file.getName()));
 				continue;
 			}
 			
 			scripts.put(file.getName(), script);
-			Debug.success("File \""+file.getName()+"\" was loaded successfully!");
+			Debug.success(ErrReporter.get("script.load", file.getName()));
 		}
 
 		_Var.resetAll();
 		
-		Debug.success("ArirangJS was enabled successfully!");
-		Debug.success("Arirang Arirang Arariyo~");
+		Debug.success(ErrReporter.get("plugin.enable"));
+		Debug.success(ErrReporter.get("arirang"));
 	}
 	
 	public void onDisable() {
-		
-		Debug.warn("ArirangJS was disabled successfully!");
-		Debug.warn("Arirang Arirang Arariyo~");
+		Debug.warn(ErrReporter.get("plugin.disable"));
+		Debug.success(ErrReporter.get("arirang"));
 	}
 	
 	@EventHandler
@@ -82,9 +82,9 @@ public class Main extends JavaPlugin {
 				String filename = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 				if(FileSystem.isExist(FileSystem.LOC_SCRIPT + filename)) {
 					scripts.put(filename, new Script(filename));
-					sender.sendMessage(ChatColor.GREEN+""+ChatColor.BOLD+"[ArirangJS] File \""+filename+"\" was reloaded successfully!");
+					sender.sendMessage(ChatColor.GREEN+""+ChatColor.BOLD+"[ArirangJS] "+ErrReporter.get("script.reload", filename));
 				} else {
-					sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] Script \""+filename+"\" is not exist.");
+					sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] "+ErrReporter.get("script.not.exist", filename));
 				}
 
 				return true;
@@ -180,10 +180,10 @@ public class Main extends JavaPlugin {
 	private void helpMessage(CommandSender sender) {
 		sender.sendMessage("");
 		sender.sendMessage(PREFIX+"Command List");
-		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang list"+ChatColor.RESET+""+ChatColor.BOLD+" : List of the Scripts");
-		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang reload [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : Reload the Script");
-		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang view [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : View the Script");
-        sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang test [code]"+ChatColor.RESET+""+ChatColor.BOLD+" : Test the Script");
+		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang list"+ChatColor.RESET+""+ChatColor.BOLD+" : "+ErrReporter.get("cmd.desc.list"));
+		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang reload [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : "+ErrReporter.get("cmd.desc.reload"));
+		sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang view [script]"+ChatColor.RESET+""+ChatColor.BOLD+" : "+ErrReporter.get("cmd.desc.view"));
+        sender.sendMessage(ChatColor.GOLD+""+ChatColor.BOLD+" /arirang test [code]"+ChatColor.RESET+""+ChatColor.BOLD+" : "+ErrReporter.get("cmd.desc.test"));
 		sender.sendMessage("");
 	}
 }

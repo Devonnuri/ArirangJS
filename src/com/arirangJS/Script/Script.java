@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.bukkit.Difficulty;
@@ -22,11 +23,13 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.annotations.JSFunction;
 
 import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
 import com.arirangJS.Lang.ErrReporter;
 import com.arirangJS.Main.SyntaxHighlighter;
+import com.arirangJS.Script.Classes._Default;
 import com.arirangJS.Script.Classes._Effect;
 import com.arirangJS.Script.Classes._Event;
 import com.arirangJS.Script.Classes._Request;
@@ -35,8 +38,6 @@ import com.arirangJS.Script.Classes.org.bukkit._Bukkit;
 import com.arirangJS.Script.Classes.org.bukkit._ChatColor;
 import com.arirangJS.Script.Classes.org.bukkit._World;
 import com.arirangJS.Script.Classes.org.bukkit.block._Block;
-import com.arirangJS.Script.Classes.org.bukkit.entity._Entity;
-import com.arirangJS.Script.Classes.org.bukkit.entity._LivingEntity;
 import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
 import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
 import com.arirangJS.Script.Classes.org.bukkit.potion._PotionEffect;
@@ -48,7 +49,7 @@ public class Script {
 	
 	public Script(String filename) {
 		Context context = Context.enter();
-		Scriptable scope = context.initStandardObjects();
+		Scriptable scope = getScope(context);
 		
 		try {
 			defineClass(scope);
@@ -73,8 +74,32 @@ public class Script {
 			Context.exit();
 		}
 	}
+	
+	public static String test(String code) {
+        Context context = Context.enter();
+        Scriptable scope = getScope(context);
+        Object result = null;
 
-	private static void defineClass(Scriptable scope) throws IllegalAccessException, InstantiationException, InvocationTargetException{
+        try {
+            defineClass(scope);
+            result = context.evaluateString(scope, code, "<test>", 1, null);
+        } catch(RhinoException e) {
+            Debug.log(SyntaxHighlighter.highlight(code));
+
+            String gap = new String(new char[e.columnNumber()]).replace("\0", " ");
+            Debug.log(gap+"| Here");
+            Debug.danger(e.getMessage());
+        } catch(IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            ErrReporter.send("err.compile", "<test>");
+        } finally {
+            Context.exit();
+        }
+
+        if(result == null) return null;
+        return result.toString();
+    }
+
+	private static void defineClass(Scriptable scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         ScriptableObject.putProperty(scope, "Action", enumClassToObj(Action.class));
         ScriptableObject.putProperty(scope, "Biome", enumClassToObj(Biome.class));
         ScriptableObject.defineClass(scope, _Block.class);
@@ -83,12 +108,9 @@ public class Script {
         ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
         ScriptableObject.putProperty(scope, "Difficulty", enumClassToObj(Difficulty.class));
         ScriptableObject.defineClass(scope, _Effect.class);
-        ScriptableObject.defineClass(scope, _Effect.class);
-        ScriptableObject.defineClass(scope, _Entity.class);
         ScriptableObject.putProperty(scope, "EntityType", enumClassToObj(EntityType.class));
         ScriptableObject.defineClass(scope, _Event.class);
         ScriptableObject.defineClass(scope, _Inventory.class);
-        ScriptableObject.defineClass(scope, _LivingEntity.class);
         ScriptableObject.defineClass(scope, _Player.class);
         ScriptableObject.defineClass(scope, _PotionEffect.class);
         ScriptableObject.defineClass(scope, _Request.class);
@@ -99,6 +121,13 @@ public class Script {
         ScriptableObject.putProperty(scope, "WorldType", enumClassToObj(WorldType.class));
         ScriptableObject.putProperty(scope, "World.Environment", enumClassToObj(World.Environment.class));
     }
+	
+	private static Scriptable getScope(Context context) {
+		Scriptable scope = context.initStandardObjects(new _Default(), false);
+		String[] names = getJSFunctions(_Default.class);
+		((ScriptableObject) scope).defineFunctionProperties(names, _Default.class, ScriptableObject.DONTENUM);
+		return scope;
+	}
 	
 	private static ScriptableObject constantsToObj(Class<?> clazz) {
 		ScriptableObject obj = new NativeObject();
@@ -126,28 +155,14 @@ public class Script {
 		}
 		return obj;
 	}
-
-	public static String test(String code) {
-        Context context = Context.enter();
-        Scriptable scope = context.initStandardObjects();
-        Object result = null;
-
-        try {
-            defineClass(scope);
-            result = context.evaluateString(scope, code, "<test>", 1, null);
-        } catch(RhinoException e) {
-            Debug.log(SyntaxHighlighter.highlight(code));
-
-            String gap = new String(new char[e.columnNumber()]).replace("\0", " ");
-            Debug.log(gap+"| Here");
-            Debug.danger(e.getMessage());
-        } catch(IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            ErrReporter.send("err.compile", "<test>");
-        } finally {
-            Context.exit();
-        }
-
-        if(result == null) return null;
-        return result.toString();
-    }
+	
+	private static String[] getJSFunctions(Class<? extends ScriptableObject> clazz) {
+		ArrayList<String> result = new ArrayList<String>();
+		for(Method method : clazz.getMethods()) {
+			if(method.getAnnotation(JSFunction.class) != null) {
+				result.add(method.getName());
+			}
+		}
+		return result.toArray(new String[0]);
+	}
 }
