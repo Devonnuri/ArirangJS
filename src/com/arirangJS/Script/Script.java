@@ -29,7 +29,7 @@ import com.arirangJS.Debug.Debug;
 import com.arirangJS.File.FileSystem;
 import com.arirangJS.Lang.ErrReporter;
 import com.arirangJS.Main.SyntaxHighlighter;
-import com.arirangJS.Script.Classes._Default;
+import com.arirangJS.Script.Classes._TopClass;
 import com.arirangJS.Script.Classes._Effect;
 import com.arirangJS.Script.Classes._Event;
 import com.arirangJS.Script.Classes._Request;
@@ -38,13 +38,11 @@ import com.arirangJS.Script.Classes.org.bukkit._Bukkit;
 import com.arirangJS.Script.Classes.org.bukkit._ChatColor;
 import com.arirangJS.Script.Classes.org.bukkit._World;
 import com.arirangJS.Script.Classes.org.bukkit.block._Block;
-import com.arirangJS.Script.Classes.org.bukkit.entity._Player;
 import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
-import com.arirangJS.Script.Classes.org.bukkit.potion._PotionEffect;
 
 public class Script {
 	public String filename;
-	public ArrayList<String> errors = new ArrayList<String>();
+	public ArrayList<String> errors = new ArrayList();
 	public Scriptable scope = null;
 	
 	public Script(String filename) {
@@ -111,8 +109,6 @@ public class Script {
         ScriptableObject.putProperty(scope, "EntityType", enumClassToObj(EntityType.class));
         ScriptableObject.defineClass(scope, _Event.class);
         ScriptableObject.defineClass(scope, _Inventory.class);
-        ScriptableObject.defineClass(scope, _Player.class);
-        ScriptableObject.defineClass(scope, _PotionEffect.class);
         ScriptableObject.defineClass(scope, _Request.class);
         ScriptableObject.putProperty(scope, "Sound", enumClassToObj(Sound.class));
         ScriptableObject.putProperty(scope, "TreeType", enumClassToObj(TreeType.class));
@@ -123,9 +119,9 @@ public class Script {
     }
 	
 	private static Scriptable getScope(Context context) {
-		Scriptable scope = context.initStandardObjects(new _Default(), false);
-		String[] names = getJSFunctions(_Default.class);
-		((ScriptableObject) scope).defineFunctionProperties(names, _Default.class, ScriptableObject.DONTENUM);
+		Scriptable scope = context.initStandardObjects(new _TopClass(), false);
+		String[] names = getJSFunctions(_TopClass.class);
+		((ScriptableObject) scope).defineFunctionProperties(names, _TopClass.class, ScriptableObject.DONTENUM);
 		return scope;
 	}
 	
@@ -155,9 +151,9 @@ public class Script {
 		}
 		return obj;
 	}
-	
+
 	private static String[] getJSFunctions(Class<? extends ScriptableObject> clazz) {
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<String> result = new ArrayList();
 		for(Method method : clazz.getMethods()) {
 			if(method.getAnnotation(JSFunction.class) != null) {
 				result.add(method.getName());

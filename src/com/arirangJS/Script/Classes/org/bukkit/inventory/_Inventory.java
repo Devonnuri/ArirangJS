@@ -86,18 +86,8 @@ public class _Inventory extends ScriptableObject {
 	}
 	
 	@JSFunction
-	public String getContents() {
-		String contents = "[]";
-		ItemStack[] contentList = inv.getContents();
-		if(inv.getContents() != null) {
-			contents = "[";
-			for(ItemStack item : contentList) {
-				contents += ScriptManager.itemToJSON(item)+",";
-			}
-			contents = contents.substring(0, contents.length()-1);
-			contents += "]";
-		}
-		return contents;
+	public ItemStack[] getContents() {
+		return inv.getContents();
 	}
 	
 	@JSFunction
@@ -126,18 +116,8 @@ public class _Inventory extends ScriptableObject {
 	}
 	
 	@JSFunction
-	public String getStorageContents() {
-		String contents = "[]";
-		ItemStack[] contentList = inv.getStorageContents();
-		if(inv.getContents() != null) {
-			contents = "[";
-			for(ItemStack item : contentList) {
-				contents += ScriptManager.itemToJSON(item)+",";
-			}
-			contents = contents.substring(0, contents.length()-1);
-			contents += "]";
-		}
-		return contents;
+	public ItemStack[] getStorageContents() {
+		return inv.getStorageContents();
 	}
 	
 	@JSFunction
@@ -146,17 +126,8 @@ public class _Inventory extends ScriptableObject {
 	}
 	
 	@JSFunction
-	public String getViewers() {
-		String viewers = "[]";
-		if(inv.getViewers() != null) {
-			viewers = "[";
-			for(HumanEntity player : inv.getViewers()) {
-				viewers += player.getName()+",";
-			}
-			viewers = viewers.substring(0, viewers.length()-1);
-			viewers += "]";
-		}
-		return viewers;
+	public HumanEntity[] getViewers() {
+		return inv.getViewers().toArray(new HumanEntity[0]);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -185,5 +156,10 @@ public class _Inventory extends ScriptableObject {
 	@JSFunction
 	public void setMaxStackSize(int size) {
 		inv.setMaxStackSize(size);
+	}
+
+	@JSFunction
+	public void show(Player player) {
+		player.openInventory(inv);
 	}
 }

@@ -36,10 +36,9 @@ public class Main extends JavaPlugin {
 		FileSystem.checkExist(FileSystem.LOC_PLUGIN);
 		FileSystem.checkExist(FileSystem.LOC_SCRIPT);
 		FileSystem.checkExist(FileSystem.LOC_VAR);
-		
-		File folder_script = new File(FileSystem.LOC_SCRIPT);
-		
-		for(File file : folder_script.listFiles()) {
+
+
+		for(File file : new File(FileSystem.LOC_SCRIPT).listFiles()) {
 			if(file.isDirectory()) continue;
 			Script script = new Script(file.getName());
 			if(script.errors.size() > 0) {
