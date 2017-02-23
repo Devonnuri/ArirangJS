@@ -1,11 +1,12 @@
 package com.arirangJS.Main;
 
 import com.arirangJS.Debug.Debug;
-import com.arirangJS.File.FileSystem;
+import com.arirangJS.Util.FileSystem;
 import com.arirangJS.Lang.ErrReporter;
 import com.arirangJS.Script.Classes._Var;
 import com.arirangJS.Script.Script;
 import com.arirangJS.Script.ScriptManager;
+import com.arirangJS.Util.Misc;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -38,8 +39,7 @@ public class Main extends JavaPlugin {
 		FileSystem.checkExist(FileSystem.LOC_VAR);
 
 
-		for(File file : new File(FileSystem.LOC_SCRIPT).listFiles()) {
-			if(file.isDirectory()) continue;
+		for(File file : Misc.getOnlyFileList(FileSystem.LOC_SCRIPT)) {
 			Script script = new Script(file.getName());
 			if(script.errors.size() > 0) {
 				Debug.warn(ErrReporter.get("script.not.load", file.getName()));
@@ -69,8 +69,7 @@ public class Main extends JavaPlugin {
 					sender.sendMessage(PREFIX+"File List");
 					
 					int i=0;
-					for(File file : new File(FileSystem.LOC_SCRIPT).listFiles()) {
-						if(file.isDirectory()) continue;
+					for(File file : Misc.getOnlyFileList(FileSystem.LOC_SCRIPT)) {
 						i++;
 						sender.sendMessage(" "+ChatColor.BOLD+""+i+". "+ChatColor.GOLD+""+ChatColor.BOLD+file.getName()+" : "+ChatColor.AQUA+String.format("%.2f KB", file.length()/1024.0));
 					}
@@ -83,19 +82,19 @@ public class Main extends JavaPlugin {
 					scripts.put(filename, new Script(filename));
 					sender.sendMessage(ChatColor.GREEN+""+ChatColor.BOLD+"[ArirangJS] "+ErrReporter.get("script.reload", filename));
 				} else {
+					if(scripts.containsKey(filename))
+						scripts.remove(filename);
 					sender.sendMessage(ChatColor.RED+""+ChatColor.BOLD+"[ArirangJS] "+ErrReporter.get("script.not.exist", filename));
 				}
 
 				return true;
-			} else if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                String filename = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-
-                for(File file : new File(FileSystem.LOC_SCRIPT).listFiles()) {
-                    scripts.put(filename, new Script(filename));
+			} else if(args.length <= 1 && args[0].equalsIgnoreCase("reload")) {
+				scripts.clear();
+                for(File file : Misc.getOnlyFileList(FileSystem.LOC_SCRIPT)) {
+                    scripts.put(file.getName(), new Script(file.getName()));
 
                     Debug.success("File \""+file.getName()+"\" was reloaded successfully!");
                 }
-
                 return true;
             } else if(args.length >= 2 && args[0].equalsIgnoreCase("test")) {
                 String code = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
@@ -134,7 +133,7 @@ public class Main extends JavaPlugin {
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		if(label.equalsIgnoreCase("arirang") || label.equalsIgnoreCase("arirangjs") || label.equalsIgnoreCase("아리랑")) {
 			if(args.length == 1) {
-				String[] argsList = {"list", "reload", "view"};
+				String[] argsList = {"list", "reload", "view", "test"};
 				ArrayList<String> list = new ArrayList<>();
 				
 				if(args[0].equals("")) {
@@ -151,19 +150,15 @@ public class Main extends JavaPlugin {
 				return list;
 			} else if(args.length == 2) {
 				if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("view")) {
-					File[] fileList = new File(FileSystem.LOC_SCRIPT).listFiles();
 					ArrayList<String> list = new ArrayList<>();
 					
 					if(args[1].equals("")) {
-						for(File file : fileList) {
-							if(file.isFile()) {
-								list.add(file.getName());
-							}
+						for(File file : Misc.getOnlyFileList(FileSystem.LOC_SCRIPT)) {
+							list.add(file.getName());
 						}
 					} else {
-						for(File file : fileList) {
-							String name = file.getName();
-							if(name.startsWith(args[1].toLowerCase()) && (name.endsWith(".ajs") || name.endsWith(".js"))) {
+						for(File file : Misc.getOnlyFileList(FileSystem.LOC_SCRIPT, ".ajs", ".js")) {
+							if(file.getName().startsWith(args[1].toLowerCase())) {
 								list.add(file.getName());
 							}
 						}

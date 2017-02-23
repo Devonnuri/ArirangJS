@@ -26,7 +26,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSFunction;
 
 import com.arirangJS.Debug.Debug;
-import com.arirangJS.File.FileSystem;
+import com.arirangJS.Util.FileSystem;
 import com.arirangJS.Lang.ErrReporter;
 import com.arirangJS.Main.SyntaxHighlighter;
 import com.arirangJS.Script.Classes._TopClass;
@@ -36,8 +36,6 @@ import com.arirangJS.Script.Classes._Request;
 import com.arirangJS.Script.Classes._Var;
 import com.arirangJS.Script.Classes.org.bukkit._Bukkit;
 import com.arirangJS.Script.Classes.org.bukkit._ChatColor;
-import com.arirangJS.Script.Classes.org.bukkit._World;
-import com.arirangJS.Script.Classes.org.bukkit.block._Block;
 import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
 
 public class Script {
@@ -51,7 +49,6 @@ public class Script {
 		
 		try {
 			defineClass(scope);
-			
 			FileInputStream inStream = new FileInputStream(FileSystem.LOC_SCRIPT+filename);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
 			context.evaluateReader(scope, reader, filename, 0, null);
@@ -100,7 +97,6 @@ public class Script {
 	private static void defineClass(Scriptable scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         ScriptableObject.putProperty(scope, "Action", enumClassToObj(Action.class));
         ScriptableObject.putProperty(scope, "Biome", enumClassToObj(Biome.class));
-        ScriptableObject.defineClass(scope, _Block.class);
         ScriptableObject.putProperty(scope, "BlockFace", enumClassToObj(BlockFace.class));
         ScriptableObject.defineClass(scope, _Bukkit.class);
         ScriptableObject.putProperty(scope, "ChatColor", constantsToObj(_ChatColor.class));
@@ -113,7 +109,6 @@ public class Script {
         ScriptableObject.putProperty(scope, "Sound", enumClassToObj(Sound.class));
         ScriptableObject.putProperty(scope, "TreeType", enumClassToObj(TreeType.class));
         ScriptableObject.defineClass(scope, _Var.class);
-        ScriptableObject.defineClass(scope, _World.class);
         ScriptableObject.putProperty(scope, "WorldType", enumClassToObj(WorldType.class));
         ScriptableObject.putProperty(scope, "World.Environment", enumClassToObj(World.Environment.class));
     }

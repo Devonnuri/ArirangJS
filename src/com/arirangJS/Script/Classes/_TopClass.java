@@ -1,12 +1,19 @@
 package com.arirangJS.Script.Classes;
 
-import org.bukkit.Bukkit;
+import org.bukkit.*;
+import org.bukkit.block.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.annotations.JSFunction;
+
+import java.util.Collection;
+import java.util.List;
 
 public class _TopClass extends ImporterTopLevel {
 
@@ -40,4 +47,8 @@ public class _TopClass extends ImporterTopLevel {
 		return new PotionEffect(PotionEffectType.getById(type), duration, amplifier, ambient, particles);
 	}
 
+	@JSFunction
+	public Block getBlock(World world, int x, int y, int z) {
+		return world.getBlockAt(x, y, z);
+	}
 }

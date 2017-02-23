@@ -17,7 +17,7 @@ import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
 import com.arirangJS.Debug.Debug;
-import com.arirangJS.File.FileSystem;
+import com.arirangJS.Util.FileSystem;
 
 public class _Var extends ScriptableObject {
 	/* 

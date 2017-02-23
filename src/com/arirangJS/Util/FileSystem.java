@@ -1,4 +1,4 @@
-package com.arirangJS.File;
+package com.arirangJS.Util;
 
 import java.io.File;
 import java.io.IOException;
