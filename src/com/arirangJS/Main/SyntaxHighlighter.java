@@ -1,9 +1,9 @@
 package com.arirangJS.Main;
 
+import org.bukkit.ChatColor;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.bukkit.ChatColor;
 
 public class SyntaxHighlighter {
 	public static String highlight(String code) {

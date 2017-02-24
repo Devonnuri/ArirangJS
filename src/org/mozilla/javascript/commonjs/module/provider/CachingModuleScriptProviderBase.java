@@ -4,14 +4,14 @@
 
 package org.mozilla.javascript.commonjs.module.provider;
 
-import java.io.Reader;
-import java.io.Serializable;
-import java.net.URI;
-
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.ModuleScript;
 import org.mozilla.javascript.commonjs.module.ModuleScriptProvider;
+
+import java.io.Reader;
+import java.io.Serializable;
+import java.net.URI;
 
 /**
  * Abstract base class that implements caching of loaded module scripts. It

@@ -6,9 +6,9 @@
 
 package org.mozilla.javascript;
 
-import java.io.Serializable;
-
 import org.mozilla.javascript.debug.DebuggableScript;
+
+import java.io.Serializable;
 
 final class InterpreterData implements Serializable, DebuggableScript
 {

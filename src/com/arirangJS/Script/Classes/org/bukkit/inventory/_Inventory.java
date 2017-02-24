@@ -1,7 +1,6 @@
 package com.arirangJS.Script.Classes.org.bukkit.inventory;
 
-import java.util.Arrays;
-
+import com.arirangJS.Script.ScriptManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -12,7 +11,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
-import com.arirangJS.Script.ScriptManager;
+import java.util.Arrays;
 
 public class _Inventory extends ScriptableObject {
 

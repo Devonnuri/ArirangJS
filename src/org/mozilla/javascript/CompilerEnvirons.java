@@ -6,9 +6,9 @@
 
 package org.mozilla.javascript;
 
-import java.util.Set;
-
 import org.mozilla.javascript.ast.ErrorCollector;
+
+import java.util.Set;
 
 public class CompilerEnvirons
 {

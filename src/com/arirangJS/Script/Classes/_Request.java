@@ -1,17 +1,16 @@
 package com.arirangJS.Script.Classes;
 
+import com.arirangJS.Debug.Debug;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.annotations.JSConstructor;
+import org.mozilla.javascript.annotations.JSStaticFunction;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.annotations.JSConstructor;
-import org.mozilla.javascript.annotations.JSStaticFunction;
-
-import com.arirangJS.Debug.Debug;
 
 public class _Request extends ScriptableObject {
 	

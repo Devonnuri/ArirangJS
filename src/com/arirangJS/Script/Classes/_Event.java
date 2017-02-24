@@ -1,10 +1,9 @@
 package com.arirangJS.Script.Classes;
 
+import com.arirangJS.Main.Main;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSStaticFunction;
-
-import com.arirangJS.Main.Main;
 
 public class _Event extends ScriptableObject {
 	

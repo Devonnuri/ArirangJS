@@ -10,12 +10,7 @@ import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.CodeSource;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.security.SecureClassLoader;
+import java.security.*;
 import java.util.Map;
 import java.util.WeakHashMap;
 

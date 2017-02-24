@@ -4,11 +4,11 @@
 
 package org.mozilla.javascript.commonjs.module.provider;
 
+import org.mozilla.javascript.Scriptable;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import org.mozilla.javascript.Scriptable;
 
 /**
  * Implemented by objects that can provide the source text for the script. The

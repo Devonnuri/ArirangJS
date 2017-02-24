@@ -1,5 +1,21 @@
 package com.arirangJS.Script;
 
+import com.arirangJS.Debug.Debug;
+import com.arirangJS.Lang.ErrReporter;
+import com.arirangJS.Main.SyntaxHighlighter;
+import com.arirangJS.Script.Classes.*;
+import com.arirangJS.Script.Classes.org.bukkit._Bukkit;
+import com.arirangJS.Script.Classes.org.bukkit._ChatColor;
+import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
+import com.arirangJS.Util.FileSystem;
+import org.bukkit.*;
+import org.bukkit.block.Biome;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
+import org.bukkit.event.block.Action;
+import org.mozilla.javascript.*;
+import org.mozilla.javascript.annotations.JSFunction;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,35 +24,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-
-import org.bukkit.Difficulty;
-import org.bukkit.Sound;
-import org.bukkit.TreeType;
-import org.bukkit.World;
-import org.bukkit.WorldType;
-import org.bukkit.block.Biome;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.EntityType;
-import org.bukkit.event.block.Action;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeObject;
-import org.mozilla.javascript.RhinoException;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.annotations.JSFunction;
-
-import com.arirangJS.Debug.Debug;
-import com.arirangJS.Util.FileSystem;
-import com.arirangJS.Lang.ErrReporter;
-import com.arirangJS.Main.SyntaxHighlighter;
-import com.arirangJS.Script.Classes._TopClass;
-import com.arirangJS.Script.Classes._Effect;
-import com.arirangJS.Script.Classes._Event;
-import com.arirangJS.Script.Classes._Request;
-import com.arirangJS.Script.Classes._Var;
-import com.arirangJS.Script.Classes.org.bukkit._Bukkit;
-import com.arirangJS.Script.Classes.org.bukkit._ChatColor;
-import com.arirangJS.Script.Classes.org.bukkit.inventory._Inventory;
 
 public class Script {
 	public String filename;

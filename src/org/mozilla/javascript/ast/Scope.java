@@ -6,14 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
+
+import java.util.*;
 
 /**
  * Represents a scope in the lexical scope chain.  Base type for

@@ -4,20 +4,14 @@
 
 package org.mozilla.javascript;
 
-import java.lang.ref.SoftReference;
-import java.lang.reflect.UndeclaredThrowableException;
-import java.security.AccessController;
-import java.security.CodeSource;
-import java.security.Policy;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.security.SecureClassLoader;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import org.mozilla.classfile.ByteCode;
 import org.mozilla.classfile.ClassFileWriter;
+
+import java.lang.ref.SoftReference;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.security.*;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * A security controller relying on Java {@link Policy} in effect. When you use

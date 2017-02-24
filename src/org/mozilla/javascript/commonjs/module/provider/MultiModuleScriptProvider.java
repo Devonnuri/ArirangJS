@@ -4,14 +4,14 @@
 
 package org.mozilla.javascript.commonjs.module.provider;
 
-import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.ModuleScript;
 import org.mozilla.javascript.commonjs.module.ModuleScriptProvider;
+
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A multiplexer for module script providers.

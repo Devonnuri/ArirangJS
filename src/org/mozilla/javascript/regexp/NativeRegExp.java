@@ -6,18 +6,9 @@
 
 package org.mozilla.javascript.regexp;
 
-import java.io.Serializable;
+import org.mozilla.javascript.*;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.IdFunctionObject;
-import org.mozilla.javascript.IdScriptableObject;
-import org.mozilla.javascript.Kit;
-import org.mozilla.javascript.ScriptRuntime;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.TopLevel;
-import org.mozilla.javascript.Undefined;
+import java.io.Serializable;
 
 /**
  * This class implements the RegExp native object.

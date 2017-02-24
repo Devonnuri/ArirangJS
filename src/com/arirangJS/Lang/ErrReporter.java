@@ -1,9 +1,9 @@
 package com.arirangJS.Lang;
 
+import com.arirangJS.Debug.Debug;
+
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-
-import com.arirangJS.Debug.Debug;
 
 public class ErrReporter {
 	public static void send(String key, String... properties) {

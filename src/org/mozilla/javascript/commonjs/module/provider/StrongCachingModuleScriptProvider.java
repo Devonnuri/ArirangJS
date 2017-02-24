@@ -4,10 +4,10 @@
 
 package org.mozilla.javascript.commonjs.module.provider;
 
+import org.mozilla.javascript.commonjs.module.ModuleScript;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.mozilla.javascript.commonjs.module.ModuleScript;
 
 /**
  * A module script provider that uses a module source provider to load modules

@@ -4,10 +4,10 @@
 
 package org.mozilla.javascript.commonjs.module;
 
+import org.mozilla.javascript.Script;
+
 import java.io.Serializable;
 import java.net.URI;
-
-import org.mozilla.javascript.Script;
 
 /**
  * Represents a compiled CommonJS module script. The {@link Require} functions

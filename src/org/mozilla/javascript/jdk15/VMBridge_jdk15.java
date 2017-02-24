@@ -6,14 +6,14 @@
 
 package org.mozilla.javascript.jdk15;
 
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Wrapper;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Iterator;
-
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.Wrapper;
 
 public class VMBridge_jdk15 extends org.mozilla.javascript.jdk13.VMBridge_jdk13
 {

@@ -6,14 +6,9 @@
 
 package org.mozilla.javascript;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
-
 import org.mozilla.javascript.json.JsonParser;
+
+import java.util.*;
 
 /**
  * This class implements the JSON native object.

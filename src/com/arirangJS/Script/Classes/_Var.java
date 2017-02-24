@@ -1,13 +1,7 @@
 package com.arirangJS.Script.Classes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import com.arirangJS.Debug.Debug;
+import com.arirangJS.Util.FileSystem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,8 +10,9 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 
-import com.arirangJS.Debug.Debug;
-import com.arirangJS.Util.FileSystem;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class _Var extends ScriptableObject {
 	/* 

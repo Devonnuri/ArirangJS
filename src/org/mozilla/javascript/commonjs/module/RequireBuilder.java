@@ -4,11 +4,11 @@
 
 package org.mozilla.javascript.commonjs.module;
 
-import java.io.Serializable;
-
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
+
+import java.io.Serializable;
 
 /**
  * A builder for {@link Require} instances. Useful when you're creating many

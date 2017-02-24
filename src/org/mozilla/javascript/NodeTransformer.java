@@ -6,14 +6,10 @@
 
 package org.mozilla.javascript;
 
+import org.mozilla.javascript.ast.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.mozilla.javascript.ast.AstRoot;
-import org.mozilla.javascript.ast.FunctionNode;
-import org.mozilla.javascript.ast.Jump;
-import org.mozilla.javascript.ast.Scope;
-import org.mozilla.javascript.ast.ScriptNode;
 
 /**
  * This class transforms a tree to a lower-level representation for codegen.

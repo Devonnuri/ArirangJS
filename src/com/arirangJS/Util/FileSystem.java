@@ -1,5 +1,8 @@
 package com.arirangJS.Util;
 
+import com.arirangJS.Debug.Debug;
+import com.arirangJS.Lang.ErrReporter;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -7,9 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import com.arirangJS.Debug.Debug;
-import com.arirangJS.Lang.ErrReporter;
 
 public class FileSystem {
 	public static final String LOC_PLUGIN = "plugins/ArirangJS/";
