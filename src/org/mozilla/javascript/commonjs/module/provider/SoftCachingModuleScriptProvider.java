@@ -26,40 +26,39 @@ import java.util.concurrent.ConcurrentMap;
  * Rhino {@link Script} objects, thus a module once loaded can become eligible
  * for garbage collection if it is otherwise unused under memory pressure.
  * Instances of this class are thread safe.
+ *
  * @author Attila Szegedi
  * @version $Id: SoftCachingModuleScriptProvider.java,v 1.3 2011/04/07 20:26:12 hannes%helma.at Exp $
  */
-public class SoftCachingModuleScriptProvider extends CachingModuleScriptProviderBase
-{
+public class SoftCachingModuleScriptProvider extends CachingModuleScriptProviderBase {
     private static final long serialVersionUID = 1L;
 
     private transient ReferenceQueue<Script> scriptRefQueue =
-        new ReferenceQueue<Script>();
+            new ReferenceQueue<Script>();
 
     private transient ConcurrentMap<String, ScriptReference> scripts =
-        new ConcurrentHashMap<String, ScriptReference>(16, .75f,
-                getConcurrencyLevel());
+            new ConcurrentHashMap<String, ScriptReference>(16, .75f,
+                    getConcurrencyLevel());
 
     /**
      * Creates a new module provider with the specified module source provider.
+     *
      * @param moduleSourceProvider provider for modules' source code
      */
     public SoftCachingModuleScriptProvider(
-            ModuleSourceProvider moduleSourceProvider)
-    {
+            ModuleSourceProvider moduleSourceProvider) {
         super(moduleSourceProvider);
     }
 
     @Override
     public ModuleScript getModuleScript(Context cx, String moduleId,
-            URI uri, URI base, Scriptable paths)
-            throws Exception
-    {
+                                        URI uri, URI base, Scriptable paths)
+            throws Exception {
         // Overridden to clear the reference queue before retrieving the
         // script.
-        for(;;) {
-            ScriptReference ref = (ScriptReference)scriptRefQueue.poll();
-            if(ref == null) {
+        for (; ; ) {
+            ScriptReference ref = (ScriptReference) scriptRefQueue.poll();
+            if (ref == null) {
                 break;
             }
             scripts.remove(ref.getModuleId(), ref);
@@ -75,8 +74,7 @@ public class SoftCachingModuleScriptProvider extends CachingModuleScriptProvider
 
     @Override
     protected void putLoadedModule(String moduleId, ModuleScript moduleScript,
-            Object validator)
-    {
+                                   Object validator) {
         scripts.put(moduleId, new ScriptReference(moduleScript.getScript(),
                 moduleId, moduleScript.getUri(), moduleScript.getBase(),
                 validator, scriptRefQueue));
@@ -89,7 +87,7 @@ public class SoftCachingModuleScriptProvider extends CachingModuleScriptProvider
         private final Object validator;
 
         ScriptReference(Script script, String moduleId, URI uri, URI base,
-                Object validator, ReferenceQueue<Script> refQueue) {
+                        Object validator, ReferenceQueue<Script> refQueue) {
             super(script, refQueue);
             this.moduleId = moduleId;
             this.uri = uri;
@@ -99,7 +97,7 @@ public class SoftCachingModuleScriptProvider extends CachingModuleScriptProvider
 
         CachedModuleScript getCachedModuleScript() {
             final Script script = get();
-            if(script == null) {
+            if (script == null) {
                 return null;
             }
             return new CachedModuleScript(new ModuleScript(script, uri, base),
@@ -111,14 +109,13 @@ public class SoftCachingModuleScriptProvider extends CachingModuleScriptProvider
         }
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void readObject(ObjectInputStream in) throws IOException,
-    ClassNotFoundException
-    {
+            ClassNotFoundException {
         scriptRefQueue = new ReferenceQueue<Script>();
         scripts = new ConcurrentHashMap<String, ScriptReference>();
-        final Map<String, CachedModuleScript> serScripts = (Map)in.readObject();
-        for(Map.Entry<String, CachedModuleScript> entry: serScripts.entrySet()) {
+        final Map<String, CachedModuleScript> serScripts = (Map) in.readObject();
+        for (Map.Entry<String, CachedModuleScript> entry : serScripts.entrySet()) {
             final CachedModuleScript cachedModuleScript = entry.getValue();
             putLoadedModule(entry.getKey(), cachedModuleScript.getModule(),
                     cachedModuleScript.getValidator());
@@ -127,11 +124,11 @@ public class SoftCachingModuleScriptProvider extends CachingModuleScriptProvider
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         final Map<String, CachedModuleScript> serScripts =
-            new HashMap<String, CachedModuleScript>();
-        for(Map.Entry<String, ScriptReference> entry: scripts.entrySet()) {
+                new HashMap<String, CachedModuleScript>();
+        for (Map.Entry<String, ScriptReference> entry : scripts.entrySet()) {
             final CachedModuleScript cachedModuleScript =
-                entry.getValue().getCachedModuleScript();
-            if(cachedModuleScript != null) {
+                    entry.getValue().getCachedModuleScript();
+            if (cachedModuleScript != null) {
                 serScripts.put(entry.getKey(), cachedModuleScript);
             }
         }

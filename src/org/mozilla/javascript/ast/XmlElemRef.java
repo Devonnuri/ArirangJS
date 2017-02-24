@@ -11,9 +11,9 @@ import org.mozilla.javascript.Token;
 /**
  * AST node for an E4X XML {@code [expr]} member-ref expression.
  * The node type is {@link Token#REF_MEMBER}.<p>
- *
+ * <p>
  * Syntax:<p>
- *
+ * <p>
  * <pre> @<i><sub>opt</sub></i> ns:: <i><sub>opt</sub></i> [ expr ]</pre>
  *
  * Examples include {@code ns::[expr]}, {@code @ns::[expr]}, {@code @[expr]},
@@ -62,6 +62,7 @@ public class XmlElemRef extends XmlRef {
 
     /**
      * Sets index expression, and sets its parent to this node.
+     *
      * @throws IllegalArgumentException if {@code expr} is {@code null}
      */
     public void setExpression(AstNode expr) {

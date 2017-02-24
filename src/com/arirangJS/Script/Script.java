@@ -26,38 +26,38 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class Script {
-	public String filename;
-	public ArrayList<String> errors = new ArrayList();
-	public Scriptable scope = null;
-	
-	public Script(String filename) {
-		Context context = Context.enter();
-		Scriptable scope = getScope(context);
-		
-		try {
-			defineClass(scope);
-			FileInputStream inStream = new FileInputStream(FileSystem.LOC_SCRIPT+filename);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
-			context.evaluateReader(scope, reader, filename, 0, null);
-			
-			this.filename = filename;
-			this.scope = scope;
-		} catch(RhinoException e) {
-			this.errors.add(e.getMessage());
-			Debug.log(SyntaxHighlighter.highlight(FileSystem.readLine(FileSystem.LOC_SCRIPT+filename, e.lineNumber())));
-			
-			String gap = new String(new char[e.columnNumber()]).replace("\0", " ");
-			Debug.log(gap+"| Here");
-			Debug.danger(e.getMessage());
-		} catch(IOException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-			this.errors.add(e.getMessage());
-			ErrReporter.send("err.compile", filename);
-		} finally {
-			Context.exit();
-		}
-	}
-	
-	public static String test(String code) {
+    public String filename;
+    public ArrayList<String> errors = new ArrayList();
+    public Scriptable scope = null;
+
+    public Script(String filename) {
+        Context context = Context.enter();
+        Scriptable scope = getScope(context);
+
+        try {
+            defineClass(scope);
+            FileInputStream inStream = new FileInputStream(FileSystem.LOC_SCRIPT + filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+            context.evaluateReader(scope, reader, filename, 0, null);
+
+            this.filename = filename;
+            this.scope = scope;
+        } catch (RhinoException e) {
+            this.errors.add(e.getMessage());
+            Debug.log(SyntaxHighlighter.highlight(FileSystem.readLine(FileSystem.LOC_SCRIPT + filename, e.lineNumber())));
+
+            String gap = new String(new char[e.columnNumber()]).replace("\0", " ");
+            Debug.log(gap + "| Here");
+            Debug.danger(e.getMessage());
+        } catch (IOException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            this.errors.add(e.getMessage());
+            ErrReporter.send("err.compile", filename);
+        } finally {
+            Context.exit();
+        }
+    }
+
+    public static String test(String code) {
         Context context = Context.enter();
         Scriptable scope = getScope(context);
         Object result = null;
@@ -65,23 +65,23 @@ public class Script {
         try {
             defineClass(scope);
             result = context.evaluateString(scope, code, "<test>", 1, null);
-        } catch(RhinoException e) {
+        } catch (RhinoException e) {
             Debug.log(SyntaxHighlighter.highlight(code));
 
             String gap = new String(new char[e.columnNumber()]).replace("\0", " ");
-            Debug.log(gap+"| Here");
+            Debug.log(gap + "| Here");
             Debug.danger(e.getMessage());
-        } catch(IllegalAccessException | InstantiationException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             ErrReporter.send("err.compile", "<test>");
         } finally {
             Context.exit();
         }
 
-        if(result == null) return null;
+        if (result == null) return null;
         return result.toString();
     }
 
-	private static void defineClass(Scriptable scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    private static void defineClass(Scriptable scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         ScriptableObject.putProperty(scope, "Action", enumClassToObj(Action.class));
         ScriptableObject.putProperty(scope, "Biome", enumClassToObj(Biome.class));
         ScriptableObject.putProperty(scope, "BlockFace", enumClassToObj(BlockFace.class));
@@ -99,48 +99,48 @@ public class Script {
         ScriptableObject.putProperty(scope, "WorldType", enumClassToObj(WorldType.class));
         ScriptableObject.putProperty(scope, "World.Environment", enumClassToObj(World.Environment.class));
     }
-	
-	private static Scriptable getScope(Context context) {
-		Scriptable scope = context.initStandardObjects(new _TopClass(), false);
-		String[] names = getJSFunctions(_TopClass.class);
-		((ScriptableObject) scope).defineFunctionProperties(names, _TopClass.class, ScriptableObject.DONTENUM);
-		return scope;
-	}
-	
-	private static ScriptableObject constantsToObj(Class<?> clazz) {
-		ScriptableObject obj = new NativeObject();
-		for(Field field : clazz.getFields()) {
-			try {
-				obj.putConst(field.getName(), obj, field.get(null));
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				ErrReporter.send("err.compile.translateObj");
-				e.printStackTrace();
-			}
-		}
-		return obj;
-	}
 
-	private static ScriptableObject enumClassToObj(Class<?> clazz) {
-		ScriptableObject obj = new NativeObject();
-		for(Object temp: clazz.getEnumConstants()) {
-			try {
-				Enum<?> _enum = (Enum<?>) temp;
-				obj.putConst(_enum.name(), obj, _enum.ordinal());
-			} catch (IllegalArgumentException e) {
-				ErrReporter.send("err.compile.translateObj");
-				e.printStackTrace();
-			}
-		}
-		return obj;
-	}
+    private static Scriptable getScope(Context context) {
+        Scriptable scope = context.initStandardObjects(new _TopClass(), false);
+        String[] names = getJSFunctions(_TopClass.class);
+        ((ScriptableObject) scope).defineFunctionProperties(names, _TopClass.class, ScriptableObject.DONTENUM);
+        return scope;
+    }
 
-	private static String[] getJSFunctions(Class<? extends ScriptableObject> clazz) {
-		ArrayList<String> result = new ArrayList();
-		for(Method method : clazz.getMethods()) {
-			if(method.getAnnotation(JSFunction.class) != null) {
-				result.add(method.getName());
-			}
-		}
-		return result.toArray(new String[0]);
-	}
+    private static ScriptableObject constantsToObj(Class<?> clazz) {
+        ScriptableObject obj = new NativeObject();
+        for (Field field : clazz.getFields()) {
+            try {
+                obj.putConst(field.getName(), obj, field.get(null));
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                ErrReporter.send("err.compile.translateObj");
+                e.printStackTrace();
+            }
+        }
+        return obj;
+    }
+
+    private static ScriptableObject enumClassToObj(Class<?> clazz) {
+        ScriptableObject obj = new NativeObject();
+        for (Object temp : clazz.getEnumConstants()) {
+            try {
+                Enum<?> _enum = (Enum<?>) temp;
+                obj.putConst(_enum.name(), obj, _enum.ordinal());
+            } catch (IllegalArgumentException e) {
+                ErrReporter.send("err.compile.translateObj");
+                e.printStackTrace();
+            }
+        }
+        return obj;
+    }
+
+    private static String[] getJSFunctions(Class<? extends ScriptableObject> clazz) {
+        ArrayList<String> result = new ArrayList();
+        for (Method method : clazz.getMethods()) {
+            if (method.getAnnotation(JSFunction.class) != null) {
+                result.add(method.getName());
+            }
+        }
+        return result.toArray(new String[0]);
+    }
 }

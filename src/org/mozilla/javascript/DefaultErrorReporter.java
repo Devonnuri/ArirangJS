@@ -11,17 +11,16 @@ package org.mozilla.javascript;
  *
  * @author Norris Boyd
  */
-class DefaultErrorReporter implements ErrorReporter
-{
+class DefaultErrorReporter implements ErrorReporter {
     static final DefaultErrorReporter instance = new DefaultErrorReporter();
 
     private boolean forEval;
     private ErrorReporter chainedReporter;
 
-    private DefaultErrorReporter() { }
+    private DefaultErrorReporter() {
+    }
 
-    static ErrorReporter forEval(ErrorReporter reporter)
-    {
+    static ErrorReporter forEval(ErrorReporter reporter) {
         DefaultErrorReporter r = new DefaultErrorReporter();
         r.forEval = true;
         r.chainedReporter = reporter;
@@ -29,19 +28,17 @@ class DefaultErrorReporter implements ErrorReporter
     }
 
     public void warning(String message, String sourceURI, int line,
-                        String lineText, int lineOffset)
-    {
+                        String lineText, int lineOffset) {
         if (chainedReporter != null) {
             chainedReporter.warning(
-                message, sourceURI, line, lineText, lineOffset);
+                    message, sourceURI, line, lineText, lineOffset);
         } else {
             // Do nothing
         }
     }
 
     public void error(String message, String sourceURI, int line,
-                      String lineText, int lineOffset)
-    {
+                      String lineText, int lineOffset) {
         if (forEval) {
             // Assume error message strings that start with "TypeError: "
             // should become TypeError exceptions. A bit of a hack, but we
@@ -55,27 +52,26 @@ class DefaultErrorReporter implements ErrorReporter
                 message = message.substring(prefix.length());
             }
             throw ScriptRuntime.constructError(error, message, sourceURI,
-                                               line, lineText, lineOffset);
+                    line, lineText, lineOffset);
         }
         if (chainedReporter != null) {
             chainedReporter.error(
-                message, sourceURI, line, lineText, lineOffset);
+                    message, sourceURI, line, lineText, lineOffset);
         } else {
             throw runtimeError(
-                message, sourceURI, line, lineText, lineOffset);
+                    message, sourceURI, line, lineText, lineOffset);
         }
     }
 
     public EvaluatorException runtimeError(String message, String sourceURI,
                                            int line, String lineText,
-                                           int lineOffset)
-    {
+                                           int lineOffset) {
         if (chainedReporter != null) {
             return chainedReporter.runtimeError(
-                message, sourceURI, line, lineText, lineOffset);
+                    message, sourceURI, line, lineText, lineOffset);
         } else {
             return new EvaluatorException(
-                message, sourceURI, line, lineText, lineOffset);
+                    message, sourceURI, line, lineText, lineOffset);
         }
     }
 }

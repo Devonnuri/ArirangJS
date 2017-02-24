@@ -15,7 +15,7 @@ import java.util.List;
  * Switch-case AST node type.  The switch case is always part of a
  * switch statement.
  * Node type is {@link Token#CASE}.<p>
- *
+ * <p>
  * <pre><i>CaseBlock</i> :
  *        { [CaseClauses] }
  *        { [CaseClauses] DefaultClause [CaseClauses] }
@@ -69,6 +69,7 @@ public class SwitchCase extends AstNode {
 
     /**
      * Return true if this is a default case.
+     *
      * @return true if {@link #getExpression} would return {@code null}
      */
     public boolean isDefault() {
@@ -128,7 +129,7 @@ public class SwitchCase extends AstNode {
         }
         if (statements != null) {
             for (AstNode s : statements) {
-                sb.append(s.toSource(depth+1));
+                sb.append(s.toSource(depth + 1));
             }
         }
         return sb.toString();

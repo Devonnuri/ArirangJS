@@ -15,7 +15,7 @@ public interface DebuggableObject {
 
     /**
      * Returns an array of ids for the properties of the object.
-     *
+     * <p>
      * <p>All properties, even those with attribute {DontEnum}, are listed.
      * This allows the debugger to display all properties of the object.<p>
      *

@@ -22,41 +22,34 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @see NativeJavaClass
  */
 
-public class NativeJavaMethod extends BaseFunction
-{
+public class NativeJavaMethod extends BaseFunction {
     static final long serialVersionUID = -3440381785576412928L;
 
-    NativeJavaMethod(MemberBox[] methods)
-    {
+    NativeJavaMethod(MemberBox[] methods) {
         this.functionName = methods[0].getName();
         this.methods = methods;
     }
 
-    NativeJavaMethod(MemberBox[] methods, String name)
-    {
+    NativeJavaMethod(MemberBox[] methods, String name) {
         this.functionName = name;
         this.methods = methods;
     }
 
-    NativeJavaMethod(MemberBox method, String name)
-    {
+    NativeJavaMethod(MemberBox method, String name) {
         this.functionName = name;
-        this.methods = new MemberBox[] { method };
+        this.methods = new MemberBox[]{method};
     }
 
-    public NativeJavaMethod(Method method, String name)
-    {
+    public NativeJavaMethod(Method method, String name) {
         this(new MemberBox(method), name);
     }
 
     @Override
-    public String getFunctionName()
-    {
+    public String getFunctionName() {
         return functionName;
     }
 
-    static String scriptSignature(Object[] values)
-    {
+    static String scriptSignature(Object[] values) {
         StringBuffer sig = new StringBuffer();
         for (int i = 0; i != values.length; ++i) {
             Object value = values[i];
@@ -74,7 +67,7 @@ public class NativeJavaMethod extends BaseFunction
                 if (value instanceof Undefined) {
                     s = "undefined";
                 } else if (value instanceof Wrapper) {
-                    Object wrapped = ((Wrapper)value).unwrap();
+                    Object wrapped = ((Wrapper) value).unwrap();
                     s = wrapped.getClass().getName();
                 } else if (value instanceof Function) {
                     s = "function";
@@ -94,8 +87,7 @@ public class NativeJavaMethod extends BaseFunction
     }
 
     @Override
-    String decompile(int indent, int flags)
-    {
+    String decompile(int indent, int flags) {
         StringBuffer sb = new StringBuffer();
         boolean justbody = (0 != (flags & Decompiler.ONLY_BODY_FLAG));
         if (!justbody) {
@@ -110,8 +102,7 @@ public class NativeJavaMethod extends BaseFunction
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuffer sb = new StringBuffer();
         for (int i = 0, N = methods.length; i != N; ++i) {
             // Check member type, we also use this for overloaded constructors
@@ -131,8 +122,7 @@ public class NativeJavaMethod extends BaseFunction
 
     @Override
     public Object call(Context cx, Scriptable scope, Scriptable thisObj,
-                       Object[] args)
-    {
+                       Object[] args) {
         // Find a method that matches the types given.
         if (methods.length == 0) {
             throw new RuntimeException("No methods defined for call");
@@ -142,7 +132,7 @@ public class NativeJavaMethod extends BaseFunction
         if (index < 0) {
             Class<?> c = methods[0].method().getDeclaringClass();
             String sig = c.getName() + '.' + getFunctionName() + '(' +
-                         scriptSignature(args) + ')';
+                    scriptSignature(args) + ')';
             throw Context.reportRuntimeError1("msg.java.no_such_method", sig);
         }
 
@@ -152,7 +142,7 @@ public class NativeJavaMethod extends BaseFunction
         if (meth.vararg) {
             // marshall the explicit parameters
             Object[] newArgs = new Object[argTypes.length];
-            for (int i = 0; i < argTypes.length-1; i++) {
+            for (int i = 0; i < argTypes.length - 1; i++) {
                 newArgs[i] = Context.jsToJava(args[i], argTypes[i]);
             }
 
@@ -161,28 +151,27 @@ public class NativeJavaMethod extends BaseFunction
             // Handle special situation where a single variable parameter
             // is given and it is a Java or ECMA array or is null.
             if (args.length == argTypes.length &&
-                (args[args.length-1] == null ||
-                 args[args.length-1] instanceof NativeArray ||
-                 args[args.length-1] instanceof NativeJavaArray))
-            {
+                    (args[args.length - 1] == null ||
+                            args[args.length - 1] instanceof NativeArray ||
+                            args[args.length - 1] instanceof NativeJavaArray)) {
                 // convert the ECMA array into a native array
-                varArgs = Context.jsToJava(args[args.length-1],
-                                           argTypes[argTypes.length - 1]);
+                varArgs = Context.jsToJava(args[args.length - 1],
+                        argTypes[argTypes.length - 1]);
             } else {
                 // marshall the variable parameters
                 Class<?> componentType = argTypes[argTypes.length - 1].
-                                         getComponentType();
+                        getComponentType();
                 varArgs = Array.newInstance(componentType,
-                                            args.length - argTypes.length + 1);
+                        args.length - argTypes.length + 1);
                 for (int i = 0; i < Array.getLength(varArgs); i++) {
-                    Object value = Context.jsToJava(args[argTypes.length-1 + i],
-                                                    componentType);
+                    Object value = Context.jsToJava(args[argTypes.length - 1 + i],
+                            componentType);
                     Array.set(varArgs, i, value);
                 }
             }
 
             // add varargs
-            newArgs[argTypes.length-1] = varArgs;
+            newArgs[argTypes.length - 1] = varArgs;
             // replace the original args with the new one
             args = newArgs;
         } else {
@@ -205,14 +194,14 @@ public class NativeJavaMethod extends BaseFunction
         } else {
             Scriptable o = thisObj;
             Class<?> c = meth.getDeclaringClass();
-            for (;;) {
+            for (; ; ) {
                 if (o == null) {
                     throw Context.reportRuntimeError3(
-                        "msg.nonjava.method", getFunctionName(),
-                        ScriptRuntime.toString(thisObj), c.getName());
+                            "msg.nonjava.method", getFunctionName(),
+                            ScriptRuntime.toString(thisObj), c.getName());
                 }
                 if (o instanceof Wrapper) {
-                    javaObject = ((Wrapper)o).unwrap();
+                    javaObject = ((Wrapper) o).unwrap();
                     if (c.isInstance(javaObject)) {
                         break;
                     }
@@ -229,19 +218,19 @@ public class NativeJavaMethod extends BaseFunction
 
         if (debug) {
             Class<?> actualType = (retval == null) ? null
-                                                : retval.getClass();
+                    : retval.getClass();
             System.err.println(" ----- Returned " + retval +
-                               " actual = " + actualType +
-                               " expect = " + staticType);
+                    " actual = " + actualType +
+                    " expect = " + staticType);
         }
 
         Object wrapped = cx.getWrapFactory().wrap(cx, scope,
-                                                  retval, staticType);
+                retval, staticType);
         if (debug) {
             Class<?> actualType = (wrapped == null) ? null
-                                                 : wrapped.getClass();
+                    : wrapped.getClass();
             System.err.println(" ----- Wrapped as " + wrapped +
-                               " class = " + actualType);
+                    " class = " + actualType);
         }
 
         if (wrapped == null && staticType == Void.TYPE) {
@@ -283,8 +272,7 @@ public class NativeJavaMethod extends BaseFunction
      * If no function can be found to call, return -1.
      */
     static int findFunction(Context cx,
-                            MemberBox[] methodsOrCtors, Object[] args)
-    {
+                            MemberBox[] methodsOrCtors, Object[] args) {
         if (methodsOrCtors.length == 0) {
             return -1;
         } else if (methodsOrCtors.length == 1) {
@@ -294,7 +282,7 @@ public class NativeJavaMethod extends BaseFunction
 
             if (member.vararg) {
                 alength--;
-                if ( alength > args.length) {
+                if (alength > args.length) {
                     return -1;
                 }
             } else {
@@ -305,7 +293,7 @@ public class NativeJavaMethod extends BaseFunction
             for (int j = 0; j != alength; ++j) {
                 if (!NativeJavaObject.canConvert(args[j], argTypes[j])) {
                     if (debug) printDebug("Rejecting (args can't convert) ",
-                                          member, args);
+                            member, args);
                     return -1;
                 }
             }
@@ -317,14 +305,14 @@ public class NativeJavaMethod extends BaseFunction
         int[] extraBestFits = null;
         int extraBestFitsCount = 0;
 
-      search:
+        search:
         for (int i = 0; i < methodsOrCtors.length; i++) {
             MemberBox member = methodsOrCtors[i];
             Class<?>[] argTypes = member.argTypes;
             int alength = argTypes.length;
             if (member.vararg) {
                 alength--;
-                if ( alength > args.length) {
+                if (alength > args.length) {
                     continue search;
                 }
             } else {
@@ -335,7 +323,7 @@ public class NativeJavaMethod extends BaseFunction
             for (int j = 0; j < alength; j++) {
                 if (!NativeJavaObject.canConvert(args[j], argTypes[j])) {
                     if (debug) printDebug("Rejecting (args can't convert) ",
-                                          member, args);
+                            member, args);
                     continue search;
                 }
             }
@@ -348,9 +336,9 @@ public class NativeJavaMethod extends BaseFunction
                 // until extraBestFitsCount to avoid extraBestFits allocation
                 // in the most common case of no ambiguity
                 int betterCount = 0; // number of times member was prefered over
-                                     // best fits
+                // best fits
                 int worseCount = 0;  // number of times best fits were prefered
-                                     // over member
+                // over member
                 for (int j = -1; j != extraBestFitsCount; ++j) {
                     int bestFitIndex;
                     if (j == -1) {
@@ -360,9 +348,8 @@ public class NativeJavaMethod extends BaseFunction
                     }
                     MemberBox bestFit = methodsOrCtors[bestFitIndex];
                     if (cx.hasFeature(Context.FEATURE_ENHANCED_JAVA_ACCESS) &&
-                        (bestFit.member().getModifiers() & Modifier.PUBLIC) !=
-                            (member.member().getModifiers() & Modifier.PUBLIC))
-                    {
+                            (bestFit.member().getModifiers() & Modifier.PUBLIC) !=
+                                    (member.member().getModifiers() & Modifier.PUBLIC)) {
                         // When FEATURE_ENHANCED_JAVA_ACCESS gives us access
                         // to non-public members, continue to prefer public
                         // methods in overloading
@@ -372,9 +359,9 @@ public class NativeJavaMethod extends BaseFunction
                             ++worseCount;
                     } else {
                         int preference = preferSignature(args, argTypes,
-                                                         member.vararg,
-                                                         bestFit.argTypes,
-                                                         bestFit.vararg );
+                                member.vararg,
+                                bestFit.argTypes,
+                                bestFit.vararg);
                         if (preference == PREFERENCE_AMBIGUOUS) {
                             break;
                         } else if (preference == PREFERENCE_FIRST_ARG) {
@@ -389,16 +376,15 @@ public class NativeJavaMethod extends BaseFunction
                             // a derived class's parameters match exactly.
                             // We want to call the derived class's method.
                             if (bestFit.isStatic() &&
-                                bestFit.getDeclaringClass().isAssignableFrom(
-                                       member.getDeclaringClass()))
-                            {
+                                    bestFit.getDeclaringClass().isAssignableFrom(
+                                            member.getDeclaringClass())) {
                                 // On some JVMs, Class.getMethods will return all
                                 // static methods of the class hierarchy, even if
                                 // a derived class's parameters match exactly.
                                 // We want to call the derived class's method.
                                 if (debug) printDebug(
-                                    "Substituting (overridden static)",
-                                    member, args);
+                                        "Substituting (overridden static)",
+                                        member, args);
                                 if (j == -1) {
                                     firstBestFit = i;
                                 } else {
@@ -406,8 +392,8 @@ public class NativeJavaMethod extends BaseFunction
                                 }
                             } else {
                                 if (debug) printDebug(
-                                    "Ignoring same signature member ",
-                                    member, args);
+                                        "Ignoring same signature member ",
+                                        member, args);
                             }
                             continue search;
                         }
@@ -416,17 +402,17 @@ public class NativeJavaMethod extends BaseFunction
                 if (betterCount == 1 + extraBestFitsCount) {
                     // member was prefered over all best fits
                     if (debug) printDebug(
-                        "New first applicable ", member, args);
+                            "New first applicable ", member, args);
                     firstBestFit = i;
                     extraBestFitsCount = 0;
                 } else if (worseCount == 1 + extraBestFitsCount) {
                     // all best fits were prefered over member, ignore it
                     if (debug) printDebug(
-                        "Rejecting (all current bests better) ", member, args);
+                            "Rejecting (all current bests better) ", member, args);
                 } else {
                     // some ambiguity was present, add member to best fit set
                     if (debug) printDebug(
-                        "Added to best fit set ", member, args);
+                            "Added to best fit set ", member, args);
                     if (extraBestFits == null) {
                         // Allocate maximum possible array
                         extraBestFits = new int[methodsOrCtors.length - 1];
@@ -464,21 +450,25 @@ public class NativeJavaMethod extends BaseFunction
 
         if (methodsOrCtors[0].isCtor()) {
             throw Context.reportRuntimeError3(
-                "msg.constructor.ambiguous",
-                memberName, scriptSignature(args), buf.toString());
+                    "msg.constructor.ambiguous",
+                    memberName, scriptSignature(args), buf.toString());
         } else {
             throw Context.reportRuntimeError4(
-                "msg.method.ambiguous", memberClass,
-                memberName, scriptSignature(args), buf.toString());
+                    "msg.method.ambiguous", memberClass,
+                    memberName, scriptSignature(args), buf.toString());
         }
     }
 
-    /** Types are equal */
-    private static final int PREFERENCE_EQUAL      = 0;
-    private static final int PREFERENCE_FIRST_ARG  = 1;
+    /**
+     * Types are equal
+     */
+    private static final int PREFERENCE_EQUAL = 0;
+    private static final int PREFERENCE_FIRST_ARG = 1;
     private static final int PREFERENCE_SECOND_ARG = 2;
-    /** No clear "easy" conversion */
-    private static final int PREFERENCE_AMBIGUOUS  = 3;
+    /**
+     * No clear "easy" conversion
+     */
+    private static final int PREFERENCE_AMBIGUOUS = 3;
 
     /**
      * Determine which of two signatures is the closer fit.
@@ -489,12 +479,11 @@ public class NativeJavaMethod extends BaseFunction
                                        Class<?>[] sig1,
                                        boolean vararg1,
                                        Class<?>[] sig2,
-                                       boolean vararg2 )
-    {
+                                       boolean vararg2) {
         int totalPreference = 0;
         for (int j = 0; j < args.length; j++) {
-            Class<?> type1 = vararg1 && j >= sig1.length ? sig1[sig1.length-1] : sig1[j];
-            Class<?> type2 = vararg2 && j >= sig2.length ? sig2[sig2.length-1] : sig2[j];
+            Class<?> type1 = vararg1 && j >= sig1.length ? sig1[sig1.length - 1] : sig1[j];
+            Class<?> type2 = vararg2 && j >= sig2.length ? sig2[sig2.length - 1] : sig2[j];
             if (type1 == type2) {
                 continue;
             }
@@ -538,8 +527,7 @@ public class NativeJavaMethod extends BaseFunction
     private static final boolean debug = false;
 
     private static void printDebug(String msg, MemberBox member,
-                                   Object[] args)
-    {
+                                   Object[] args) {
         if (debug) {
             StringBuffer sb = new StringBuffer();
             sb.append(" ----- ");
@@ -572,7 +560,7 @@ class ResolvedOverload {
         for (int i = 0, l = args.length; i < l; i++) {
             Object arg = args[i];
             if (arg instanceof Wrapper)
-                arg = ((Wrapper)arg).unwrap();
+                arg = ((Wrapper) arg).unwrap();
             types[i] = arg == null ? null : arg.getClass();
         }
     }
@@ -584,7 +572,7 @@ class ResolvedOverload {
         for (int i = 0, l = args.length; i < l; i++) {
             Object arg = args[i];
             if (arg instanceof Wrapper)
-                arg = ((Wrapper)arg).unwrap();
+                arg = ((Wrapper) arg).unwrap();
             if (arg == null) {
                 if (types[i] != null) return false;
             } else if (arg.getClass() != types[i]) {

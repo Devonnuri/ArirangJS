@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 /**
  * ClassFileWriter
- *
+ * <p>
  * A ClassFileWriter is used to write a Java class file. Methods are
  * provided to create fields and methods, and within methods to write
  * Java bytecodes.
@@ -44,17 +44,16 @@ public class ClassFileWriter {
     /**
      * Construct a ClassFileWriter for a class.
      *
-     * @param className the name of the class to write, including
-     *        full package qualification.
+     * @param className      the name of the class to write, including
+     *                       full package qualification.
      * @param superClassName the name of the superclass of the class
-     *        to write, including full package qualification.
+     *                       to write, including full package qualification.
      * @param sourceFileName the name of the source file to use for
-     *        producing debug information, or null if debug information
-     *        is not desired
+     *                       producing debug information, or null if debug information
+     *                       is not desired
      */
     public ClassFileWriter(String className, String superClassName,
-                           String sourceFileName)
-    {
+                           String sourceFileName) {
         generatedClassName = className;
         itsConstantPool = new ConstantPool(this);
         itsThisClassIndex = itsConstantPool.addClass(className);
@@ -67,20 +66,19 @@ public class ClassFileWriter {
         itsFlags = ACC_PUBLIC | ACC_SUPER;
     }
 
-    public final String getClassName()
-    {
+    public final String getClassName() {
         return generatedClassName;
     }
 
     /**
      * Add an interface implemented by this class.
-     *
+     * <p>
      * This method may be called multiple times for classes that
      * implement multiple interfaces.
      *
      * @param interfaceName a name of an interface implemented
-     *        by the class being written, including full package
-     *        qualification.
+     *                      by the class being written, including full package
+     *                      qualification.
      */
     public void addInterface(String interfaceName) {
         short interfaceIndex = itsConstantPool.addClass(interfaceName);
@@ -88,37 +86,37 @@ public class ClassFileWriter {
     }
 
     public static final short
-        ACC_PUBLIC = 0x0001,
-        ACC_PRIVATE = 0x0002,
-        ACC_PROTECTED = 0x0004,
-        ACC_STATIC = 0x0008,
-        ACC_FINAL = 0x0010,
-        ACC_SUPER = 0x0020,
-        ACC_SYNCHRONIZED = 0x0020,
-        ACC_VOLATILE = 0x0040,
-        ACC_TRANSIENT = 0x0080,
-        ACC_NATIVE = 0x0100,
-        ACC_ABSTRACT = 0x0400;
+            ACC_PUBLIC = 0x0001,
+            ACC_PRIVATE = 0x0002,
+            ACC_PROTECTED = 0x0004,
+            ACC_STATIC = 0x0008,
+            ACC_FINAL = 0x0010,
+            ACC_SUPER = 0x0020,
+            ACC_SYNCHRONIZED = 0x0020,
+            ACC_VOLATILE = 0x0040,
+            ACC_TRANSIENT = 0x0080,
+            ACC_NATIVE = 0x0100,
+            ACC_ABSTRACT = 0x0400;
 
     /**
      * Set the class's flags.
-     *
+     * <p>
      * Flags must be a set of the following flags, bitwise or'd
      * together:
-     *      ACC_PUBLIC
-     *      ACC_PRIVATE
-     *      ACC_PROTECTED
-     *      ACC_FINAL
-     *      ACC_ABSTRACT
+     * ACC_PUBLIC
+     * ACC_PRIVATE
+     * ACC_PROTECTED
+     * ACC_FINAL
+     * ACC_ABSTRACT
      * TODO: check that this is the appropriate set
+     *
      * @param flags the set of class flags to set
      */
     public void setFlags(short flags) {
         itsFlags = flags;
     }
 
-    static String getSlashedForm(String name)
-    {
+    static String getSlashedForm(String name) {
         return name.replace('.', '/');
     }
 
@@ -127,8 +125,7 @@ public class ClassFileWriter {
      * "Lname-with-dots-replaced-by-slashes;" form suitable for use as
      * JVM type signatures.
      */
-    public static String classNameToSignature(String name)
-    {
+    public static String classNameToSignature(String name) {
         int nameLength = name.length();
         int colonPos = 1 + nameLength;
         char[] buf = new char[colonPos + 1];
@@ -147,9 +144,9 @@ public class ClassFileWriter {
      * Add a field to the class.
      *
      * @param fieldName the name of the field
-     * @param type the type of the field using ...
-     * @param flags the attributes of the field, such as ACC_PUBLIC, etc.
-     *        bitwise or'd together
+     * @param type      the type of the field using ...
+     * @param flags     the attributes of the field, such as ACC_PUBLIC, etc.
+     *                  bitwise or'd together
      */
     public void addField(String fieldName, String type, short flags) {
         short fieldNameIndex = itsConstantPool.addUtf8(fieldName);
@@ -161,22 +158,21 @@ public class ClassFileWriter {
      * Add a field to the class.
      *
      * @param fieldName the name of the field
-     * @param type the type of the field using ...
-     * @param flags the attributes of the field, such as ACC_PUBLIC, etc.
-     *        bitwise or'd together
-     * @param value an initial integral value
+     * @param type      the type of the field using ...
+     * @param flags     the attributes of the field, such as ACC_PUBLIC, etc.
+     *                  bitwise or'd together
+     * @param value     an initial integral value
      */
     public void addField(String fieldName, String type, short flags,
-                         int value)
-    {
+                         int value) {
         short fieldNameIndex = itsConstantPool.addUtf8(fieldName);
         short typeIndex = itsConstantPool.addUtf8(type);
         ClassFileField field = new ClassFileField(fieldNameIndex, typeIndex,
-                                                  flags);
+                flags);
         field.setAttributes(itsConstantPool.addUtf8("ConstantValue"),
-                            (short)0,
-                            (short)0,
-                            itsConstantPool.addConstant(value));
+                (short) 0,
+                (short) 0,
+                itsConstantPool.addConstant(value));
         itsFields.add(field);
     }
 
@@ -184,22 +180,21 @@ public class ClassFileWriter {
      * Add a field to the class.
      *
      * @param fieldName the name of the field
-     * @param type the type of the field using ...
-     * @param flags the attributes of the field, such as ACC_PUBLIC, etc.
-     *        bitwise or'd together
-     * @param value an initial long value
+     * @param type      the type of the field using ...
+     * @param flags     the attributes of the field, such as ACC_PUBLIC, etc.
+     *                  bitwise or'd together
+     * @param value     an initial long value
      */
     public void addField(String fieldName, String type, short flags,
-                         long value)
-    {
+                         long value) {
         short fieldNameIndex = itsConstantPool.addUtf8(fieldName);
         short typeIndex = itsConstantPool.addUtf8(type);
         ClassFileField field = new ClassFileField(fieldNameIndex, typeIndex,
-                                                  flags);
+                flags);
         field.setAttributes(itsConstantPool.addUtf8("ConstantValue"),
-                            (short)0,
-                            (short)2,
-                            itsConstantPool.addConstant(value));
+                (short) 0,
+                (short) 2,
+                itsConstantPool.addConstant(value));
         itsFields.add(field);
     }
 
@@ -207,22 +202,21 @@ public class ClassFileWriter {
      * Add a field to the class.
      *
      * @param fieldName the name of the field
-     * @param type the type of the field using ...
-     * @param flags the attributes of the field, such as ACC_PUBLIC, etc.
-     *        bitwise or'd together
-     * @param value an initial double value
+     * @param type      the type of the field using ...
+     * @param flags     the attributes of the field, such as ACC_PUBLIC, etc.
+     *                  bitwise or'd together
+     * @param value     an initial double value
      */
     public void addField(String fieldName, String type, short flags,
-                         double value)
-    {
+                         double value) {
         short fieldNameIndex = itsConstantPool.addUtf8(fieldName);
         short typeIndex = itsConstantPool.addUtf8(type);
         ClassFileField field = new ClassFileField(fieldNameIndex, typeIndex,
-                                                  flags);
+                flags);
         field.setAttributes(itsConstantPool.addUtf8("ConstantValue"),
-                            (short)0,
-                            (short)2,
-                            itsConstantPool.addConstant(value));
+                (short) 0,
+                (short) 2,
+                itsConstantPool.addConstant(value));
         itsFields.add(field);
     }
 
@@ -230,18 +224,17 @@ public class ClassFileWriter {
      * Add Information about java variable to use when generating the local
      * variable table.
      *
-     * @param name variable name.
-     * @param type variable type as bytecode descriptor string.
-     * @param startPC the starting bytecode PC where this variable is live,
+     * @param name     variable name.
+     * @param type     variable type as bytecode descriptor string.
+     * @param startPC  the starting bytecode PC where this variable is live,
      *                 or -1 if it does not have a Java register.
      * @param register the Java register number of variable
      *                 or -1 if it does not have a Java register.
      */
-    public void addVariableDescriptor(String name, String type, int startPC, int register)
-    {
+    public void addVariableDescriptor(String name, String type, int startPC, int register) {
         int nameIndex = itsConstantPool.addUtf8(name);
         int descriptorIndex = itsConstantPool.addUtf8(type);
-        int [] chunk = { nameIndex, descriptorIndex, startPC, register };
+        int[] chunk = {nameIndex, descriptorIndex, startPC, register};
         if (itsVarDescriptors == null) {
             itsVarDescriptors = new ObjArray();
         }
@@ -250,20 +243,20 @@ public class ClassFileWriter {
 
     /**
      * Add a method and begin adding code.
-     *
+     * <p>
      * This method must be called before other methods for adding code,
      * exception tables, etc. can be invoked.
      *
      * @param methodName the name of the method
-     * @param type a string representing the type
-     * @param flags the attributes of the field, such as ACC_PUBLIC, etc.
-     *        bitwise or'd together
+     * @param type       a string representing the type
+     * @param flags      the attributes of the field, such as ACC_PUBLIC, etc.
+     *                   bitwise or'd together
      */
     public void startMethod(String methodName, String type, short flags) {
         short methodNameIndex = itsConstantPool.addUtf8(methodName);
         short typeIndex = itsConstantPool.addUtf8(type);
         itsCurrentMethod = new ClassFileMethod(methodName, methodNameIndex,
-                                               type, typeIndex, flags);
+                type, typeIndex, flags);
         itsJumpFroms = new UintMap();
         itsMethods.add(itsCurrentMethod);
         addSuperBlockStart(0);
@@ -271,12 +264,12 @@ public class ClassFileWriter {
 
     /**
      * Complete generation of the method.
-     *
+     * <p>
      * After this method is called, no more code can be added to the
      * method begun with <code>startMethod</code>.
      *
      * @param maxLocals the maximum number of local variable slots
-     *        (a.k.a. Java registers) used by the method
+     *                  (a.k.a. Java registers) used by the method
      */
     public void stopMethod(short maxLocals) {
         if (itsCurrentMethod == null)
@@ -318,24 +311,24 @@ public class ClassFileWriter {
         }
 
         int attrLength = 2 +                    // attribute_name_index
-                         4 +                    // attribute_length
-                         2 +                    // max_stack
-                         2 +                    // max_locals
-                         4 +                    // code_length
-                         itsCodeBufferTop +
-                         2 +                    // exception_table_length
-                         (itsExceptionTableTop * 8) +
-                         2 +                    // attributes_count
-                         lineNumberTableLength +
-                         variableTableLength +
-                         stackMapTableLength;
+                4 +                    // attribute_length
+                2 +                    // max_stack
+                2 +                    // max_locals
+                4 +                    // code_length
+                itsCodeBufferTop +
+                2 +                    // exception_table_length
+                (itsExceptionTableTop * 8) +
+                2 +                    // attributes_count
+                lineNumberTableLength +
+                variableTableLength +
+                stackMapTableLength;
 
         if (attrLength > 65536) {
             // See http://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html,
             // section 4.10, "The amount of code per non-native, non-abstract
             // method is limited to 65536 bytes...
             throw new ClassFileFormatException(
-                "generated bytecode for method exceeds 64K limit.");
+                    "generated bytecode for method exceeds 64K limit.");
         }
         byte[] codeAttribute = new byte[attrLength];
         int index = 0;
@@ -347,16 +340,16 @@ public class ClassFileWriter {
         index = putInt16(itsMaxLocals, codeAttribute, index);
         index = putInt32(itsCodeBufferTop, codeAttribute, index);
         System.arraycopy(itsCodeBuffer, 0, codeAttribute, index,
-                         itsCodeBufferTop);
+                itsCodeBufferTop);
         index += itsCodeBufferTop;
 
         if (itsExceptionTableTop > 0) {
             index = putInt16(itsExceptionTableTop, codeAttribute, index);
             for (int i = 0; i < itsExceptionTableTop; i++) {
                 ExceptionTableEntry ete = itsExceptionTable[i];
-                short startPC = (short)getLabelPC(ete.itsStartLabel);
-                short endPC = (short)getLabelPC(ete.itsEndLabel);
-                short handlerPC = (short)getLabelPC(ete.itsHandlerLabel);
+                short startPC = (short) getLabelPC(ete.itsStartLabel);
+                short endPC = (short) getLabelPC(ete.itsEndLabel);
+                short handlerPC = (short) getLabelPC(ete.itsHandlerLabel);
                 short catchType = ete.itsCatchType;
                 if (startPC == -1)
                     throw new IllegalStateException("start label not defined");
@@ -364,15 +357,14 @@ public class ClassFileWriter {
                     throw new IllegalStateException("end label not defined");
                 if (handlerPC == -1)
                     throw new IllegalStateException(
-                        "handler label not defined");
+                            "handler label not defined");
 
                 index = putInt16(startPC, codeAttribute, index);
                 index = putInt16(endPC, codeAttribute, index);
                 index = putInt16(handlerPC, codeAttribute, index);
                 index = putInt16(catchType, codeAttribute, index);
             }
-        }
-        else {
+        } else {
             // write 0 as exception table length
             index = putInt16(0, codeAttribute, index);
         }
@@ -408,11 +400,11 @@ public class ClassFileWriter {
             index = putInt32(tableAttrLength, codeAttribute, index);
             index = putInt16(varCount, codeAttribute, index);
             for (int i = 0; i < varCount; i++) {
-                int[] chunk = (int[])itsVarDescriptors.get(i);
-                int nameIndex       = chunk[0];
+                int[] chunk = (int[]) itsVarDescriptors.get(i);
+                int nameIndex = chunk[0];
                 int descriptorIndex = chunk[1];
-                int startPC         = chunk[2];
-                int register        = chunk[3];
+                int startPC = chunk[2];
+                int register = chunk[3];
                 int length = itsCodeBufferTop - startPC;
 
                 index = putInt16(startPC, codeAttribute, index);
@@ -461,11 +453,11 @@ public class ClassFileWriter {
         if (DEBUGCODE)
             System.out.println("Add " + bytecodeStr(theOpCode));
         addToCodeBuffer(theOpCode);
-        itsStackTop = (short)newStack;
-        if (newStack > itsMaxStack) itsMaxStack = (short)newStack;
+        itsStackTop = (short) newStack;
+        if (newStack > itsMaxStack) itsMaxStack = (short) newStack;
         if (DEBUGSTACK) {
-            System.out.println("After "+bytecodeStr(theOpCode)
-                               +" stack = "+itsStackTop);
+            System.out.println("After " + bytecodeStr(theOpCode)
+                    + " stack = " + itsStackTop);
         }
         if (theOpCode == ByteCode.ATHROW) {
             addSuperBlockStart(itsCodeBufferTop);
@@ -475,115 +467,112 @@ public class ClassFileWriter {
     /**
      * Add a single-operand opcode to the current method.
      *
-     * @param theOpCode the opcode of the bytecode
+     * @param theOpCode  the opcode of the bytecode
      * @param theOperand the operand of the bytecode
      */
     public void add(int theOpCode, int theOperand) {
         if (DEBUGCODE) {
-            System.out.println("Add "+bytecodeStr(theOpCode)
-                               +", "+Integer.toHexString(theOperand));
+            System.out.println("Add " + bytecodeStr(theOpCode)
+                    + ", " + Integer.toHexString(theOperand));
         }
         int newStack = itsStackTop + stackChange(theOpCode);
         if (newStack < 0 || Short.MAX_VALUE < newStack) badStack(newStack);
 
         switch (theOpCode) {
-            case ByteCode.GOTO :
+            case ByteCode.GOTO:
                 // This is necessary because dead code is seemingly being
                 // generated and Sun's verifier is expecting type state to be
                 // placed even at dead blocks of code.
                 addSuperBlockStart(itsCodeBufferTop + 3);
                 // fallthru...
-            case ByteCode.IFEQ :
-            case ByteCode.IFNE :
-            case ByteCode.IFLT :
-            case ByteCode.IFGE :
-            case ByteCode.IFGT :
-            case ByteCode.IFLE :
-            case ByteCode.IF_ICMPEQ :
-            case ByteCode.IF_ICMPNE :
-            case ByteCode.IF_ICMPLT :
-            case ByteCode.IF_ICMPGE :
-            case ByteCode.IF_ICMPGT :
-            case ByteCode.IF_ICMPLE :
-            case ByteCode.IF_ACMPEQ :
-            case ByteCode.IF_ACMPNE :
-            case ByteCode.JSR :
-            case ByteCode.IFNULL :
-            case ByteCode.IFNONNULL : {
-                    if ((theOperand & 0x80000000) != 0x80000000) {
-                        if ((theOperand < 0) || (theOperand > 65535))
-                            throw new IllegalArgumentException(
+            case ByteCode.IFEQ:
+            case ByteCode.IFNE:
+            case ByteCode.IFLT:
+            case ByteCode.IFGE:
+            case ByteCode.IFGT:
+            case ByteCode.IFLE:
+            case ByteCode.IF_ICMPEQ:
+            case ByteCode.IF_ICMPNE:
+            case ByteCode.IF_ICMPLT:
+            case ByteCode.IF_ICMPGE:
+            case ByteCode.IF_ICMPGT:
+            case ByteCode.IF_ICMPLE:
+            case ByteCode.IF_ACMPEQ:
+            case ByteCode.IF_ACMPNE:
+            case ByteCode.JSR:
+            case ByteCode.IFNULL:
+            case ByteCode.IFNONNULL: {
+                if ((theOperand & 0x80000000) != 0x80000000) {
+                    if ((theOperand < 0) || (theOperand > 65535))
+                        throw new IllegalArgumentException(
                                 "Bad label for branch");
+                }
+                int branchPC = itsCodeBufferTop;
+                addToCodeBuffer(theOpCode);
+                if ((theOperand & 0x80000000) != 0x80000000) {
+                    // hard displacement
+                    addToCodeInt16(theOperand);
+                    int target = theOperand + branchPC;
+                    addSuperBlockStart(target);
+                    itsJumpFroms.put(target, branchPC);
+                } else {  // a label
+                    int targetPC = getLabelPC(theOperand);
+                    if (DEBUGLABELS) {
+                        int theLabel = theOperand & 0x7FFFFFFF;
+                        System.out.println("Fixing branch to " +
+                                theLabel + " at " + targetPC +
+                                " from " + branchPC);
                     }
-                    int branchPC = itsCodeBufferTop;
-                    addToCodeBuffer(theOpCode);
-                    if ((theOperand & 0x80000000) != 0x80000000) {
-                            // hard displacement
-                        addToCodeInt16(theOperand);
-                        int target = theOperand + branchPC;
-                        addSuperBlockStart(target);
-                        itsJumpFroms.put(target, branchPC);
-                    }
-                    else {  // a label
-                        int targetPC = getLabelPC(theOperand);
-                        if (DEBUGLABELS) {
-                            int theLabel = theOperand & 0x7FFFFFFF;
-                            System.out.println("Fixing branch to " +
-                                               theLabel + " at " + targetPC +
-                                               " from " + branchPC);
-                        }
-                        if (targetPC != -1) {
-                            int offset = targetPC - branchPC;
-                            addToCodeInt16(offset);
-                            addSuperBlockStart(targetPC);
-                            itsJumpFroms.put(targetPC, branchPC);
-                        }
-                        else {
-                            addLabelFixup(theOperand, branchPC + 1);
-                            addToCodeInt16(0);
-                        }
+                    if (targetPC != -1) {
+                        int offset = targetPC - branchPC;
+                        addToCodeInt16(offset);
+                        addSuperBlockStart(targetPC);
+                        itsJumpFroms.put(targetPC, branchPC);
+                    } else {
+                        addLabelFixup(theOperand, branchPC + 1);
+                        addToCodeInt16(0);
                     }
                 }
-                break;
+            }
+            break;
 
-            case ByteCode.BIPUSH :
-                if ((byte)theOperand != theOperand)
+            case ByteCode.BIPUSH:
+                if ((byte) theOperand != theOperand)
                     throw new IllegalArgumentException("out of range byte");
                 addToCodeBuffer(theOpCode);
-                addToCodeBuffer((byte)theOperand);
+                addToCodeBuffer((byte) theOperand);
                 break;
 
-            case ByteCode.SIPUSH :
-                if ((short)theOperand != theOperand)
+            case ByteCode.SIPUSH:
+                if ((short) theOperand != theOperand)
                     throw new IllegalArgumentException("out of range short");
                 addToCodeBuffer(theOpCode);
-                   addToCodeInt16(theOperand);
+                addToCodeInt16(theOperand);
                 break;
 
-            case ByteCode.NEWARRAY :
+            case ByteCode.NEWARRAY:
                 if (!(0 <= theOperand && theOperand < 256))
                     throw new IllegalArgumentException("out of range index");
                 addToCodeBuffer(theOpCode);
                 addToCodeBuffer(theOperand);
                 break;
 
-            case ByteCode.GETFIELD :
-            case ByteCode.PUTFIELD :
+            case ByteCode.GETFIELD:
+            case ByteCode.PUTFIELD:
                 if (!(0 <= theOperand && theOperand < 65536))
                     throw new IllegalArgumentException("out of range field");
                 addToCodeBuffer(theOpCode);
                 addToCodeInt16(theOperand);
                 break;
 
-            case ByteCode.LDC :
-            case ByteCode.LDC_W :
-            case ByteCode.LDC2_W :
+            case ByteCode.LDC:
+            case ByteCode.LDC_W:
+            case ByteCode.LDC2_W:
                 if (!(0 <= theOperand && theOperand < 65536))
                     throw new IllegalArgumentException("out of range index");
                 if (theOperand >= 256
-                    || theOpCode == ByteCode.LDC_W
-                    || theOpCode == ByteCode.LDC2_W)
-                {
+                        || theOpCode == ByteCode.LDC_W
+                        || theOpCode == ByteCode.LDC2_W) {
                     if (theOpCode == ByteCode.LDC) {
                         addToCodeBuffer(ByteCode.LDC_W);
                     } else {
@@ -596,40 +585,39 @@ public class ClassFileWriter {
                 }
                 break;
 
-            case ByteCode.RET :
-            case ByteCode.ILOAD :
-            case ByteCode.LLOAD :
-            case ByteCode.FLOAD :
-            case ByteCode.DLOAD :
-            case ByteCode.ALOAD :
-            case ByteCode.ISTORE :
-            case ByteCode.LSTORE :
-            case ByteCode.FSTORE :
-            case ByteCode.DSTORE :
-            case ByteCode.ASTORE :
+            case ByteCode.RET:
+            case ByteCode.ILOAD:
+            case ByteCode.LLOAD:
+            case ByteCode.FLOAD:
+            case ByteCode.DLOAD:
+            case ByteCode.ALOAD:
+            case ByteCode.ISTORE:
+            case ByteCode.LSTORE:
+            case ByteCode.FSTORE:
+            case ByteCode.DSTORE:
+            case ByteCode.ASTORE:
                 if (!(0 <= theOperand && theOperand < 65536))
                     throw new ClassFileFormatException("out of range variable");
                 if (theOperand >= 256) {
                     addToCodeBuffer(ByteCode.WIDE);
                     addToCodeBuffer(theOpCode);
                     addToCodeInt16(theOperand);
-                }
-                else {
+                } else {
                     addToCodeBuffer(theOpCode);
                     addToCodeBuffer(theOperand);
                 }
                 break;
 
-            default :
+            default:
                 throw new IllegalArgumentException(
-                    "Unexpected opcode for 1 operand");
+                        "Unexpected opcode for 1 operand");
         }
 
-        itsStackTop = (short)newStack;
-        if (newStack > itsMaxStack) itsMaxStack = (short)newStack;
+        itsStackTop = (short) newStack;
+        if (newStack > itsMaxStack) itsMaxStack = (short) newStack;
         if (DEBUGSTACK) {
-            System.out.println("After "+bytecodeStr(theOpCode)
-                               +" stack = "+itsStackTop);
+            System.out.println("After " + bytecodeStr(theOpCode)
+                    + " stack = " + itsStackTop);
         }
     }
 
@@ -640,12 +628,24 @@ public class ClassFileWriter {
      */
     public void addLoadConstant(int k) {
         switch (k) {
-            case 0: add(ByteCode.ICONST_0); break;
-            case 1: add(ByteCode.ICONST_1); break;
-            case 2: add(ByteCode.ICONST_2); break;
-            case 3: add(ByteCode.ICONST_3); break;
-            case 4: add(ByteCode.ICONST_4); break;
-            case 5: add(ByteCode.ICONST_5); break;
+            case 0:
+                add(ByteCode.ICONST_0);
+                break;
+            case 1:
+                add(ByteCode.ICONST_1);
+                break;
+            case 2:
+                add(ByteCode.ICONST_2);
+                break;
+            case 3:
+                add(ByteCode.ICONST_3);
+                break;
+            case 4:
+                add(ByteCode.ICONST_4);
+                break;
+            case 5:
+                add(ByteCode.ICONST_5);
+                break;
             default:
                 add(ByteCode.LDC, itsConstantPool.addConstant(k));
                 break;
@@ -691,15 +691,15 @@ public class ClassFileWriter {
     /**
      * Add the given two-operand bytecode to the current method.
      *
-     * @param theOpCode the opcode of the bytecode
+     * @param theOpCode   the opcode of the bytecode
      * @param theOperand1 the first operand of the bytecode
      * @param theOperand2 the second operand of the bytecode
      */
     public void add(int theOpCode, int theOperand1, int theOperand2) {
         if (DEBUGCODE) {
-            System.out.println("Add "+bytecodeStr(theOpCode)
-                               +", "+Integer.toHexString(theOperand1)
-                               +", "+Integer.toHexString(theOperand2));
+            System.out.println("Add " + bytecodeStr(theOpCode)
+                    + ", " + Integer.toHexString(theOperand1)
+                    + ", " + Integer.toHexString(theOperand2));
         }
         int newStack = itsStackTop + stackChange(theOpCode);
         if (newStack < 0 || Short.MAX_VALUE < newStack) badStack(newStack);
@@ -715,14 +715,12 @@ public class ClassFileWriter {
                 addToCodeBuffer(ByteCode.IINC);
                 addToCodeInt16(theOperand1);
                 addToCodeInt16(theOperand2);
-            }
-            else {
+            } else {
                 addToCodeBuffer(ByteCode.IINC);
                 addToCodeBuffer(theOperand1);
                 addToCodeBuffer(theOperand2);
             }
-        }
-        else if (theOpCode == ByteCode.MULTIANEWARRAY) {
+        } else if (theOpCode == ByteCode.MULTIANEWARRAY) {
             if (!(0 <= theOperand1 && theOperand1 < 65536))
                 throw new IllegalArgumentException("out of range index");
             if (!(0 <= theOperand2 && theOperand2 < 256))
@@ -731,138 +729,134 @@ public class ClassFileWriter {
             addToCodeBuffer(ByteCode.MULTIANEWARRAY);
             addToCodeInt16(theOperand1);
             addToCodeBuffer(theOperand2);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException(
-                "Unexpected opcode for 2 operands");
+                    "Unexpected opcode for 2 operands");
         }
-        itsStackTop = (short)newStack;
-        if (newStack > itsMaxStack) itsMaxStack = (short)newStack;
+        itsStackTop = (short) newStack;
+        if (newStack > itsMaxStack) itsMaxStack = (short) newStack;
         if (DEBUGSTACK) {
-            System.out.println("After "+bytecodeStr(theOpCode)
-                               +" stack = "+itsStackTop);
+            System.out.println("After " + bytecodeStr(theOpCode)
+                    + " stack = " + itsStackTop);
         }
 
     }
 
     public void add(int theOpCode, String className) {
         if (DEBUGCODE) {
-            System.out.println("Add "+bytecodeStr(theOpCode)
-                               +", "+className);
+            System.out.println("Add " + bytecodeStr(theOpCode)
+                    + ", " + className);
         }
         int newStack = itsStackTop + stackChange(theOpCode);
         if (newStack < 0 || Short.MAX_VALUE < newStack) badStack(newStack);
         switch (theOpCode) {
-            case ByteCode.NEW :
-            case ByteCode.ANEWARRAY :
-            case ByteCode.CHECKCAST :
-            case ByteCode.INSTANCEOF : {
+            case ByteCode.NEW:
+            case ByteCode.ANEWARRAY:
+            case ByteCode.CHECKCAST:
+            case ByteCode.INSTANCEOF: {
                 short classIndex = itsConstantPool.addClass(className);
                 addToCodeBuffer(theOpCode);
                 addToCodeInt16(classIndex);
             }
             break;
 
-            default :
+            default:
                 throw new IllegalArgumentException(
-                    "bad opcode for class reference");
+                        "bad opcode for class reference");
         }
-        itsStackTop = (short)newStack;
-        if (newStack > itsMaxStack) itsMaxStack = (short)newStack;
+        itsStackTop = (short) newStack;
+        if (newStack > itsMaxStack) itsMaxStack = (short) newStack;
         if (DEBUGSTACK) {
-            System.out.println("After "+bytecodeStr(theOpCode)
-                               +" stack = "+itsStackTop);
+            System.out.println("After " + bytecodeStr(theOpCode)
+                    + " stack = " + itsStackTop);
         }
     }
 
 
     public void add(int theOpCode, String className, String fieldName,
-                    String fieldType)
-    {
+                    String fieldType) {
         if (DEBUGCODE) {
-            System.out.println("Add "+bytecodeStr(theOpCode)
-                               +", "+className+", "+fieldName+", "+fieldType);
+            System.out.println("Add " + bytecodeStr(theOpCode)
+                    + ", " + className + ", " + fieldName + ", " + fieldType);
         }
         int newStack = itsStackTop + stackChange(theOpCode);
         char fieldTypeChar = fieldType.charAt(0);
         int fieldSize = (fieldTypeChar == 'J' || fieldTypeChar == 'D')
-                        ? 2 : 1;
+                ? 2 : 1;
         switch (theOpCode) {
-            case ByteCode.GETFIELD :
-            case ByteCode.GETSTATIC :
+            case ByteCode.GETFIELD:
+            case ByteCode.GETSTATIC:
                 newStack += fieldSize;
                 break;
-            case ByteCode.PUTSTATIC :
-            case ByteCode.PUTFIELD :
+            case ByteCode.PUTSTATIC:
+            case ByteCode.PUTFIELD:
                 newStack -= fieldSize;
                 break;
-            default :
+            default:
                 throw new IllegalArgumentException(
-                    "bad opcode for field reference");
+                        "bad opcode for field reference");
         }
         if (newStack < 0 || Short.MAX_VALUE < newStack) badStack(newStack);
         short fieldRefIndex = itsConstantPool.addFieldRef(className,
-                                             fieldName, fieldType);
+                fieldName, fieldType);
         addToCodeBuffer(theOpCode);
         addToCodeInt16(fieldRefIndex);
 
-        itsStackTop = (short)newStack;
-        if (newStack > itsMaxStack) itsMaxStack = (short)newStack;
+        itsStackTop = (short) newStack;
+        if (newStack > itsMaxStack) itsMaxStack = (short) newStack;
         if (DEBUGSTACK) {
-            System.out.println("After "+bytecodeStr(theOpCode)
-                               +" stack = "+itsStackTop);
+            System.out.println("After " + bytecodeStr(theOpCode)
+                    + " stack = " + itsStackTop);
         }
     }
 
     public void addInvoke(int theOpCode, String className, String methodName,
-                          String methodType)
-    {
+                          String methodType) {
         if (DEBUGCODE) {
-            System.out.println("Add "+bytecodeStr(theOpCode)
-                               +", "+className+", "+methodName+", "
-                               +methodType);
+            System.out.println("Add " + bytecodeStr(theOpCode)
+                    + ", " + className + ", " + methodName + ", "
+                    + methodType);
         }
         int parameterInfo = sizeOfParameters(methodType);
         int parameterCount = parameterInfo >>> 16;
-        int stackDiff = (short)parameterInfo;
+        int stackDiff = (short) parameterInfo;
 
         int newStack = itsStackTop + stackDiff;
         newStack += stackChange(theOpCode);     // adjusts for 'this'
         if (newStack < 0 || Short.MAX_VALUE < newStack) badStack(newStack);
 
         switch (theOpCode) {
-            case ByteCode.INVOKEVIRTUAL :
-            case ByteCode.INVOKESPECIAL :
-            case ByteCode.INVOKESTATIC :
-            case ByteCode.INVOKEINTERFACE : {
-                    addToCodeBuffer(theOpCode);
-                    if (theOpCode == ByteCode.INVOKEINTERFACE) {
-                        short ifMethodRefIndex
-                                    = itsConstantPool.addInterfaceMethodRef(
-                                               className, methodName,
-                                               methodType);
-                        addToCodeInt16(ifMethodRefIndex);
-                        addToCodeBuffer(parameterCount + 1);
-                        addToCodeBuffer(0);
-                    }
-                    else {
-                        short methodRefIndex = itsConstantPool.addMethodRef(
-                                               className, methodName,
-                                               methodType);
-                        addToCodeInt16(methodRefIndex);
-                    }
+            case ByteCode.INVOKEVIRTUAL:
+            case ByteCode.INVOKESPECIAL:
+            case ByteCode.INVOKESTATIC:
+            case ByteCode.INVOKEINTERFACE: {
+                addToCodeBuffer(theOpCode);
+                if (theOpCode == ByteCode.INVOKEINTERFACE) {
+                    short ifMethodRefIndex
+                            = itsConstantPool.addInterfaceMethodRef(
+                            className, methodName,
+                            methodType);
+                    addToCodeInt16(ifMethodRefIndex);
+                    addToCodeBuffer(parameterCount + 1);
+                    addToCodeBuffer(0);
+                } else {
+                    short methodRefIndex = itsConstantPool.addMethodRef(
+                            className, methodName,
+                            methodType);
+                    addToCodeInt16(methodRefIndex);
                 }
-                break;
+            }
+            break;
 
-            default :
+            default:
                 throw new IllegalArgumentException(
-                    "bad opcode for method reference");
+                        "bad opcode for method reference");
         }
-        itsStackTop = (short)newStack;
-        if (newStack > itsMaxStack) itsMaxStack = (short)newStack;
+        itsStackTop = (short) newStack;
+        if (newStack > itsMaxStack) itsMaxStack = (short) newStack;
         if (DEBUGSTACK) {
-            System.out.println("After "+bytecodeStr(theOpCode)
-                               +" stack = "+itsStackTop);
+            System.out.println("After " + bytecodeStr(theOpCode)
+                    + " stack = " + itsStackTop);
         }
     }
 
@@ -871,25 +865,23 @@ public class ClassFileWriter {
      *
      * @param k the constant
      */
-    public void addPush(int k)
-    {
-        if ((byte)k == k) {
+    public void addPush(int k) {
+        if ((byte) k == k) {
             if (k == -1) {
                 add(ByteCode.ICONST_M1);
             } else if (0 <= k && k <= 5) {
-                add((byte)(ByteCode.ICONST_0 + k));
+                add((byte) (ByteCode.ICONST_0 + k));
             } else {
-                add(ByteCode.BIPUSH, (byte)k);
+                add(ByteCode.BIPUSH, (byte) k);
             }
-        } else if ((short)k == k) {
-            add(ByteCode.SIPUSH, (short)k);
+        } else if ((short) k == k) {
+            add(ByteCode.SIPUSH, (short) k);
         } else {
             addLoadConstant(k);
         }
     }
 
-    public void addPush(boolean k)
-    {
+    public void addPush(boolean k) {
         add(k ? ByteCode.ICONST_1 : ByteCode.ICONST_0);
     }
 
@@ -898,9 +890,8 @@ public class ClassFileWriter {
      *
      * @param k the constant
      */
-    public void addPush(long k)
-    {
-        int ik = (int)k;
+    public void addPush(long k) {
+        int ik = (int) k;
         if (ik == k) {
             addPush(ik);
             add(ByteCode.I2L);
@@ -914,8 +905,7 @@ public class ClassFileWriter {
      *
      * @param k the constant
      */
-    public void addPush(double k)
-    {
+    public void addPush(double k) {
         if (k == 0.0) {
             // zero
             add(ByteCode.DCONST_0);
@@ -958,12 +948,12 @@ public class ClassFileWriter {
         addPush(length);
         addInvoke(ByteCode.INVOKESPECIAL, SB, "<init>", "(I)V");
         int cursor = 0;
-        for (;;) {
+        for (; ; ) {
             add(ByteCode.DUP);
             String s = k.substring(cursor, limit);
             addLoadConstant(s);
             addInvoke(ByteCode.INVOKEVIRTUAL, SB, "append",
-                      "(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+                    "(Ljava/lang/String;)Ljava/lang/StringBuffer;");
             add(ByteCode.POP);
             if (limit == length) {
                 break;
@@ -972,7 +962,7 @@ public class ClassFileWriter {
             limit = itsConstantPool.getUtfEncodingLimit(k, limit, length);
         }
         addInvoke(ByteCode.INVOKEVIRTUAL, SB, "toString",
-                  "()Ljava/lang/String;");
+                "()Ljava/lang/String;");
     }
 
     /**
@@ -981,8 +971,7 @@ public class ClassFileWriter {
      *
      * @param k the string constant
      */
-    public boolean isUnderStringSizeLimit(String k)
-    {
+    public boolean isUnderStringSizeLimit(String k) {
         return itsConstantPool.isUnderUtfEncodingLimit(k);
     }
 
@@ -991,8 +980,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addIStore(int local)
-    {
+    public void addIStore(int local) {
         xop(ByteCode.ISTORE_0, ByteCode.ISTORE, local);
     }
 
@@ -1001,8 +989,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addLStore(int local)
-    {
+    public void addLStore(int local) {
         xop(ByteCode.LSTORE_0, ByteCode.LSTORE, local);
     }
 
@@ -1011,8 +998,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addFStore(int local)
-    {
+    public void addFStore(int local) {
         xop(ByteCode.FSTORE_0, ByteCode.FSTORE, local);
     }
 
@@ -1021,8 +1007,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addDStore(int local)
-    {
+    public void addDStore(int local) {
         xop(ByteCode.DSTORE_0, ByteCode.DSTORE, local);
     }
 
@@ -1031,8 +1016,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addAStore(int local)
-    {
+    public void addAStore(int local) {
         xop(ByteCode.ASTORE_0, ByteCode.ASTORE, local);
     }
 
@@ -1041,8 +1025,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addILoad(int local)
-    {
+    public void addILoad(int local) {
         xop(ByteCode.ILOAD_0, ByteCode.ILOAD, local);
     }
 
@@ -1051,8 +1034,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addLLoad(int local)
-    {
+    public void addLLoad(int local) {
         xop(ByteCode.LLOAD_0, ByteCode.LLOAD, local);
     }
 
@@ -1061,8 +1043,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addFLoad(int local)
-    {
+    public void addFLoad(int local) {
         xop(ByteCode.FLOAD_0, ByteCode.FLOAD, local);
     }
 
@@ -1071,8 +1052,7 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addDLoad(int local)
-    {
+    public void addDLoad(int local) {
         xop(ByteCode.DLOAD_0, ByteCode.DLOAD, local);
     }
 
@@ -1081,47 +1061,43 @@ public class ClassFileWriter {
      *
      * @param local number of local register
      */
-    public void addALoad(int local)
-    {
+    public void addALoad(int local) {
         xop(ByteCode.ALOAD_0, ByteCode.ALOAD, local);
     }
 
     /**
      * Load "this" into stack.
      */
-    public void addLoadThis()
-    {
+    public void addLoadThis() {
         add(ByteCode.ALOAD_0);
     }
 
-    private void xop(int shortOp, int op, int local)
-    {
+    private void xop(int shortOp, int op, int local) {
         switch (local) {
-          case 0:
-            add(shortOp);
-            break;
-          case 1:
-            add(shortOp + 1);
-            break;
-          case 2:
-            add(shortOp + 2);
-            break;
-          case 3:
-            add(shortOp + 3);
-            break;
-          default:
-            add(op, local);
+            case 0:
+                add(shortOp);
+                break;
+            case 1:
+                add(shortOp + 1);
+                break;
+            case 2:
+                add(shortOp + 2);
+                break;
+            case 3:
+                add(shortOp + 3);
+                break;
+            default:
+                add(op, local);
         }
     }
 
-    public int addTableSwitch(int low, int high)
-    {
+    public int addTableSwitch(int low, int high) {
         if (DEBUGCODE) {
-            System.out.println("Add "+bytecodeStr(ByteCode.TABLESWITCH)
-                               +" "+low+" "+high);
+            System.out.println("Add " + bytecodeStr(ByteCode.TABLESWITCH)
+                    + " " + low + " " + high);
         }
         if (low > high)
-            throw new ClassFileFormatException("Bad bounds: "+low+' '+ high);
+            throw new ClassFileFormatException("Bad bounds: " + low + ' ' + high);
 
         int newStack = itsStackTop + stackChange(ByteCode.TABLESWITCH);
         if (newStack < 0 || Short.MAX_VALUE < newStack) badStack(newStack);
@@ -1131,7 +1107,7 @@ public class ClassFileWriter {
 
         int N = addReservedCodeSpace(1 + padSize + 4 * (1 + 2 + entryCount));
         int switchStart = N;
-        itsCodeBuffer[N++] = (byte)ByteCode.TABLESWITCH;
+        itsCodeBuffer[N++] = (byte) ByteCode.TABLESWITCH;
         while (padSize != 0) {
             itsCodeBuffer[N++] = 0;
             --padSize;
@@ -1140,36 +1116,33 @@ public class ClassFileWriter {
         N = putInt32(low, itsCodeBuffer, N);
         putInt32(high, itsCodeBuffer, N);
 
-        itsStackTop = (short)newStack;
-        if (newStack > itsMaxStack) itsMaxStack = (short)newStack;
+        itsStackTop = (short) newStack;
+        if (newStack > itsMaxStack) itsMaxStack = (short) newStack;
         if (DEBUGSTACK) {
-            System.out.println("After "+bytecodeStr(ByteCode.TABLESWITCH)
-                               +" stack = "+itsStackTop);
+            System.out.println("After " + bytecodeStr(ByteCode.TABLESWITCH)
+                    + " stack = " + itsStackTop);
         }
 
         return switchStart;
     }
 
-    public final void markTableSwitchDefault(int switchStart)
-    {
+    public final void markTableSwitchDefault(int switchStart) {
         addSuperBlockStart(itsCodeBufferTop);
         itsJumpFroms.put(itsCodeBufferTop, switchStart);
         setTableSwitchJump(switchStart, -1, itsCodeBufferTop);
     }
 
-    public final void markTableSwitchCase(int switchStart, int caseIndex)
-    {
+    public final void markTableSwitchCase(int switchStart, int caseIndex) {
         addSuperBlockStart(itsCodeBufferTop);
         itsJumpFroms.put(itsCodeBufferTop, switchStart);
         setTableSwitchJump(switchStart, caseIndex, itsCodeBufferTop);
     }
 
     public final void markTableSwitchCase(int switchStart, int caseIndex,
-                                          int stackTop)
-    {
+                                          int stackTop) {
         if (!(0 <= stackTop && stackTop <= itsMaxStack))
-            throw new IllegalArgumentException("Bad stack index: "+stackTop);
-        itsStackTop = (short)stackTop;
+            throw new IllegalArgumentException("Bad stack index: " + stackTop);
+        itsStackTop = (short) stackTop;
         addSuperBlockStart(itsCodeBufferTop);
         itsJumpFroms.put(itsCodeBufferTop, switchStart);
         setTableSwitchJump(switchStart, caseIndex, itsCodeBufferTop);
@@ -1180,12 +1153,11 @@ public class ClassFileWriter {
      * be marked as a super block start for stack map generation.
      */
     public void setTableSwitchJump(int switchStart, int caseIndex,
-                                   int jumpTarget)
-    {
+                                   int jumpTarget) {
         if (!(0 <= jumpTarget && jumpTarget <= itsCodeBufferTop))
-            throw new IllegalArgumentException("Bad jump target: "+jumpTarget);
+            throw new IllegalArgumentException("Bad jump target: " + jumpTarget);
         if (!(caseIndex >= -1))
-            throw new IllegalArgumentException("Bad case index: "+caseIndex);
+            throw new IllegalArgumentException("Bad case index: " + caseIndex);
 
         int padSize = 3 & ~switchStart; // == 3 - switchStart % 4
         int caseOffset;
@@ -1196,33 +1168,31 @@ public class ClassFileWriter {
             caseOffset = switchStart + 1 + padSize + 4 * (3 + caseIndex);
         }
         if (!(0 <= switchStart
-              && switchStart <= itsCodeBufferTop - 4 * 4 - padSize - 1))
-        {
+                && switchStart <= itsCodeBufferTop - 4 * 4 - padSize - 1)) {
             throw new IllegalArgumentException(
-                switchStart+" is outside a possible range of tableswitch"
-                +" in already generated code");
+                    switchStart + " is outside a possible range of tableswitch"
+                            + " in already generated code");
         }
         if ((0xFF & itsCodeBuffer[switchStart]) != ByteCode.TABLESWITCH) {
             throw new IllegalArgumentException(
-                switchStart+" is not offset of tableswitch statement");
+                    switchStart + " is not offset of tableswitch statement");
         }
         if (!(0 <= caseOffset && caseOffset + 4 <= itsCodeBufferTop)) {
             // caseIndex >= -1 does not guarantee that caseOffset >= 0 due
             // to a possible overflow.
             throw new ClassFileFormatException(
-                "Too big case index: "+caseIndex);
+                    "Too big case index: " + caseIndex);
         }
         // ALERT: perhaps check against case bounds?
         putInt32(jumpTarget - switchStart, itsCodeBuffer, caseOffset);
     }
 
-    public int acquireLabel()
-    {
+    public int acquireLabel() {
         int top = itsLabelTableTop;
         if (itsLabelTable == null || top == itsLabelTable.length) {
             if (itsLabelTable == null) {
                 itsLabelTable = new int[MIN_LABEL_TABLE_SIZE];
-            }else {
+            } else {
                 int[] tmp = new int[itsLabelTable.length * 2];
                 System.arraycopy(itsLabelTable, 0, tmp, 0, top);
                 itsLabelTable = tmp;
@@ -1233,8 +1203,7 @@ public class ClassFileWriter {
         return top | 0x80000000;
     }
 
-    public void markLabel(int label)
-    {
+    public void markLabel(int label) {
         if (!(label < 0))
             throw new IllegalArgumentException("Bad label, no biscuit");
 
@@ -1249,8 +1218,7 @@ public class ClassFileWriter {
         itsLabelTable[label] = itsCodeBufferTop;
     }
 
-    public void markLabel(int label, short stackTop)
-    {
+    public void markLabel(int label, short stackTop) {
         markLabel(label);
         itsStackTop = stackTop;
     }
@@ -1260,8 +1228,7 @@ public class ClassFileWriter {
         markLabel(theLabel);
     }
 
-    public int getLabelPC(int label)
-    {
+    public int getLabelPC(int label) {
         if (!(label < 0))
             throw new IllegalArgumentException("Bad label, no biscuit");
         label &= 0x7FFFFFFF;
@@ -1270,8 +1237,7 @@ public class ClassFileWriter {
         return itsLabelTable[label];
     }
 
-    private void addLabelFixup(int label, int fixupSite)
-    {
+    private void addLabelFixup(int label, int fixupSite) {
         if (!(label < 0))
             throw new IllegalArgumentException("Bad label, no biscuit");
         label &= 0x7FFFFFFF;
@@ -1281,23 +1247,22 @@ public class ClassFileWriter {
         if (itsFixupTable == null || top == itsFixupTable.length) {
             if (itsFixupTable == null) {
                 itsFixupTable = new long[MIN_FIXUP_TABLE_SIZE];
-            }else {
+            } else {
                 long[] tmp = new long[itsFixupTable.length * 2];
                 System.arraycopy(itsFixupTable, 0, tmp, 0, top);
                 itsFixupTable = tmp;
             }
         }
         itsFixupTableTop = top + 1;
-        itsFixupTable[top] = ((long)label << 32) | fixupSite;
+        itsFixupTable[top] = ((long) label << 32) | fixupSite;
     }
 
-    private  void fixLabelGotos()
-    {
+    private void fixLabelGotos() {
         byte[] codeBuffer = itsCodeBuffer;
         for (int i = 0; i < itsFixupTableTop; i++) {
             long fixup = itsFixupTable[i];
-            int label = (int)(fixup >> 32);
-            int fixupSite = (int)fixup;
+            int label = (int) (fixup >> 32);
+            int fixupSite = (int) fixup;
             int pc = itsLabelTable[label];
             if (pc == -1) {
                 // Unlocated label
@@ -1307,12 +1272,12 @@ public class ClassFileWriter {
             addSuperBlockStart(pc);
             itsJumpFroms.put(pc, fixupSite - 1);
             int offset = pc - (fixupSite - 1);
-            if ((short)offset != offset) {
+            if ((short) offset != offset) {
                 throw new ClassFileFormatException
-                    ("Program too complex: too big jump offset");
+                        ("Program too complex: too big jump offset");
             }
-            codeBuffer[fixupSite] = (byte)(offset >> 8);
-            codeBuffer[fixupSite + 1] = (byte)offset;
+            codeBuffer[fixupSite] = (byte) (offset >> 8);
+            codeBuffer[fixupSite + 1] = (byte) offset;
         }
         itsFixupTableTop = 0;
     }
@@ -1337,35 +1302,34 @@ public class ClassFileWriter {
     public void adjustStackTop(int delta) {
         int newStack = itsStackTop + delta;
         if (newStack < 0 || Short.MAX_VALUE < newStack) badStack(newStack);
-        itsStackTop = (short)newStack;
-        if (newStack > itsMaxStack) itsMaxStack = (short)newStack;
+        itsStackTop = (short) newStack;
+        if (newStack > itsMaxStack) itsMaxStack = (short) newStack;
         if (DEBUGSTACK) {
-            System.out.println("After "+"adjustStackTop("+delta+")"
-                               +" stack = "+itsStackTop);
+            System.out.println("After " + "adjustStackTop(" + delta + ")"
+                    + " stack = " + itsStackTop);
         }
     }
 
-    private void addToCodeBuffer(int b)
-    {
+    private void addToCodeBuffer(int b) {
         int N = addReservedCodeSpace(1);
-        itsCodeBuffer[N] = (byte)b;
+        itsCodeBuffer[N] = (byte) b;
     }
 
-    private void addToCodeInt16(int value)
-    {
+    private void addToCodeInt16(int value) {
         int N = addReservedCodeSpace(2);
         putInt16(value, itsCodeBuffer, N);
     }
 
-    private int addReservedCodeSpace(int size)
-    {
+    private int addReservedCodeSpace(int size) {
         if (itsCurrentMethod == null)
             throw new IllegalArgumentException("No method to add to");
         int oldTop = itsCodeBufferTop;
         int newTop = oldTop + size;
         if (newTop > itsCodeBuffer.length) {
             int newSize = itsCodeBuffer.length * 2;
-            if (newTop > newSize) { newSize = newTop; }
+            if (newTop > newSize) {
+                newSize = newTop;
+            }
             byte[] tmp = new byte[newSize];
             System.arraycopy(itsCodeBuffer, 0, tmp, 0, oldTop);
             itsCodeBuffer = tmp;
@@ -1375,8 +1339,7 @@ public class ClassFileWriter {
     }
 
     public void addExceptionHandler(int startLabel, int endLabel,
-                                    int handlerLabel, String catchClassName)
-    {
+                                    int handlerLabel, String catchClassName) {
         if ((startLabel & 0x80000000) != 0x80000000)
             throw new IllegalArgumentException("Bad startLabel");
         if ((endLabel & 0x80000000) != 0x80000000)
@@ -1390,13 +1353,13 @@ public class ClassFileWriter {
          * something other than a Throwable.)
          */
         short catch_type_index = (catchClassName == null)
-                                 ? 0
-                                 : itsConstantPool.addClass(catchClassName);
+                ? 0
+                : itsConstantPool.addClass(catchClassName);
         ExceptionTableEntry newEntry = new ExceptionTableEntry(
-                                           startLabel,
-                                           endLabel,
-                                           handlerLabel,
-                                           catch_type_index);
+                startLabel,
+                endLabel,
+                handlerLabel,
+                catch_type_index);
         int N = itsExceptionTableTop;
         if (N == 0) {
             itsExceptionTable = new ExceptionTableEntry[ExceptionTableSize];
@@ -1465,8 +1428,8 @@ public class ClassFileWriter {
                 for (int i = 0;
                      i < superBlocks.length && superBlocks[i] != null; i++) {
                     System.out.println("sb " + i + ": [" +
-                                       superBlocks[i].getStart() + ", " +
-                                       superBlocks[i].getEnd() + ")");
+                            superBlocks[i].getStart() + ", " +
+                            superBlocks[i].getEnd() + ")");
                 }
             }
 
@@ -1480,7 +1443,7 @@ public class ClassFileWriter {
                     SuperBlock sb = superBlocks[i];
                     System.out.println("sb " + i + ":");
                     TypeInfo.print(sb.getLocals(), sb.getStack(),
-                                   itsConstantPool);
+                            itsConstantPool);
                 }
             }
         }
@@ -1521,7 +1484,7 @@ public class ClassFileWriter {
 
         /**
          * Calculate partial dependencies for super blocks.
-         *
+         * <p>
          * This is used as a workaround for dead code that is generated. Only
          * one dependency per super block is given.
          */
@@ -1599,7 +1562,7 @@ public class ClassFileWriter {
 
         /**
          * Extract a logical operand from the byte code.
-         *
+         * <p>
          * This is used, for example, to get branch offsets.
          */
         private int getOperand(int start, int size) {
@@ -1620,11 +1583,11 @@ public class ClassFileWriter {
         private void verify() {
             int[] initialLocals = createInitialLocals();
             superBlocks[0].merge(initialLocals, initialLocals.length,
-                                 new int[0], 0, itsConstantPool);
+                    new int[0], 0, itsConstantPool);
 
             // Start from the top of the method and queue up block dependencies
             // as they come along.
-            workList = new SuperBlock[] { superBlocks[0] };
+            workList = new SuperBlock[]{superBlocks[0]};
             workListTop = 1;
             executeWorkList();
 
@@ -1640,11 +1603,11 @@ public class ClassFileWriter {
 
         /**
          * Replace the contents of a super block with no-ops.
-         *
+         * <p>
          * The above description is not strictly true; the last instruction is
          * an athrow instruction. This technique is borrowed from ASM's
          * developer guide: http://asm.ow2.org/doc/developer-guide.html#deadcode
-         *
+         * <p>
          * The proposed algorithm fills a block with nop, ending it with an
          * athrow. The stack map generated would be empty locals with an
          * exception on the stack. In theory, it shouldn't matter what the
@@ -1652,14 +1615,14 @@ public class ClassFileWriter {
          * However, it turns out that if the code being modified falls into an
          * exception handler, it causes problems. Therefore, if it does, then
          * we steal the locals from the exception block.
-         *
+         * <p>
          * If the block itself is an exception handler, we remove it from the
          * exception table to simplify block dependencies.
          */
         private void killSuperBlock(SuperBlock sb) {
             int[] locals = new int[0];
-            int[] stack = new int[] { TypeInfo.OBJECT("java/lang/Throwable",
-                                                      itsConstantPool) };
+            int[] stack = new int[]{TypeInfo.OBJECT("java/lang/Throwable",
+                    itsConstantPool)};
 
             // If the super block is handled by any exception handler, use its
             // locals as the killed block's locals. Ignore uninitialized
@@ -1672,8 +1635,8 @@ public class ClassFileWriter {
                 int handlerPC = getLabelPC(ete.itsHandlerLabel);
                 SuperBlock handlerSB = getSuperBlockFromOffset(handlerPC);
                 if ((sb.getStart() > eteStart && sb.getStart() < eteEnd) ||
-                    (eteStart > sb.getStart() && eteStart < sb.getEnd()) &&
-                    handlerSB.isInitialized()) {
+                        (eteStart > sb.getStart() && eteStart < sb.getEnd()) &&
+                                handlerSB.isInitialized()) {
                     locals = handlerSB.getLocals();
                     break;
                 }
@@ -1695,7 +1658,7 @@ public class ClassFileWriter {
             }
 
             sb.merge(locals, locals.length, stack, stack.length,
-                     itsConstantPool);
+                    itsConstantPool);
 
             int end = sb.getEnd() - 1;
             itsCodeBuffer[end] = (byte) ByteCode.ATHROW;
@@ -1727,7 +1690,7 @@ public class ClassFileWriter {
                 System.out.println("working on sb " + work.getIndex());
                 System.out.println("initial type state:");
                 TypeInfo.print(locals, localsTop, stack, stackTop,
-                               itsConstantPool);
+                        itsConstantPool);
             }
 
             for (int bci = work.getStart(); bci < work.getEnd(); bci += next) {
@@ -1743,20 +1706,20 @@ public class ClassFileWriter {
                     SuperBlock targetSB = getBranchTarget(bci);
                     if (DEBUGSTACKMAP) {
                         System.out.println("sb " + work.getIndex() +
-                                           " points to sb " +
-                                           targetSB.getIndex() +
-                                           " (offset " + bci + " -> " +
-                                           targetSB.getStart() + ")");
+                                " points to sb " +
+                                targetSB.getIndex() +
+                                " (offset " + bci + " -> " +
+                                targetSB.getStart() + ")");
                         System.out.println("type state at " + bci + ":");
                         TypeInfo.print(locals, localsTop, stack, stackTop,
-                                       itsConstantPool);
+                                itsConstantPool);
                     }
                     flowInto(targetSB);
                     if (DEBUGSTACKMAP) {
                         System.out.println("type state of " + targetSB +
-                                           " after merge:");
+                                " after merge:");
                         TypeInfo.print(targetSB.getLocals(),
-                                       targetSB.getStack(), itsConstantPool);
+                                targetSB.getStack(), itsConstantPool);
                     }
                 } else if (bc == ByteCode.TABLESWITCH) {
                     int switchStart = bci + 1 + (3 & ~bci); // 3 - bci % 4
@@ -1765,7 +1728,7 @@ public class ClassFileWriter {
                             getSuperBlockFromOffset(bci + defaultOffset);
                     if (DEBUGSTACK) {
                         System.out.println("merging sb " + work.getIndex() +
-                                           " with sb " + targetSB.getIndex());
+                                " with sb " + targetSB.getIndex());
                     }
                     flowInto(targetSB);
                     int low = getOperand(switchStart + 4, 4);
@@ -1777,8 +1740,8 @@ public class ClassFileWriter {
                         targetSB = getSuperBlockFromOffset(label);
                         if (DEBUGSTACKMAP) {
                             System.out.println("merging sb " +
-                                               work.getIndex() + " with sb " +
-                                               targetSB.getIndex());
+                                    work.getIndex() + " with sb " +
+                                    targetSB.getIndex());
                         }
                         flowInto(targetSB);
                     }
@@ -1798,12 +1761,12 @@ public class ClassFileWriter {
 
                     if (ete.itsCatchType == 0) {
                         exceptionType = TypeInfo.OBJECT(
-                            itsConstantPool.addClass("java/lang/Throwable"));
+                                itsConstantPool.addClass("java/lang/Throwable"));
                     } else {
                         exceptionType = TypeInfo.OBJECT(ete.itsCatchType);
                     }
-                    sb.merge(locals, localsTop, new int[] { exceptionType }, 1,
-                             itsConstantPool);
+                    sb.merge(locals, localsTop, new int[]{exceptionType}, 1,
+                            itsConstantPool);
                     addToWorkList(sb);
                 }
             }
@@ -1811,7 +1774,7 @@ public class ClassFileWriter {
             if (DEBUGSTACKMAP) {
                 System.out.println("end of sb " + work.getIndex() + ":");
                 TypeInfo.print(locals, localsTop, stack, stackTop,
-                               itsConstantPool);
+                        itsConstantPool);
             }
 
             // Check the last instruction to see if it is a true end of a
@@ -1822,8 +1785,8 @@ public class ClassFileWriter {
                 if (nextIndex < superBlocks.length) {
                     if (DEBUGSTACKMAP) {
                         System.out.println("continuing from sb " +
-                                           work.getIndex() + " into sb " +
-                                           nextIndex);
+                                work.getIndex() + " into sb " +
+                                nextIndex);
                     }
                     flowInto(superBlocks[nextIndex]);
                 }
@@ -2130,11 +2093,11 @@ public class ClassFileWriter {
                             break;
                         case ConstantPool.CONSTANT_String:
                             push(TypeInfo.OBJECT("java/lang/String",
-                                                 itsConstantPool));
+                                    itsConstantPool));
                             break;
                         default:
                             throw new IllegalArgumentException(
-                                "bad const type " + constType);
+                                    "bad const type " + constType);
                     }
                     break;
                 case ByteCode.NEW:
@@ -2152,7 +2115,7 @@ public class ClassFileWriter {
                     className = (String) itsConstantPool.getConstantData(index);
                     pop();
                     push(TypeInfo.OBJECT("[L" + className + ';',
-                                         itsConstantPool));
+                            itsConstantPool));
                     break;
                 case ByteCode.INVOKEVIRTUAL:
                 case ByteCode.INVOKESPECIAL:
@@ -2171,7 +2134,7 @@ public class ClassFileWriter {
                         int instType = pop();
                         int tag = TypeInfo.getTag(instType);
                         if (tag == TypeInfo.UNINITIALIZED_VARIABLE(0) ||
-                            tag == TypeInfo.UNINITIALIZED_THIS) {
+                                tag == TypeInfo.UNINITIALIZED_THIS) {
                             if ("<init>".equals(methodName)) {
                                 int newType =
                                         TypeInfo.OBJECT(itsThisClassIndex);
@@ -2283,14 +2246,14 @@ public class ClassFileWriter {
             int type = getLocal(localIndex);
             int tag = TypeInfo.getTag(type);
             if (tag == TypeInfo.OBJECT_TAG ||
-                tag == TypeInfo.UNINITIALIZED_THIS ||
-                tag == TypeInfo.UNINITIALIZED_VAR_TAG ||
-                tag == TypeInfo.NULL) {
+                    tag == TypeInfo.UNINITIALIZED_THIS ||
+                    tag == TypeInfo.UNINITIALIZED_VAR_TAG ||
+                    tag == TypeInfo.NULL) {
                 push(type);
             } else {
                 throw new IllegalStateException("bad local variable type: " +
-                                                type + " at index: " +
-                                                localIndex);
+                        type + " at index: " +
+                        localIndex);
             }
         }
 
@@ -2355,7 +2318,7 @@ public class ClassFileWriter {
 
         /**
          * Push two words onto the op stack.
-         *
+         * <p>
          * This is only meant to be used as a complement to pop2(), and both
          * methods are helpers for the more complex DUP operations.
          */
@@ -2369,7 +2332,7 @@ public class ClassFileWriter {
 
         /**
          * Pop two words from the op stack.
-         *
+         * <p>
          * If the top of the stack is a DOUBLE or LONG, then the bottom 32 bits
          * reflects the appropriate type and the top 32 bits are 0. Otherwise,
          * the top 32 bits are the first word on the stack and the lower 32
@@ -2390,7 +2353,7 @@ public class ClassFileWriter {
 
         /**
          * Compute the output size of the stack map table.
-         *
+         * <p>
          * Because this would share much in common with actual writing of the
          * stack map table, we instead just write the stack map table to a
          * buffer and return the size from it. The buffer is later used in
@@ -2429,7 +2392,7 @@ public class ClassFileWriter {
                     int last = prevLocals.length > currentLocals.length ?
                             currentLocals.length : prevLocals.length;
                     int delta = Math.abs(prevLocals.length -
-                                         currentLocals.length);
+                            currentLocals.length);
                     int j;
                     // Compare locals until one is different or the end of a
                     // local variable array is reached
@@ -2454,18 +2417,18 @@ public class ClassFileWriter {
                         // Not all locals were compared were equal, so a full
                         // frame is necessary
                         writeFullFrame(currentLocals, currentStack,
-                                       offsetDelta);
+                                offsetDelta);
                     }
                 } else if (currentStack.length == 1) {
                     if (Arrays.equals(prevLocals, currentLocals)) {
-                       writeSameLocalsOneStackItemFrame(currentLocals,
-                                                        currentStack,
-                                                        offsetDelta);
+                        writeSameLocalsOneStackItemFrame(currentLocals,
+                                currentStack,
+                                offsetDelta);
                     } else {
                         // Output a full frame, since no other frame types have
                         // one operand stack item.
                         writeFullFrame(currentLocals, currentStack,
-                                       offsetDelta);
+                                offsetDelta);
                     }
                 } else {
                     // Any stack map frame that has more than one operand stack
@@ -2482,14 +2445,14 @@ public class ClassFileWriter {
 
         /**
          * Get the worst case write size of the stack map table.
-         *
+         * <p>
          * This computes how much full frames would take, if each full frame
          * contained the maximum number of locals and stack operands, and each
          * verification type was 3 bytes.
          */
         private int getWorstCaseWriteSize() {
             return (superBlocks.length - 1) * (7 + itsMaxLocals * 3 +
-                                               itsMaxStack * 3);
+                    itsMaxStack * 3);
         }
 
         private void writeSameFrame(int[] locals, int offsetDelta) {
@@ -2503,7 +2466,7 @@ public class ClassFileWriter {
                 // the above, except with a larger offset delta.
                 rawStackMap[rawStackMapTop++] = (byte) 251;
                 rawStackMapTop = putInt16(offsetDelta, rawStackMap,
-                                          rawStackMapTop);
+                        rawStackMapTop);
             }
         }
 
@@ -2521,7 +2484,7 @@ public class ClassFileWriter {
                 // item on the operand stack instead of zero.
                 rawStackMap[rawStackMapTop++] = (byte) 247;
                 rawStackMapTop = putInt16(offsetDelta, rawStackMap,
-                                          rawStackMapTop);
+                        rawStackMapTop);
             }
             writeType(stack[0]);
         }
@@ -2531,10 +2494,10 @@ public class ClassFileWriter {
             rawStackMap[rawStackMapTop++] = (byte) 255;
             rawStackMapTop = putInt16(offsetDelta, rawStackMap, rawStackMapTop);
             rawStackMapTop = putInt16(locals.length, rawStackMap,
-                                      rawStackMapTop);
+                    rawStackMapTop);
             rawStackMapTop = writeTypes(locals);
             rawStackMapTop = putInt16(stack.length, rawStackMap,
-                                      rawStackMapTop);
+                    rawStackMapTop);
             rawStackMapTop = writeTypes(stack);
         }
 
@@ -2567,9 +2530,9 @@ public class ClassFileWriter {
             int tag = type & 0xFF;
             rawStackMap[rawStackMapTop++] = (byte) tag;
             if (tag == TypeInfo.OBJECT_TAG ||
-                tag == TypeInfo.UNINITIALIZED_VAR_TAG) {
+                    tag == TypeInfo.UNINITIALIZED_VAR_TAG) {
                 rawStackMapTop = putInt16(type >>> 8, rawStackMap,
-                                          rawStackMapTop);
+                        rawStackMapTop);
             }
             return rawStackMapTop;
         }
@@ -2625,7 +2588,7 @@ public class ClassFileWriter {
 
     /**
      * Convert a class descriptor into an internal name.
-     *
+     * <p>
      * For example, descriptor Ljava/lang/Object; becomes java/lang/Object.
      */
     private static String classDescriptorToInternalName(String descriptor) {
@@ -2654,13 +2617,13 @@ public class ClassFileWriter {
                 return classDescriptorToInternalName(descriptor);
             default:
                 throw new IllegalArgumentException("bad descriptor:" +
-                                                   descriptor);
+                        descriptor);
         }
     }
 
     /**
      * Compute the initial local variable array for the current method.
-     *
+     * <p>
      * Creates an array of the size of the method's max locals, regardless of
      * the number of parameters in the method.
      */
@@ -2731,14 +2694,12 @@ public class ClassFileWriter {
      * @throws IOException if writing to the stream produces an exception
      */
     public void write(OutputStream oStream)
-        throws IOException
-    {
+            throws IOException {
         byte[] array = toByteArray();
         oStream.write(array);
     }
 
-    private int getWriteSize()
-    {
+    private int getWriteSize() {
         int size = 0;
 
         if (itsSourceFileNameIndex != 0) {
@@ -2755,12 +2716,12 @@ public class ClassFileWriter {
 
         size += 2; //writeShort(itsFields.size());
         for (int i = 0; i < itsFields.size(); i++) {
-            size += ((ClassFileField)(itsFields.get(i))).getWriteSize();
+            size += ((ClassFileField) (itsFields.get(i))).getWriteSize();
         }
 
         size += 2; //writeShort(itsMethods.size());
         for (int i = 0; i < itsMethods.size(); i++) {
-            size += ((ClassFileMethod)(itsMethods.get(i))).getWriteSize();
+            size += ((ClassFileMethod) (itsMethods.get(i))).getWriteSize();
         }
 
         if (itsSourceFileNameIndex != 0) {
@@ -2768,7 +2729,7 @@ public class ClassFileWriter {
             size += 2; //writeShort(sourceFileAttributeNameIndex);
             size += 4; //writeInt(2);
             size += 2; //writeShort(itsSourceFileNameIndex);
-        }else {
+        } else {
             size += 2; //out.writeShort(0);  no attributes
         }
 
@@ -2778,8 +2739,7 @@ public class ClassFileWriter {
     /**
      * Get the class file as array of bytesto the OutputStream.
      */
-    public byte[] toByteArray()
-    {
+    public byte[] toByteArray() {
         int dataSize = getWriteSize();
         byte[] data = new byte[dataSize];
         int offset = 0;
@@ -2787,7 +2747,7 @@ public class ClassFileWriter {
         short sourceFileAttributeNameIndex = 0;
         if (itsSourceFileNameIndex != 0) {
             sourceFileAttributeNameIndex = itsConstantPool.addUtf8(
-                                               "SourceFile");
+                    "SourceFile");
         }
 
         offset = putInt32(FileHeaderConstant, data, offset);
@@ -2799,17 +2759,17 @@ public class ClassFileWriter {
         offset = putInt16(itsSuperClassIndex, data, offset);
         offset = putInt16(itsInterfaces.size(), data, offset);
         for (int i = 0; i < itsInterfaces.size(); i++) {
-            int interfaceIndex = ((Short)(itsInterfaces.get(i))).shortValue();
+            int interfaceIndex = ((Short) (itsInterfaces.get(i))).shortValue();
             offset = putInt16(interfaceIndex, data, offset);
         }
         offset = putInt16(itsFields.size(), data, offset);
         for (int i = 0; i < itsFields.size(); i++) {
-            ClassFileField field = (ClassFileField)itsFields.get(i);
+            ClassFileField field = (ClassFileField) itsFields.get(i);
             offset = field.write(data, offset);
         }
         offset = putInt16(itsMethods.size(), data, offset);
         for (int i = 0; i < itsMethods.size(); i++) {
-            ClassFileMethod method = (ClassFileMethod)itsMethods.get(i);
+            ClassFileMethod method = (ClassFileMethod) itsMethods.get(i);
             offset = method.write(data, offset);
         }
         if (itsSourceFileNameIndex != 0) {
@@ -2829,17 +2789,18 @@ public class ClassFileWriter {
         return data;
     }
 
-    static int putInt64(long value, byte[] array, int offset)
-    {
-        offset = putInt32((int)(value >>> 32), array, offset);
-        return putInt32((int)value, array, offset);
+    static int putInt64(long value, byte[] array, int offset) {
+        offset = putInt32((int) (value >>> 32), array, offset);
+        return putInt32((int) value, array, offset);
     }
 
-    private static void badStack(int value)
-    {
+    private static void badStack(int value) {
         String s;
-        if (value < 0) { s = "Stack underflow: "+value; }
-        else { s = "Too big stack: "+value; }
+        if (value < 0) {
+            s = "Stack underflow: " + value;
+        } else {
+            s = "Too big stack: " + value;
+        }
         throw new IllegalStateException(s);
     }
 
@@ -2851,39 +2812,37 @@ public class ClassFileWriter {
         If Java really supported references we wouldn't have to be this
         perverted.
     */
-    private static int sizeOfParameters(String pString)
-    {
+    private static int sizeOfParameters(String pString) {
         int length = pString.length();
         int rightParenthesis = pString.lastIndexOf(')');
         if (3 <= length /* minimal signature takes at least 3 chars: ()V */
-            && pString.charAt(0) == '('
-            && 1 <= rightParenthesis && rightParenthesis + 1 < length)
-        {
+                && pString.charAt(0) == '('
+                && 1 <= rightParenthesis && rightParenthesis + 1 < length) {
             boolean ok = true;
             int index = 1;
             int stackDiff = 0;
             int count = 0;
-        stringLoop:
+            stringLoop:
             while (index != rightParenthesis) {
                 switch (pString.charAt(index)) {
                     default:
                         ok = false;
                         break stringLoop;
-                    case 'J' :
-                    case 'D' :
+                    case 'J':
+                    case 'D':
                         --stackDiff;
                         // fall thru
-                    case 'B' :
-                    case 'S' :
-                    case 'C' :
-                    case 'I' :
-                    case 'Z' :
-                    case 'F' :
+                    case 'B':
+                    case 'S':
+                    case 'C':
+                    case 'I':
+                    case 'Z':
+                    case 'F':
                         --stackDiff;
                         ++count;
                         ++index;
                         continue;
-                    case '[' :
+                    case '[':
                         ++index;
                         int c = pString.charAt(index);
                         while (c == '[') {
@@ -2894,14 +2853,14 @@ public class ClassFileWriter {
                             default:
                                 ok = false;
                                 break stringLoop;
-                            case 'J' :
-                            case 'D' :
-                            case 'B' :
-                            case 'S' :
-                            case 'C' :
-                            case 'I' :
-                            case 'Z' :
-                            case 'F' :
+                            case 'J':
+                            case 'D':
+                            case 'B':
+                            case 'S':
+                            case 'C':
+                            case 'I':
+                            case 'Z':
+                            case 'F':
                                 --stackDiff;
                                 ++count;
                                 ++index;
@@ -2909,15 +2868,14 @@ public class ClassFileWriter {
                             case 'L':
                                 // fall thru
                         }
-                          // fall thru
-                    case 'L' : {
+                        // fall thru
+                    case 'L': {
                         --stackDiff;
                         ++count;
                         ++index;
-                        int semicolon = pString.indexOf(';',  index);
+                        int semicolon = pString.indexOf(';', index);
                         if (!(index + 1 <= semicolon
-                            && semicolon < rightParenthesis))
-                        {
+                                && semicolon < rightParenthesis)) {
                             ok = false;
                             break stringLoop;
                         }
@@ -2931,21 +2889,21 @@ public class ClassFileWriter {
                     default:
                         ok = false;
                         break;
-                    case 'J' :
-                    case 'D' :
+                    case 'J':
+                    case 'D':
                         ++stackDiff;
                         // fall thru
-                    case 'B' :
-                    case 'S' :
-                    case 'C' :
-                    case 'I' :
-                    case 'Z' :
-                    case 'F' :
-                    case 'L' :
-                    case '[' :
+                    case 'B':
+                    case 'S':
+                    case 'C':
+                    case 'I':
+                    case 'Z':
+                    case 'F':
+                    case 'L':
+                    case '[':
                         ++stackDiff;
                         // fall thru
-                    case 'V' :
+                    case 'V':
                         break;
                 }
                 if (ok) {
@@ -2954,28 +2912,26 @@ public class ClassFileWriter {
             }
         }
         throw new IllegalArgumentException(
-            "Bad parameter signature: "+pString);
+                "Bad parameter signature: " + pString);
     }
 
-    static int putInt16(int value, byte[] array, int offset)
-    {
-        array[offset + 0] = (byte)(value >>> 8);
-        array[offset + 1] = (byte)value;
+    static int putInt16(int value, byte[] array, int offset) {
+        array[offset + 0] = (byte) (value >>> 8);
+        array[offset + 1] = (byte) value;
         return offset + 2;
     }
 
-    static int putInt32(int value, byte[] array, int offset)
-    {
-        array[offset + 0] = (byte)(value >>> 24);
-        array[offset + 1] = (byte)(value >>> 16);
-        array[offset + 2] = (byte)(value >>> 8);
-        array[offset + 3] = (byte)value;
+    static int putInt32(int value, byte[] array, int offset) {
+        array[offset + 0] = (byte) (value >>> 24);
+        array[offset + 1] = (byte) (value >>> 16);
+        array[offset + 2] = (byte) (value >>> 8);
+        array[offset + 3] = (byte) value;
         return offset + 4;
     }
 
     /**
      * Size of a bytecode instruction, counting the opcode and its operands.
-     *
+     * <p>
      * This is different from opcodeCount, since opcodeCount counts logical
      * operands.
      */
@@ -3207,8 +3163,7 @@ public class ClassFileWriter {
     /**
      * Number of operands accompanying the opcode.
      */
-    static int opcodeCount(int opcode)
-    {
+    static int opcodeCount(int opcode) {
         switch (opcode) {
             case ByteCode.AALOAD:
             case ByteCode.AASTORE:
@@ -3421,14 +3376,13 @@ public class ClassFileWriter {
             case ByteCode.TABLESWITCH:
                 return -1;
         }
-        throw new IllegalArgumentException("Bad opcode: "+opcode);
+        throw new IllegalArgumentException("Bad opcode: " + opcode);
     }
 
     /**
-     *  The effect on the operand stack of a given opcode.
+     * The effect on the operand stack of a given opcode.
      */
-    static int stackChange(int opcode)
-    {
+    static int stackChange(int opcode) {
         // For INVOKE... accounts only for popping this (unless static),
         // ignoring parameters and return type
         switch (opcode) {
@@ -3650,13 +3604,13 @@ public class ClassFileWriter {
             case ByteCode.LLOAD_3:
                 return 2;
         }
-        throw new IllegalArgumentException("Bad opcode: "+opcode);
+        throw new IllegalArgumentException("Bad opcode: " + opcode);
     }
 
-        /*
-         * Number of bytes of operands generated after the opcode.
-         * Not in use currently.
-         */
+    /*
+     * Number of bytes of operands generated after the opcode.
+     * Not in use currently.
+     */
 /*
     int extra(int opcode)
     {
@@ -3880,225 +3834,429 @@ public class ClassFileWriter {
         throw new IllegalArgumentException("Bad opcode: "+opcode);
     }
 */
-	private static String bytecodeStr(int code)
-    {
+    private static String bytecodeStr(int code) {
         if (DEBUGSTACK || DEBUGCODE) {
             switch (code) {
-                case ByteCode.NOP:              return "nop";
-                case ByteCode.ACONST_NULL:      return "aconst_null";
-                case ByteCode.ICONST_M1:        return "iconst_m1";
-                case ByteCode.ICONST_0:         return "iconst_0";
-                case ByteCode.ICONST_1:         return "iconst_1";
-                case ByteCode.ICONST_2:         return "iconst_2";
-                case ByteCode.ICONST_3:         return "iconst_3";
-                case ByteCode.ICONST_4:         return "iconst_4";
-                case ByteCode.ICONST_5:         return "iconst_5";
-                case ByteCode.LCONST_0:         return "lconst_0";
-                case ByteCode.LCONST_1:         return "lconst_1";
-                case ByteCode.FCONST_0:         return "fconst_0";
-                case ByteCode.FCONST_1:         return "fconst_1";
-                case ByteCode.FCONST_2:         return "fconst_2";
-                case ByteCode.DCONST_0:         return "dconst_0";
-                case ByteCode.DCONST_1:         return "dconst_1";
-                case ByteCode.BIPUSH:           return "bipush";
-                case ByteCode.SIPUSH:           return "sipush";
-                case ByteCode.LDC:              return "ldc";
-                case ByteCode.LDC_W:            return "ldc_w";
-                case ByteCode.LDC2_W:           return "ldc2_w";
-                case ByteCode.ILOAD:            return "iload";
-                case ByteCode.LLOAD:            return "lload";
-                case ByteCode.FLOAD:            return "fload";
-                case ByteCode.DLOAD:            return "dload";
-                case ByteCode.ALOAD:            return "aload";
-                case ByteCode.ILOAD_0:          return "iload_0";
-                case ByteCode.ILOAD_1:          return "iload_1";
-                case ByteCode.ILOAD_2:          return "iload_2";
-                case ByteCode.ILOAD_3:          return "iload_3";
-                case ByteCode.LLOAD_0:          return "lload_0";
-                case ByteCode.LLOAD_1:          return "lload_1";
-                case ByteCode.LLOAD_2:          return "lload_2";
-                case ByteCode.LLOAD_3:          return "lload_3";
-                case ByteCode.FLOAD_0:          return "fload_0";
-                case ByteCode.FLOAD_1:          return "fload_1";
-                case ByteCode.FLOAD_2:          return "fload_2";
-                case ByteCode.FLOAD_3:          return "fload_3";
-                case ByteCode.DLOAD_0:          return "dload_0";
-                case ByteCode.DLOAD_1:          return "dload_1";
-                case ByteCode.DLOAD_2:          return "dload_2";
-                case ByteCode.DLOAD_3:          return "dload_3";
-                case ByteCode.ALOAD_0:          return "aload_0";
-                case ByteCode.ALOAD_1:          return "aload_1";
-                case ByteCode.ALOAD_2:          return "aload_2";
-                case ByteCode.ALOAD_3:          return "aload_3";
-                case ByteCode.IALOAD:           return "iaload";
-                case ByteCode.LALOAD:           return "laload";
-                case ByteCode.FALOAD:           return "faload";
-                case ByteCode.DALOAD:           return "daload";
-                case ByteCode.AALOAD:           return "aaload";
-                case ByteCode.BALOAD:           return "baload";
-                case ByteCode.CALOAD:           return "caload";
-                case ByteCode.SALOAD:           return "saload";
-                case ByteCode.ISTORE:           return "istore";
-                case ByteCode.LSTORE:           return "lstore";
-                case ByteCode.FSTORE:           return "fstore";
-                case ByteCode.DSTORE:           return "dstore";
-                case ByteCode.ASTORE:           return "astore";
-                case ByteCode.ISTORE_0:         return "istore_0";
-                case ByteCode.ISTORE_1:         return "istore_1";
-                case ByteCode.ISTORE_2:         return "istore_2";
-                case ByteCode.ISTORE_3:         return "istore_3";
-                case ByteCode.LSTORE_0:         return "lstore_0";
-                case ByteCode.LSTORE_1:         return "lstore_1";
-                case ByteCode.LSTORE_2:         return "lstore_2";
-                case ByteCode.LSTORE_3:         return "lstore_3";
-                case ByteCode.FSTORE_0:         return "fstore_0";
-                case ByteCode.FSTORE_1:         return "fstore_1";
-                case ByteCode.FSTORE_2:         return "fstore_2";
-                case ByteCode.FSTORE_3:         return "fstore_3";
-                case ByteCode.DSTORE_0:         return "dstore_0";
-                case ByteCode.DSTORE_1:         return "dstore_1";
-                case ByteCode.DSTORE_2:         return "dstore_2";
-                case ByteCode.DSTORE_3:         return "dstore_3";
-                case ByteCode.ASTORE_0:         return "astore_0";
-                case ByteCode.ASTORE_1:         return "astore_1";
-                case ByteCode.ASTORE_2:         return "astore_2";
-                case ByteCode.ASTORE_3:         return "astore_3";
-                case ByteCode.IASTORE:          return "iastore";
-                case ByteCode.LASTORE:          return "lastore";
-                case ByteCode.FASTORE:          return "fastore";
-                case ByteCode.DASTORE:          return "dastore";
-                case ByteCode.AASTORE:          return "aastore";
-                case ByteCode.BASTORE:          return "bastore";
-                case ByteCode.CASTORE:          return "castore";
-                case ByteCode.SASTORE:          return "sastore";
-                case ByteCode.POP:              return "pop";
-                case ByteCode.POP2:             return "pop2";
-                case ByteCode.DUP:              return "dup";
-                case ByteCode.DUP_X1:           return "dup_x1";
-                case ByteCode.DUP_X2:           return "dup_x2";
-                case ByteCode.DUP2:             return "dup2";
-                case ByteCode.DUP2_X1:          return "dup2_x1";
-                case ByteCode.DUP2_X2:          return "dup2_x2";
-                case ByteCode.SWAP:             return "swap";
-                case ByteCode.IADD:             return "iadd";
-                case ByteCode.LADD:             return "ladd";
-                case ByteCode.FADD:             return "fadd";
-                case ByteCode.DADD:             return "dadd";
-                case ByteCode.ISUB:             return "isub";
-                case ByteCode.LSUB:             return "lsub";
-                case ByteCode.FSUB:             return "fsub";
-                case ByteCode.DSUB:             return "dsub";
-                case ByteCode.IMUL:             return "imul";
-                case ByteCode.LMUL:             return "lmul";
-                case ByteCode.FMUL:             return "fmul";
-                case ByteCode.DMUL:             return "dmul";
-                case ByteCode.IDIV:             return "idiv";
-                case ByteCode.LDIV:             return "ldiv";
-                case ByteCode.FDIV:             return "fdiv";
-                case ByteCode.DDIV:             return "ddiv";
-                case ByteCode.IREM:             return "irem";
-                case ByteCode.LREM:             return "lrem";
-                case ByteCode.FREM:             return "frem";
-                case ByteCode.DREM:             return "drem";
-                case ByteCode.INEG:             return "ineg";
-                case ByteCode.LNEG:             return "lneg";
-                case ByteCode.FNEG:             return "fneg";
-                case ByteCode.DNEG:             return "dneg";
-                case ByteCode.ISHL:             return "ishl";
-                case ByteCode.LSHL:             return "lshl";
-                case ByteCode.ISHR:             return "ishr";
-                case ByteCode.LSHR:             return "lshr";
-                case ByteCode.IUSHR:            return "iushr";
-                case ByteCode.LUSHR:            return "lushr";
-                case ByteCode.IAND:             return "iand";
-                case ByteCode.LAND:             return "land";
-                case ByteCode.IOR:              return "ior";
-                case ByteCode.LOR:              return "lor";
-                case ByteCode.IXOR:             return "ixor";
-                case ByteCode.LXOR:             return "lxor";
-                case ByteCode.IINC:             return "iinc";
-                case ByteCode.I2L:              return "i2l";
-                case ByteCode.I2F:              return "i2f";
-                case ByteCode.I2D:              return "i2d";
-                case ByteCode.L2I:              return "l2i";
-                case ByteCode.L2F:              return "l2f";
-                case ByteCode.L2D:              return "l2d";
-                case ByteCode.F2I:              return "f2i";
-                case ByteCode.F2L:              return "f2l";
-                case ByteCode.F2D:              return "f2d";
-                case ByteCode.D2I:              return "d2i";
-                case ByteCode.D2L:              return "d2l";
-                case ByteCode.D2F:              return "d2f";
-                case ByteCode.I2B:              return "i2b";
-                case ByteCode.I2C:              return "i2c";
-                case ByteCode.I2S:              return "i2s";
-                case ByteCode.LCMP:             return "lcmp";
-                case ByteCode.FCMPL:            return "fcmpl";
-                case ByteCode.FCMPG:            return "fcmpg";
-                case ByteCode.DCMPL:            return "dcmpl";
-                case ByteCode.DCMPG:            return "dcmpg";
-                case ByteCode.IFEQ:             return "ifeq";
-                case ByteCode.IFNE:             return "ifne";
-                case ByteCode.IFLT:             return "iflt";
-                case ByteCode.IFGE:             return "ifge";
-                case ByteCode.IFGT:             return "ifgt";
-                case ByteCode.IFLE:             return "ifle";
-                case ByteCode.IF_ICMPEQ:        return "if_icmpeq";
-                case ByteCode.IF_ICMPNE:        return "if_icmpne";
-                case ByteCode.IF_ICMPLT:        return "if_icmplt";
-                case ByteCode.IF_ICMPGE:        return "if_icmpge";
-                case ByteCode.IF_ICMPGT:        return "if_icmpgt";
-                case ByteCode.IF_ICMPLE:        return "if_icmple";
-                case ByteCode.IF_ACMPEQ:        return "if_acmpeq";
-                case ByteCode.IF_ACMPNE:        return "if_acmpne";
-                case ByteCode.GOTO:             return "goto";
-                case ByteCode.JSR:              return "jsr";
-                case ByteCode.RET:              return "ret";
-                case ByteCode.TABLESWITCH:      return "tableswitch";
-                case ByteCode.LOOKUPSWITCH:     return "lookupswitch";
-                case ByteCode.IRETURN:          return "ireturn";
-                case ByteCode.LRETURN:          return "lreturn";
-                case ByteCode.FRETURN:          return "freturn";
-                case ByteCode.DRETURN:          return "dreturn";
-                case ByteCode.ARETURN:          return "areturn";
-                case ByteCode.RETURN:           return "return";
-                case ByteCode.GETSTATIC:        return "getstatic";
-                case ByteCode.PUTSTATIC:        return "putstatic";
-                case ByteCode.GETFIELD:         return "getfield";
-                case ByteCode.PUTFIELD:         return "putfield";
-                case ByteCode.INVOKEVIRTUAL:    return "invokevirtual";
-                case ByteCode.INVOKESPECIAL:    return "invokespecial";
-                case ByteCode.INVOKESTATIC:     return "invokestatic";
-                case ByteCode.INVOKEINTERFACE:  return "invokeinterface";
-                case ByteCode.NEW:              return "new";
-                case ByteCode.NEWARRAY:         return "newarray";
-                case ByteCode.ANEWARRAY:        return "anewarray";
-                case ByteCode.ARRAYLENGTH:      return "arraylength";
-                case ByteCode.ATHROW:           return "athrow";
-                case ByteCode.CHECKCAST:        return "checkcast";
-                case ByteCode.INSTANCEOF:       return "instanceof";
-                case ByteCode.MONITORENTER:     return "monitorenter";
-                case ByteCode.MONITOREXIT:      return "monitorexit";
-                case ByteCode.WIDE:             return "wide";
-                case ByteCode.MULTIANEWARRAY:   return "multianewarray";
-                case ByteCode.IFNULL:           return "ifnull";
-                case ByteCode.IFNONNULL:        return "ifnonnull";
-                case ByteCode.GOTO_W:           return "goto_w";
-                case ByteCode.JSR_W:            return "jsr_w";
-                case ByteCode.BREAKPOINT:       return "breakpoint";
+                case ByteCode.NOP:
+                    return "nop";
+                case ByteCode.ACONST_NULL:
+                    return "aconst_null";
+                case ByteCode.ICONST_M1:
+                    return "iconst_m1";
+                case ByteCode.ICONST_0:
+                    return "iconst_0";
+                case ByteCode.ICONST_1:
+                    return "iconst_1";
+                case ByteCode.ICONST_2:
+                    return "iconst_2";
+                case ByteCode.ICONST_3:
+                    return "iconst_3";
+                case ByteCode.ICONST_4:
+                    return "iconst_4";
+                case ByteCode.ICONST_5:
+                    return "iconst_5";
+                case ByteCode.LCONST_0:
+                    return "lconst_0";
+                case ByteCode.LCONST_1:
+                    return "lconst_1";
+                case ByteCode.FCONST_0:
+                    return "fconst_0";
+                case ByteCode.FCONST_1:
+                    return "fconst_1";
+                case ByteCode.FCONST_2:
+                    return "fconst_2";
+                case ByteCode.DCONST_0:
+                    return "dconst_0";
+                case ByteCode.DCONST_1:
+                    return "dconst_1";
+                case ByteCode.BIPUSH:
+                    return "bipush";
+                case ByteCode.SIPUSH:
+                    return "sipush";
+                case ByteCode.LDC:
+                    return "ldc";
+                case ByteCode.LDC_W:
+                    return "ldc_w";
+                case ByteCode.LDC2_W:
+                    return "ldc2_w";
+                case ByteCode.ILOAD:
+                    return "iload";
+                case ByteCode.LLOAD:
+                    return "lload";
+                case ByteCode.FLOAD:
+                    return "fload";
+                case ByteCode.DLOAD:
+                    return "dload";
+                case ByteCode.ALOAD:
+                    return "aload";
+                case ByteCode.ILOAD_0:
+                    return "iload_0";
+                case ByteCode.ILOAD_1:
+                    return "iload_1";
+                case ByteCode.ILOAD_2:
+                    return "iload_2";
+                case ByteCode.ILOAD_3:
+                    return "iload_3";
+                case ByteCode.LLOAD_0:
+                    return "lload_0";
+                case ByteCode.LLOAD_1:
+                    return "lload_1";
+                case ByteCode.LLOAD_2:
+                    return "lload_2";
+                case ByteCode.LLOAD_3:
+                    return "lload_3";
+                case ByteCode.FLOAD_0:
+                    return "fload_0";
+                case ByteCode.FLOAD_1:
+                    return "fload_1";
+                case ByteCode.FLOAD_2:
+                    return "fload_2";
+                case ByteCode.FLOAD_3:
+                    return "fload_3";
+                case ByteCode.DLOAD_0:
+                    return "dload_0";
+                case ByteCode.DLOAD_1:
+                    return "dload_1";
+                case ByteCode.DLOAD_2:
+                    return "dload_2";
+                case ByteCode.DLOAD_3:
+                    return "dload_3";
+                case ByteCode.ALOAD_0:
+                    return "aload_0";
+                case ByteCode.ALOAD_1:
+                    return "aload_1";
+                case ByteCode.ALOAD_2:
+                    return "aload_2";
+                case ByteCode.ALOAD_3:
+                    return "aload_3";
+                case ByteCode.IALOAD:
+                    return "iaload";
+                case ByteCode.LALOAD:
+                    return "laload";
+                case ByteCode.FALOAD:
+                    return "faload";
+                case ByteCode.DALOAD:
+                    return "daload";
+                case ByteCode.AALOAD:
+                    return "aaload";
+                case ByteCode.BALOAD:
+                    return "baload";
+                case ByteCode.CALOAD:
+                    return "caload";
+                case ByteCode.SALOAD:
+                    return "saload";
+                case ByteCode.ISTORE:
+                    return "istore";
+                case ByteCode.LSTORE:
+                    return "lstore";
+                case ByteCode.FSTORE:
+                    return "fstore";
+                case ByteCode.DSTORE:
+                    return "dstore";
+                case ByteCode.ASTORE:
+                    return "astore";
+                case ByteCode.ISTORE_0:
+                    return "istore_0";
+                case ByteCode.ISTORE_1:
+                    return "istore_1";
+                case ByteCode.ISTORE_2:
+                    return "istore_2";
+                case ByteCode.ISTORE_3:
+                    return "istore_3";
+                case ByteCode.LSTORE_0:
+                    return "lstore_0";
+                case ByteCode.LSTORE_1:
+                    return "lstore_1";
+                case ByteCode.LSTORE_2:
+                    return "lstore_2";
+                case ByteCode.LSTORE_3:
+                    return "lstore_3";
+                case ByteCode.FSTORE_0:
+                    return "fstore_0";
+                case ByteCode.FSTORE_1:
+                    return "fstore_1";
+                case ByteCode.FSTORE_2:
+                    return "fstore_2";
+                case ByteCode.FSTORE_3:
+                    return "fstore_3";
+                case ByteCode.DSTORE_0:
+                    return "dstore_0";
+                case ByteCode.DSTORE_1:
+                    return "dstore_1";
+                case ByteCode.DSTORE_2:
+                    return "dstore_2";
+                case ByteCode.DSTORE_3:
+                    return "dstore_3";
+                case ByteCode.ASTORE_0:
+                    return "astore_0";
+                case ByteCode.ASTORE_1:
+                    return "astore_1";
+                case ByteCode.ASTORE_2:
+                    return "astore_2";
+                case ByteCode.ASTORE_3:
+                    return "astore_3";
+                case ByteCode.IASTORE:
+                    return "iastore";
+                case ByteCode.LASTORE:
+                    return "lastore";
+                case ByteCode.FASTORE:
+                    return "fastore";
+                case ByteCode.DASTORE:
+                    return "dastore";
+                case ByteCode.AASTORE:
+                    return "aastore";
+                case ByteCode.BASTORE:
+                    return "bastore";
+                case ByteCode.CASTORE:
+                    return "castore";
+                case ByteCode.SASTORE:
+                    return "sastore";
+                case ByteCode.POP:
+                    return "pop";
+                case ByteCode.POP2:
+                    return "pop2";
+                case ByteCode.DUP:
+                    return "dup";
+                case ByteCode.DUP_X1:
+                    return "dup_x1";
+                case ByteCode.DUP_X2:
+                    return "dup_x2";
+                case ByteCode.DUP2:
+                    return "dup2";
+                case ByteCode.DUP2_X1:
+                    return "dup2_x1";
+                case ByteCode.DUP2_X2:
+                    return "dup2_x2";
+                case ByteCode.SWAP:
+                    return "swap";
+                case ByteCode.IADD:
+                    return "iadd";
+                case ByteCode.LADD:
+                    return "ladd";
+                case ByteCode.FADD:
+                    return "fadd";
+                case ByteCode.DADD:
+                    return "dadd";
+                case ByteCode.ISUB:
+                    return "isub";
+                case ByteCode.LSUB:
+                    return "lsub";
+                case ByteCode.FSUB:
+                    return "fsub";
+                case ByteCode.DSUB:
+                    return "dsub";
+                case ByteCode.IMUL:
+                    return "imul";
+                case ByteCode.LMUL:
+                    return "lmul";
+                case ByteCode.FMUL:
+                    return "fmul";
+                case ByteCode.DMUL:
+                    return "dmul";
+                case ByteCode.IDIV:
+                    return "idiv";
+                case ByteCode.LDIV:
+                    return "ldiv";
+                case ByteCode.FDIV:
+                    return "fdiv";
+                case ByteCode.DDIV:
+                    return "ddiv";
+                case ByteCode.IREM:
+                    return "irem";
+                case ByteCode.LREM:
+                    return "lrem";
+                case ByteCode.FREM:
+                    return "frem";
+                case ByteCode.DREM:
+                    return "drem";
+                case ByteCode.INEG:
+                    return "ineg";
+                case ByteCode.LNEG:
+                    return "lneg";
+                case ByteCode.FNEG:
+                    return "fneg";
+                case ByteCode.DNEG:
+                    return "dneg";
+                case ByteCode.ISHL:
+                    return "ishl";
+                case ByteCode.LSHL:
+                    return "lshl";
+                case ByteCode.ISHR:
+                    return "ishr";
+                case ByteCode.LSHR:
+                    return "lshr";
+                case ByteCode.IUSHR:
+                    return "iushr";
+                case ByteCode.LUSHR:
+                    return "lushr";
+                case ByteCode.IAND:
+                    return "iand";
+                case ByteCode.LAND:
+                    return "land";
+                case ByteCode.IOR:
+                    return "ior";
+                case ByteCode.LOR:
+                    return "lor";
+                case ByteCode.IXOR:
+                    return "ixor";
+                case ByteCode.LXOR:
+                    return "lxor";
+                case ByteCode.IINC:
+                    return "iinc";
+                case ByteCode.I2L:
+                    return "i2l";
+                case ByteCode.I2F:
+                    return "i2f";
+                case ByteCode.I2D:
+                    return "i2d";
+                case ByteCode.L2I:
+                    return "l2i";
+                case ByteCode.L2F:
+                    return "l2f";
+                case ByteCode.L2D:
+                    return "l2d";
+                case ByteCode.F2I:
+                    return "f2i";
+                case ByteCode.F2L:
+                    return "f2l";
+                case ByteCode.F2D:
+                    return "f2d";
+                case ByteCode.D2I:
+                    return "d2i";
+                case ByteCode.D2L:
+                    return "d2l";
+                case ByteCode.D2F:
+                    return "d2f";
+                case ByteCode.I2B:
+                    return "i2b";
+                case ByteCode.I2C:
+                    return "i2c";
+                case ByteCode.I2S:
+                    return "i2s";
+                case ByteCode.LCMP:
+                    return "lcmp";
+                case ByteCode.FCMPL:
+                    return "fcmpl";
+                case ByteCode.FCMPG:
+                    return "fcmpg";
+                case ByteCode.DCMPL:
+                    return "dcmpl";
+                case ByteCode.DCMPG:
+                    return "dcmpg";
+                case ByteCode.IFEQ:
+                    return "ifeq";
+                case ByteCode.IFNE:
+                    return "ifne";
+                case ByteCode.IFLT:
+                    return "iflt";
+                case ByteCode.IFGE:
+                    return "ifge";
+                case ByteCode.IFGT:
+                    return "ifgt";
+                case ByteCode.IFLE:
+                    return "ifle";
+                case ByteCode.IF_ICMPEQ:
+                    return "if_icmpeq";
+                case ByteCode.IF_ICMPNE:
+                    return "if_icmpne";
+                case ByteCode.IF_ICMPLT:
+                    return "if_icmplt";
+                case ByteCode.IF_ICMPGE:
+                    return "if_icmpge";
+                case ByteCode.IF_ICMPGT:
+                    return "if_icmpgt";
+                case ByteCode.IF_ICMPLE:
+                    return "if_icmple";
+                case ByteCode.IF_ACMPEQ:
+                    return "if_acmpeq";
+                case ByteCode.IF_ACMPNE:
+                    return "if_acmpne";
+                case ByteCode.GOTO:
+                    return "goto";
+                case ByteCode.JSR:
+                    return "jsr";
+                case ByteCode.RET:
+                    return "ret";
+                case ByteCode.TABLESWITCH:
+                    return "tableswitch";
+                case ByteCode.LOOKUPSWITCH:
+                    return "lookupswitch";
+                case ByteCode.IRETURN:
+                    return "ireturn";
+                case ByteCode.LRETURN:
+                    return "lreturn";
+                case ByteCode.FRETURN:
+                    return "freturn";
+                case ByteCode.DRETURN:
+                    return "dreturn";
+                case ByteCode.ARETURN:
+                    return "areturn";
+                case ByteCode.RETURN:
+                    return "return";
+                case ByteCode.GETSTATIC:
+                    return "getstatic";
+                case ByteCode.PUTSTATIC:
+                    return "putstatic";
+                case ByteCode.GETFIELD:
+                    return "getfield";
+                case ByteCode.PUTFIELD:
+                    return "putfield";
+                case ByteCode.INVOKEVIRTUAL:
+                    return "invokevirtual";
+                case ByteCode.INVOKESPECIAL:
+                    return "invokespecial";
+                case ByteCode.INVOKESTATIC:
+                    return "invokestatic";
+                case ByteCode.INVOKEINTERFACE:
+                    return "invokeinterface";
+                case ByteCode.NEW:
+                    return "new";
+                case ByteCode.NEWARRAY:
+                    return "newarray";
+                case ByteCode.ANEWARRAY:
+                    return "anewarray";
+                case ByteCode.ARRAYLENGTH:
+                    return "arraylength";
+                case ByteCode.ATHROW:
+                    return "athrow";
+                case ByteCode.CHECKCAST:
+                    return "checkcast";
+                case ByteCode.INSTANCEOF:
+                    return "instanceof";
+                case ByteCode.MONITORENTER:
+                    return "monitorenter";
+                case ByteCode.MONITOREXIT:
+                    return "monitorexit";
+                case ByteCode.WIDE:
+                    return "wide";
+                case ByteCode.MULTIANEWARRAY:
+                    return "multianewarray";
+                case ByteCode.IFNULL:
+                    return "ifnull";
+                case ByteCode.IFNONNULL:
+                    return "ifnonnull";
+                case ByteCode.GOTO_W:
+                    return "goto_w";
+                case ByteCode.JSR_W:
+                    return "jsr_w";
+                case ByteCode.BREAKPOINT:
+                    return "breakpoint";
 
-                case ByteCode.IMPDEP1:          return "impdep1";
-                case ByteCode.IMPDEP2:          return "impdep2";
+                case ByteCode.IMPDEP1:
+                    return "impdep1";
+                case ByteCode.IMPDEP2:
+                    return "impdep2";
             }
         }
         return "";
     }
 
-    final char[] getCharBuffer(int minimalSize)
-    {
+    final char[] getCharBuffer(int minimalSize) {
         if (minimalSize > tmpCharBuffer.length) {
             int newSize = tmpCharBuffer.length * 2;
-            if (minimalSize > newSize) { newSize = minimalSize; }
+            if (minimalSize > newSize) {
+                newSize = minimalSize;
+            }
             tmpCharBuffer = new char[newSize];
         }
         return tmpCharBuffer;
@@ -4106,7 +4264,7 @@ public class ClassFileWriter {
 
     /**
      * Add a pc as the start of super block.
-     *
+     * <p>
      * A pc is the beginning of a super block if:
      * - pc == 0
      * - it is the target of a branch instruction
@@ -4120,7 +4278,7 @@ public class ClassFileWriter {
             } else if (itsSuperBlockStarts.length == itsSuperBlockStartsTop) {
                 int[] tmp = new int[itsSuperBlockStartsTop * 2];
                 System.arraycopy(itsSuperBlockStarts, 0, tmp, 0,
-                                 itsSuperBlockStartsTop);
+                        itsSuperBlockStartsTop);
                 itsSuperBlockStarts = tmp;
             }
             itsSuperBlockStarts[itsSuperBlockStartsTop++] = pc;
@@ -4129,7 +4287,7 @@ public class ClassFileWriter {
 
     /**
      * Sort the list of recorded super block starts and remove duplicates.
-     *
+     * <p>
      * Also adds exception handling blocks as block starts, since there is no
      * explicit control flow to these. Used for stack map table generation.
      */
@@ -4194,7 +4352,7 @@ public class ClassFileWriter {
             is = ClassFileWriter.class.getResourceAsStream("ClassFileWriter.class");
             if (is == null) {
                 is = ClassLoader.getSystemResourceAsStream(
-                    "org/mozilla/classfile/ClassFileWriter.class");
+                        "org/mozilla/classfile/ClassFileWriter.class");
             }
             byte[] header = new byte[8];
             // read loop is required since JDK7 will only provide 2 bytes
@@ -4260,7 +4418,7 @@ public class ClassFileWriter {
     private int[] itsLabelTable;
     private int itsLabelTableTop;
 
-// itsFixupTable[i] = (label_index << 32) | fixup_site
+    // itsFixupTable[i] = (label_index << 32) | fixup_site
     private static final int MIN_FIXUP_TABLE_SIZE = 40;
     private long[] itsFixupTable;
     private int itsFixupTableTop;
@@ -4269,12 +4427,10 @@ public class ClassFileWriter {
     private char[] tmpCharBuffer = new char[64];
 }
 
-final class ExceptionTableEntry
-{
+final class ExceptionTableEntry {
 
     ExceptionTableEntry(int startLabel, int endLabel,
-                        int handlerLabel, short catchType)
-    {
+                        int handlerLabel, short catchType) {
         itsStartLabel = startLabel;
         itsEndLabel = endLabel;
         itsHandlerLabel = handlerLabel;
@@ -4287,19 +4443,16 @@ final class ExceptionTableEntry
     short itsCatchType;
 }
 
-final class ClassFileField
-{
+final class ClassFileField {
 
-    ClassFileField(short nameIndex, short typeIndex, short flags)
-    {
+    ClassFileField(short nameIndex, short typeIndex, short flags) {
         itsNameIndex = nameIndex;
         itsTypeIndex = typeIndex;
         itsFlags = flags;
         itsHasAttributes = false;
     }
 
-    void setAttributes(short attr1, short attr2, short attr3, int index)
-    {
+    void setAttributes(short attr1, short attr2, short attr3, int index) {
         itsHasAttributes = true;
         itsAttr1 = attr1;
         itsAttr2 = attr2;
@@ -4307,8 +4460,7 @@ final class ClassFileField
         itsIndex = index;
     }
 
-    int write(byte[] data, int offset)
-    {
+    int write(byte[] data, int offset) {
         offset = ClassFileWriter.putInt16(itsFlags, data, offset);
         offset = ClassFileWriter.putInt16(itsNameIndex, data, offset);
         offset = ClassFileWriter.putInt16(itsTypeIndex, data, offset);
@@ -4325,8 +4477,7 @@ final class ClassFileField
         return offset;
     }
 
-    int getWriteSize()
-    {
+    int getWriteSize() {
         int size = 2 * 3;
         if (!itsHasAttributes) {
             size += 2;
@@ -4344,12 +4495,10 @@ final class ClassFileField
     private int itsIndex;
 }
 
-final class ClassFileMethod
-{
+final class ClassFileMethod {
 
     ClassFileMethod(String name, short nameIndex, String type, short typeIndex,
-                    short flags)
-    {
+                    short flags) {
         itsName = name;
         itsNameIndex = nameIndex;
         itsType = type;
@@ -4357,41 +4506,35 @@ final class ClassFileMethod
         itsFlags = flags;
     }
 
-    void setCodeAttribute(byte codeAttribute[])
-    {
+    void setCodeAttribute(byte codeAttribute[]) {
         itsCodeAttribute = codeAttribute;
     }
 
-    int write(byte[] data, int offset)
-    {
+    int write(byte[] data, int offset) {
         offset = ClassFileWriter.putInt16(itsFlags, data, offset);
         offset = ClassFileWriter.putInt16(itsNameIndex, data, offset);
         offset = ClassFileWriter.putInt16(itsTypeIndex, data, offset);
         // Code attribute only
         offset = ClassFileWriter.putInt16(1, data, offset);
         System.arraycopy(itsCodeAttribute, 0, data, offset,
-                         itsCodeAttribute.length);
+                itsCodeAttribute.length);
         offset += itsCodeAttribute.length;
         return offset;
     }
 
-    int getWriteSize()
-    {
+    int getWriteSize() {
         return 2 * 4 + itsCodeAttribute.length;
     }
 
-    String getName()
-    {
+    String getName() {
         return itsName;
     }
 
-    String getType()
-    {
+    String getType() {
         return itsType;
     }
 
-    short getFlags()
-    {
+    short getFlags() {
         return itsFlags;
     }
 
@@ -4404,11 +4547,9 @@ final class ClassFileMethod
 
 }
 
-final class ConstantPool
-{
+final class ConstantPool {
 
-    ConstantPool(ClassFileWriter cfw)
-    {
+    ConstantPool(ClassFileWriter cfw) {
         this.cfw = cfw;
         itsTopIndex = 1;       // the zero'th entry is reserved
         itsPool = new byte[ConstantPoolSize];
@@ -4417,42 +4558,38 @@ final class ConstantPool
 
     private static final int ConstantPoolSize = 256;
     static final byte
-        CONSTANT_Class = 7,
-        CONSTANT_Fieldref = 9,
-        CONSTANT_Methodref = 10,
-        CONSTANT_InterfaceMethodref = 11,
-        CONSTANT_String = 8,
-        CONSTANT_Integer = 3,
-        CONSTANT_Float = 4,
-        CONSTANT_Long = 5,
-        CONSTANT_Double = 6,
-        CONSTANT_NameAndType = 12,
-        CONSTANT_Utf8 = 1;
+            CONSTANT_Class = 7,
+            CONSTANT_Fieldref = 9,
+            CONSTANT_Methodref = 10,
+            CONSTANT_InterfaceMethodref = 11,
+            CONSTANT_String = 8,
+            CONSTANT_Integer = 3,
+            CONSTANT_Float = 4,
+            CONSTANT_Long = 5,
+            CONSTANT_Double = 6,
+            CONSTANT_NameAndType = 12,
+            CONSTANT_Utf8 = 1;
 
-    int write(byte[] data, int offset)
-    {
-        offset = ClassFileWriter.putInt16((short)itsTopIndex, data, offset);
+    int write(byte[] data, int offset) {
+        offset = ClassFileWriter.putInt16((short) itsTopIndex, data, offset);
         System.arraycopy(itsPool, 0, data, offset, itsTop);
         offset += itsTop;
         return offset;
     }
 
-    int getWriteSize()
-    {
+    int getWriteSize() {
         return 2 + itsTop;
     }
 
-    int addConstant(int k)
-    {
+    int addConstant(int k) {
         ensure(5);
         itsPool[itsTop++] = CONSTANT_Integer;
         itsTop = ClassFileWriter.putInt32(k, itsPool, itsTop);
         itsPoolTypes.put(itsTopIndex, CONSTANT_Integer);
-        return (short)(itsTopIndex++);
+        return (short) (itsTopIndex++);
     }
 
-    int addConstant(long k)
-    {
+    int addConstant(long k) {
         ensure(9);
         itsPool[itsTop++] = CONSTANT_Long;
         itsTop = ClassFileWriter.putInt64(k, itsPool, itsTop);
@@ -4462,8 +4599,7 @@ final class ConstantPool
         return index;
     }
 
-    int addConstant(float k)
-    {
+    int addConstant(float k) {
         ensure(5);
         itsPool[itsTop++] = CONSTANT_Float;
         int bits = Float.floatToIntBits(k);
@@ -4472,8 +4608,7 @@ final class ConstantPool
         return itsTopIndex++;
     }
 
-    int addConstant(double k)
-    {
+    int addConstant(double k) {
         ensure(9);
         itsPool[itsTop++] = CONSTANT_Double;
         long bits = Double.doubleToLongBits(k);
@@ -4484,8 +4619,7 @@ final class ConstantPool
         return index;
     }
 
-    int addConstant(String k)
-    {
+    int addConstant(String k) {
         int utf8Index = 0xFFFF & addUtf8(k);
         int theIndex = itsStringConstHash.getInt(utf8Index, -1);
         if (theIndex == -1) {
@@ -4499,8 +4633,7 @@ final class ConstantPool
         return theIndex;
     }
 
-    boolean isUnderUtfEncodingLimit(String s)
-    {
+    boolean isUnderUtfEncodingLimit(String s) {
         int strLen = s.length();
         if (strLen * 3 <= MAX_UTF_ENCODING_SIZE) {
             return true;
@@ -4514,8 +4647,7 @@ final class ConstantPool
      * Get maximum i such that <tt>start <= i <= end</tt> and
      * <tt>s.substring(start, i)</tt> fits JVM UTF string encoding limit.
      */
-    int getUtfEncodingLimit(String s, int start, int end)
-    {
+    int getUtfEncodingLimit(String s, int start, int end) {
         if ((end - start) * 3 <= MAX_UTF_ENCODING_SIZE) {
             return end;
         }
@@ -4536,8 +4668,7 @@ final class ConstantPool
         return end;
     }
 
-    short addUtf8(String k)
-    {
+    short addUtf8(String k) {
         int theIndex = itsUtf8Hash.get(k, -1);
         if (theIndex == -1) {
             int strLen = k.length();
@@ -4560,14 +4691,14 @@ final class ConstantPool
                 for (int i = 0; i != strLen; i++) {
                     int c = chars[i];
                     if (c != 0 && c <= 0x7F) {
-                        itsPool[top++] = (byte)c;
+                        itsPool[top++] = (byte) c;
                     } else if (c > 0x7FF) {
-                        itsPool[top++] = (byte)(0xE0 | (c >> 12));
-                        itsPool[top++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-                        itsPool[top++] = (byte)(0x80 | (c & 0x3F));
+                        itsPool[top++] = (byte) (0xE0 | (c >> 12));
+                        itsPool[top++] = (byte) (0x80 | ((c >> 6) & 0x3F));
+                        itsPool[top++] = (byte) (0x80 | (c & 0x3F));
                     } else {
-                        itsPool[top++] = (byte)(0xC0 | (c >> 6));
-                        itsPool[top++] = (byte)(0x80 | (c & 0x3F));
+                        itsPool[top++] = (byte) (0xC0 | (c >> 6));
+                        itsPool[top++] = (byte) (0x80 | (c & 0x3F));
                     }
                 }
 
@@ -4576,8 +4707,8 @@ final class ConstantPool
                     tooBigString = true;
                 } else {
                     // Write back length
-                    itsPool[itsTop + 1] = (byte)(utfLen >>> 8);
-                    itsPool[itsTop + 2] = (byte)utfLen;
+                    itsPool[itsTop + 1] = (byte) (utfLen >>> 8);
+                    itsPool[itsTop + 2] = (byte) utfLen;
 
                     itsTop = top;
                     theIndex = itsTopIndex++;
@@ -4590,11 +4721,10 @@ final class ConstantPool
         }
         setConstantData(theIndex, k);
         itsPoolTypes.put(theIndex, CONSTANT_Utf8);
-        return (short)theIndex;
+        return (short) theIndex;
     }
 
-    private short addNameAndType(String name, String type)
-    {
+    private short addNameAndType(String name, String type) {
         short nameIndex = addUtf8(name);
         short typeIndex = addUtf8(type);
         ensure(5);
@@ -4602,11 +4732,10 @@ final class ConstantPool
         itsTop = ClassFileWriter.putInt16(nameIndex, itsPool, itsTop);
         itsTop = ClassFileWriter.putInt16(typeIndex, itsPool, itsTop);
         itsPoolTypes.put(itsTopIndex, CONSTANT_NameAndType);
-        return (short)(itsTopIndex++);
+        return (short) (itsTopIndex++);
     }
 
-    short addClass(String className)
-    {
+    short addClass(String className) {
         int theIndex = itsClassHash.get(className, -1);
         if (theIndex == -1) {
             String slashed = className;
@@ -4631,13 +4760,12 @@ final class ConstantPool
         }
         setConstantData(theIndex, className);
         itsPoolTypes.put(theIndex, CONSTANT_Class);
-        return (short)theIndex;
+        return (short) theIndex;
     }
 
-    short addFieldRef(String className, String fieldName, String fieldType)
-    {
+    short addFieldRef(String className, String fieldName, String fieldType) {
         FieldOrMethodRef ref = new FieldOrMethodRef(className, fieldName,
-                                                    fieldType);
+                fieldType);
 
         int theIndex = itsFieldRefHash.get(ref, -1);
         if (theIndex == -1) {
@@ -4652,14 +4780,13 @@ final class ConstantPool
         }
         setConstantData(theIndex, ref);
         itsPoolTypes.put(theIndex, CONSTANT_Fieldref);
-        return (short)theIndex;
+        return (short) theIndex;
     }
 
     short addMethodRef(String className, String methodName,
-                       String methodType)
-    {
+                       String methodType) {
         FieldOrMethodRef ref = new FieldOrMethodRef(className, methodName,
-                                                    methodType);
+                methodType);
 
         int theIndex = itsMethodRefHash.get(ref, -1);
         if (theIndex == -1) {
@@ -4674,12 +4801,11 @@ final class ConstantPool
         }
         setConstantData(theIndex, ref);
         itsPoolTypes.put(theIndex, CONSTANT_Methodref);
-        return (short)theIndex;
+        return (short) theIndex;
     }
 
     short addInterfaceMethodRef(String className,
-                                String methodName, String methodType)
-    {
+                                String methodName, String methodType) {
         short ntIndex = addNameAndType(methodName, methodType);
         short classIndex = addClass(className);
         ensure(5);
@@ -4687,29 +4813,25 @@ final class ConstantPool
         itsTop = ClassFileWriter.putInt16(classIndex, itsPool, itsTop);
         itsTop = ClassFileWriter.putInt16(ntIndex, itsPool, itsTop);
         FieldOrMethodRef r = new FieldOrMethodRef(className, methodName,
-                                                  methodType);
+                methodType);
         setConstantData(itsTopIndex, r);
         itsPoolTypes.put(itsTopIndex, CONSTANT_InterfaceMethodref);
-        return (short)(itsTopIndex++);
+        return (short) (itsTopIndex++);
     }
 
-    Object getConstantData(int index)
-    {
+    Object getConstantData(int index) {
         return itsConstantData.getObject(index);
     }
 
-    void setConstantData(int index, Object data)
-    {
+    void setConstantData(int index, Object data) {
         itsConstantData.put(index, data);
     }
 
-    byte getConstantType(int index)
-    {
+    byte getConstantType(int index) {
         return (byte) itsPoolTypes.getInt(index, 0);
     }
 
-    void ensure(int howMuch)
-    {
+    void ensure(int howMuch) {
         if (itsTop + howMuch > itsPool.length) {
             int newCapacity = itsPool.length * 2;
             if (itsTop + howMuch > newCapacity) {
@@ -4738,43 +4860,38 @@ final class ConstantPool
     private byte itsPool[];
 }
 
-final class FieldOrMethodRef
-{
-    FieldOrMethodRef(String className, String name, String type)
-    {
+final class FieldOrMethodRef {
+    FieldOrMethodRef(String className, String name, String type) {
         this.className = className;
         this.name = name;
         this.type = type;
     }
 
-    public String getClassName()
-    {
+    public String getClassName() {
         return className;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public String getType()
-    {
+    public String getType() {
         return type;
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (!(obj instanceof FieldOrMethodRef)) { return false; }
-        FieldOrMethodRef x = (FieldOrMethodRef)obj;
+    public boolean equals(Object obj) {
+        if (!(obj instanceof FieldOrMethodRef)) {
+            return false;
+        }
+        FieldOrMethodRef x = (FieldOrMethodRef) obj;
         return className.equals(x.className)
-            && name.equals(x.name)
-            && type.equals(x.type);
+                && name.equals(x.name)
+                && type.equals(x.type);
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         if (hashCode == -1) {
             int h1 = className.hashCode();
             int h2 = name.hashCode();
@@ -4821,7 +4938,7 @@ final class SuperBlock {
 
     /**
      * Get a copy of the super block's locals without any trailing TOP types.
-     *
+     * <p>
      * This is useful for actual writing stack maps; during the computation of
      * stack map types, all local arrays have the same size; the max locals for
      * the method. In addition, DOUBLE and LONG types have trailing TOP types
@@ -4832,7 +4949,7 @@ final class SuperBlock {
         int last = locals.length - 1;
         // Exclude all of the trailing TOPs not bound to a DOUBLE/LONG
         while (last >= 0 && locals[last] == TypeInfo.TOP &&
-               !TypeInfo.isTwoWords(locals[last - 1])) {
+                !TypeInfo.isTwoWords(locals[last - 1])) {
             last--;
         }
         last++;
@@ -4868,11 +4985,11 @@ final class SuperBlock {
             isInitialized = true;
             return true;
         } else if (this.locals.length == localsTop &&
-                   this.stack.length == stackTop) {
+                this.stack.length == stackTop) {
             boolean localsChanged = mergeState(this.locals, locals, localsTop,
-                                               pool);
+                    pool);
             boolean stackChanged = mergeState(this.stack, stack, stackTop,
-                                              pool);
+                    pool);
             return localsChanged || stackChanged;
         } else {
             if (ClassFileWriter.StackMapTable.DEBUGSTACKMAP) {
@@ -4888,7 +5005,7 @@ final class SuperBlock {
 
     /**
      * Merge an operand stack or local variable array with incoming state.
-     *
+     * <p>
      * They are treated the same way; by this point, it should already be
      * ensured that the array sizes are the same, which is the only additional
      * constraint that is imposed on merging operand stacks (the local variable
@@ -4954,7 +5071,8 @@ final class SuperBlock {
  * always in bits 0-7.
  */
 final class TypeInfo {
-    private TypeInfo() { }
+    private TypeInfo() {
+    }
 
     static final int TOP = 0;
     static final int INTEGER = 1;
@@ -4989,7 +5107,7 @@ final class TypeInfo {
     /**
      * Treat the result of getPayload as a constant pool index and fetch the
      * corresponding String mapped to it.
-     *
+     * <p>
      * Only works on OBJECT types.
      */
     static final String getPayloadAsType(int typeInfo, ConstantPool pool) {
@@ -5030,17 +5148,17 @@ final class TypeInfo {
 
     /**
      * Merge two verification types.
-     *
+     * <p>
      * In most cases, the verification types must be the same. For example,
      * INTEGER and DOUBLE cannot be merged and an exception will be thrown.
      * The basic rules are:
-     *
+     * <p>
      * - If the types are equal, simply return one.
      * - If either type is TOP, return TOP.
      * - If either type is NULL, return the other type.
      * - If both types are objects, find the lowest common ancestor in the
-     *   class hierarchy.
-     *
+     * class hierarchy.
+     * <p>
      * This method uses reflection to traverse the class hierarchy. Therefore,
      * it is assumed that the current class being generated is never the target
      * of a full object-object merge, which would need to load the current
@@ -5055,7 +5173,7 @@ final class TypeInfo {
         if (current == incoming || (currentIsObject && incoming == NULL)) {
             return current;
         } else if (currentTag == TypeInfo.TOP ||
-            incomingTag == TypeInfo.TOP) {
+                incomingTag == TypeInfo.TOP) {
             return TypeInfo.TOP;
         } else if (current == NULL && incomingIsObject) {
             return incoming;
@@ -5088,7 +5206,7 @@ final class TypeInfo {
             } else if (incomingClass.isAssignableFrom(currentClass)) {
                 return incoming;
             } else if (incomingClass.isInterface() ||
-                       currentClass.isInterface()) {
+                    currentClass.isInterface()) {
                 // For verification purposes, Sun specifies that interfaces are
                 // subtypes of Object. Therefore, we know that the merge result
                 // involving interfaces where one is not assignable to the
@@ -5107,8 +5225,8 @@ final class TypeInfo {
             }
         }
         throw new IllegalArgumentException("bad merge attempt between " +
-                                           toString(current, pool) + " and " +
-                                           toString(incoming, pool));
+                toString(current, pool) + " and " +
+                toString(incoming, pool));
     }
 
     static String toString(int type, ConstantPool pool) {
@@ -5142,12 +5260,12 @@ final class TypeInfo {
     /**
      * Take an internal name and return a java.lang.Class instance that
      * represents it.
-     *
+     * <p>
      * For example, given "java/lang/Object", returns the equivalent of
      * Class.forName("java.lang.Object"), but also handles exceptions.
      */
-	@SuppressWarnings("rawtypes")
-	static Class getClassFromInternalName(String internalName) {
+    @SuppressWarnings("rawtypes")
+    static Class getClassFromInternalName(String internalName) {
         try {
             return Class.forName(internalName.replace('/', '.'));
         } catch (ClassNotFoundException e) {
@@ -5177,7 +5295,7 @@ final class TypeInfo {
     }
 
     static void print(int[] locals, int localsTop, int[] stack, int stackTop,
-                       ConstantPool pool) {
+                      ConstantPool pool) {
         System.out.print("locals: ");
         System.out.println(toString(locals, localsTop, pool));
         System.out.print("stack: ");

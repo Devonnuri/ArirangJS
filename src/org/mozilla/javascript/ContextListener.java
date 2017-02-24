@@ -13,8 +13,7 @@ package org.mozilla.javascript;
  * {@link Context} instances should implement
  * {@link ContextFactory.Listener}.
  */
-public interface ContextListener extends ContextFactory.Listener
-{
+public interface ContextListener extends ContextFactory.Listener {
 
     /**
      * @deprecated Rhino runtime never calls the method.

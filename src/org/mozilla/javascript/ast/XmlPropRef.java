@@ -11,9 +11,9 @@ import org.mozilla.javascript.Token;
 /**
  * AST node for an E4X XML {@code [expr]} property-ref expression.
  * The node type is {@link Token#REF_NAME}.<p>
- *
+ * <p>
  * Syntax:<p>
- *
+ * <p>
  * <pre> @<i><sub>opt</sub></i> ns:: <i><sub>opt</sub></i> name</pre>
  *
  * Examples include {@code name}, {@code ns::name}, {@code ns::*},
@@ -53,6 +53,7 @@ public class XmlPropRef extends XmlRef {
 
     /**
      * Sets property name, and sets its parent to this node.
+     *
      * @throws IllegalArgumentException if {@code propName} is {@code null}
      */
     public void setPropName(Name propName) {

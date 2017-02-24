@@ -13,14 +13,13 @@ import java.util.Map;
 /**
  * This class performs node transforms to prepare for optimization.
  *
- * @see NodeTransformer
  * @author Norris Boyd
+ * @see NodeTransformer
  */
 
 class OptTransformer extends NodeTransformer {
 
-    OptTransformer(Map<String,OptFunctionNode> possibleDirectCalls, ObjArray directCallTargets)
-    {
+    OptTransformer(Map<String, OptFunctionNode> possibleDirectCalls, ObjArray directCallTargets) {
         this.possibleDirectCalls = possibleDirectCalls;
         this.directCallTargets = directCallTargets;
     }
@@ -37,8 +36,7 @@ class OptTransformer extends NodeTransformer {
         super.visitCall(node, tree);
     }
 
-    private void detectDirectCall(Node node, ScriptNode tree)
-    {
+    private void detectDirectCall(Node node, ScriptNode tree) {
         if (tree.getType() == Token.FUNCTION) {
             Node left = node.getFirstChild();
 
@@ -79,9 +77,8 @@ class OptTransformer extends NodeTransformer {
                     OptFunctionNode ofn;
                     ofn = possibleDirectCalls.get(targetName);
                     if (ofn != null
-                        && argCount == ofn.fnode.getParamCount()
-                        && !ofn.fnode.requiresActivation())
-                    {
+                            && argCount == ofn.fnode.getParamCount()
+                            && !ofn.fnode.requiresActivation()) {
                         // Refuse to directCall any function with more
                         // than 32 parameters - prevent code explosion
                         // for wacky test cases
@@ -99,6 +96,6 @@ class OptTransformer extends NodeTransformer {
         }
     }
 
-    private Map<String,OptFunctionNode> possibleDirectCalls;
+    private Map<String, OptFunctionNode> possibleDirectCalls;
     private ObjArray directCallTargets;
 }

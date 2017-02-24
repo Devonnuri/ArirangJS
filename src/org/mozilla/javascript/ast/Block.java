@@ -13,7 +13,7 @@ import org.mozilla.javascript.Token;
  * A block statement delimited by curly braces.  The node position is the
  * position of the open-curly, and the length extends to the position of
  * the close-curly.  Node type is {@link Token#BLOCK}.
- *
+ * <p>
  * <pre><i>Block</i> :
  *     <b>{</b> Statement* <b>}</b></pre>
  */
@@ -47,7 +47,7 @@ public class Block extends AstNode {
         sb.append(makeIndent(depth));
         sb.append("{\n");
         for (Node kid : this) {
-            sb.append(((AstNode)kid).toSource(depth+1));
+            sb.append(((AstNode) kid).toSource(depth + 1));
         }
         sb.append(makeIndent(depth));
         sb.append("}\n");
@@ -58,7 +58,7 @@ public class Block extends AstNode {
     public void visit(NodeVisitor v) {
         if (v.visit(this)) {
             for (Node kid : this) {
-                ((AstNode)kid).visit(v);
+                ((AstNode) kid).visit(v);
             }
         }
     }

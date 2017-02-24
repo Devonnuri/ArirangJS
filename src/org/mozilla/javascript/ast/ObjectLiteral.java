@@ -16,9 +16,9 @@ import java.util.List;
  * AST node for an Object literal (also called an Object initialiser in
  * Ecma-262).  The elements list will always be non-{@code null}, although
  * the list will have no elements if the Object literal is empty.<p>
- *
+ * <p>
  * Node type is {@link Token#OBJECTLIT}.<p>
- *
+ * <p>
  * <pre><i>ObjectLiteral</i> :
  *       <b>{}</b>
  *       <b>{</b> PropertyNameAndValueList <b>}</b>
@@ -33,7 +33,7 @@ import java.util.List;
 public class ObjectLiteral extends AstNode implements DestructuringForm {
 
     private static final List<ObjectProperty> NO_ELEMS =
-        Collections.unmodifiableList(new ArrayList<ObjectProperty>());
+            Collections.unmodifiableList(new ArrayList<ObjectProperty>());
 
     private List<ObjectProperty> elements;
     boolean isDestructuring;
@@ -64,6 +64,7 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
     /**
      * Sets the element list, and updates the parent of each element.
      * Replaces any existing elements.
+     *
      * @param elements the element list.  Can be {@code null}.
      */
     public void setElements(List<ObjectProperty> elements) {
@@ -79,6 +80,7 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
 
     /**
      * Adds an element to the list, and sets its parent to this node.
+     *
      * @param element the property node to append to the end of the list
      * @throws IllegalArgumentException} if element is {@code null}
      */

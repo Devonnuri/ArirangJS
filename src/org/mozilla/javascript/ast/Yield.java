@@ -11,7 +11,7 @@ import org.mozilla.javascript.Token;
 /**
  * AST node for JavaScript 1.7 {@code yield} expression or statement.
  * Node type is {@link Token#YIELD}.<p>
- *
+ * <p>
  * <pre><i>Yield</i> :
  *   <b>yield</b> [<i>no LineTerminator here</i>] [non-paren Expression] ;</pre>
  */
@@ -48,6 +48,7 @@ public class Yield extends AstNode {
 
     /**
      * Sets yielded expression, and sets its parent to this node.
+     *
      * @param expr the value to yield. Can be {@code null}.
      */
     public void setValue(AstNode expr) {

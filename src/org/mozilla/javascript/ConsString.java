@@ -11,17 +11,17 @@ import java.io.Serializable;
 /**
  * <p>This class represents a string composed of two components, each of which
  * may be a <code>java.lang.String</code> or another ConsString.</p>
- *
+ * <p>
  * <p>This string representation is optimized for concatenation using the "+"
  * operator. Instead of immediately copying both components to a new character
  * array, ConsString keeps references to the original components and only
  * converts them to a String if either toString() is called or a certain depth
  * level is reached.</p>
- *
+ * <p>
  * <p>Note that instances of this class are only immutable if both parts are
  * immutable, i.e. either Strings or ConsStrings that are ultimately composed
  * of Strings.</p>
- *
+ * <p>
  * <p>Both the name and the concept are borrowed from V8.</p>
  */
 public class ConsString implements CharSequence, Serializable {
@@ -38,10 +38,10 @@ public class ConsString implements CharSequence, Serializable {
         length = str1.length() + str2.length();
         depth = 1;
         if (str1 instanceof ConsString) {
-            depth += ((ConsString)str1).depth;
+            depth += ((ConsString) str1).depth;
         }
         if (str2 instanceof ConsString) {
-            depth += ((ConsString)str2).depth;
+            depth += ((ConsString) str2).depth;
         }
         // Don't let it grow too deep, can cause stack overflows
         if (depth > 2000) {
@@ -53,9 +53,9 @@ public class ConsString implements CharSequence, Serializable {
     private Object writeReplace() {
         return this.toString();
     }
-    
+
     public String toString() {
-        return depth == 0 ? (String)s1 : flatten();
+        return depth == 0 ? (String) s1 : flatten();
     }
 
     private synchronized String flatten() {
@@ -66,7 +66,7 @@ public class ConsString implements CharSequence, Serializable {
             s2 = "";
             depth = 0;
         }
-        return (String)s1;
+        return (String) s1;
     }
 
     private synchronized void appendTo(StringBuilder b) {
@@ -76,7 +76,7 @@ public class ConsString implements CharSequence, Serializable {
 
     private static void appendFragment(CharSequence s, StringBuilder b) {
         if (s instanceof ConsString) {
-            ((ConsString)s).appendTo(b);
+            ((ConsString) s).appendTo(b);
         } else {
             b.append(s);
         }
@@ -87,12 +87,12 @@ public class ConsString implements CharSequence, Serializable {
     }
 
     public char charAt(int index) {
-        String str = depth == 0 ? (String)s1 : flatten();
+        String str = depth == 0 ? (String) s1 : flatten();
         return str.charAt(index);
     }
 
     public CharSequence subSequence(int start, int end) {
-        String str = depth == 0 ? (String)s1 : flatten();
+        String str = depth == 0 ? (String) s1 : flatten();
         return str.substring(start, end);
     }
 

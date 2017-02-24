@@ -15,8 +15,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-public class VMBridge_jdk15 extends org.mozilla.javascript.jdk13.VMBridge_jdk13
-{
+public class VMBridge_jdk15 extends org.mozilla.javascript.jdk13.VMBridge_jdk13 {
     public VMBridge_jdk15() throws SecurityException, InstantiationException {
         try {
             // Just try and see if we can access the isVarArgs method.
@@ -53,7 +52,7 @@ public class VMBridge_jdk15 extends org.mozilla.javascript.jdk13.VMBridge_jdk13
             if (unwrapped instanceof Iterator)
                 iterator = (Iterator<?>) unwrapped;
             if (unwrapped instanceof Iterable)
-                iterator = ((Iterable<?>)unwrapped).iterator();
+                iterator = ((Iterable<?>) unwrapped).iterator();
             return iterator;
         }
         return null;

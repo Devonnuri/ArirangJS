@@ -11,21 +11,21 @@ import org.mozilla.javascript.Token;
 /**
  * Node representing comments.
  * Node type is {@link Token#COMMENT}.<p>
- *
+ * <p>
  * <p>JavaScript effectively has five comment types:
- *   <ol>
- *     <li>// line comments</li>
- *     <li>/<span class="none">* block comments *\/</li>
- *     <li>/<span class="none">** jsdoc comments *\/</li>
- *     <li>&lt;!-- html-open line comments</li>
- *     <li>^\\s*--&gt; html-close line comments</li>
- *   </ol>
- *
+ * <ol>
+ * <li>// line comments</li>
+ * <li>/<span class="none">* block comments *\/</li>
+ * <li>/<span class="none">** jsdoc comments *\/</li>
+ * <li>&lt;!-- html-open line comments</li>
+ * <li>^\\s*--&gt; html-close line comments</li>
+ * </ol>
+ * <p>
  * <p>The first three should be familiar to Java programmers.  JsDoc comments
  * are really just block comments with some conventions about the formatting
  * within the comment delimiters.  Line and block comments are described in the
  * Ecma-262 specification. <p>
- *
+ * <p>
  * <p>SpiderMonkey and Rhino also support HTML comment syntax, but somewhat
  * counterintuitively, the syntax does not produce a block comment.  Instead,
  * everything from the string &lt;!-- through the end of the line is considered
@@ -33,7 +33,7 @@ import org.mozilla.javascript.Token;
  * then the line is considered a line comment.  This is to support parsing
  * JavaScript in &lt;script&gt; HTML tags that has been "hidden" from very old
  * browsers by surrounding it with HTML comment delimiters. <p>
- *
+ * <p>
  * Note the node start position for Comment nodes is still relative to the
  * parent, but Comments are always stored directly in the AstRoot node, so
  * they are also effectively absolute offsets.
@@ -49,9 +49,10 @@ public class Comment extends AstNode {
 
     /**
      * Constructs a new Comment
-     * @param pos the start position
-     * @param len the length including delimiter(s)
-     * @param type the comment type
+     *
+     * @param pos   the start position
+     * @param len   the length including delimiter(s)
+     * @param type  the comment type
      * @param value the value of the comment, as a string
      */
     public Comment(int pos, int len, Token.CommentType type, String value) {
@@ -69,8 +70,9 @@ public class Comment extends AstNode {
 
     /**
      * Sets the comment style
+     *
      * @param type the comment style, a
-     * {@link org.mozilla.javascript.Token.CommentType}
+     *             {@link org.mozilla.javascript.Token.CommentType}
      */
     public void setCommentType(Token.CommentType type) {
         this.commentType = type;

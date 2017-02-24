@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
- package org.mozilla.javascript;
+package org.mozilla.javascript;
 
 import java.util.EnumMap;
 
@@ -12,13 +12,13 @@ import java.util.EnumMap;
  * A top-level scope object that provides special means to cache and preserve
  * the initial values of the built-in constructor properties for better
  * ECMAScript compliance.
- *
+ * <p>
  * <p>ECMA 262 requires that most constructors used internally construct
  * objects with the original prototype object as value of their [[Prototype]]
  * internal property. Since built-in global constructors are defined as
  * writable and deletable, this means they should be cached to protect against
  * redefinition at runtime.</p>
- *
+ * <p>
  * <p>In order to implement this efficiently, this class provides a mechanism
  * to access the original built-in global constructors and their prototypes
  * via numeric class-ids. To make use of this, the new
@@ -26,7 +26,7 @@ import java.util.EnumMap;
  * {@link ScriptRuntime#setBuiltinProtoAndParent ScriptRuntime.setBuiltinProtoAndParent}
  * methods should be used to create and initialize objects of built-in classes
  * instead of their generic counterparts.</p>
- *
+ * <p>
  * <p>Calling {@link org.mozilla.javascript.Context#initStandardObjects()}
  * with an instance of this class as argument will automatically cache
  * built-in classes after initialization. For other setups involving
@@ -43,21 +43,37 @@ public class TopLevel extends IdScriptableObject {
      * An enumeration of built-in ECMAScript objects.
      */
     public enum Builtins {
-        /** The built-in Object type. */
+        /**
+         * The built-in Object type.
+         */
         Object,
-        /** The built-in Array type. */
+        /**
+         * The built-in Array type.
+         */
         Array,
-        /** The built-in Function type. */
+        /**
+         * The built-in Function type.
+         */
         Function,
-        /** The built-in String type. */
+        /**
+         * The built-in String type.
+         */
         String,
-        /** The built-in Number type. */
+        /**
+         * The built-in Number type.
+         */
         Number,
-        /** The built-in Boolean type. */
+        /**
+         * The built-in Boolean type.
+         */
         Boolean,
-        /** The built-in RegExp type. */
+        /**
+         * The built-in RegExp type.
+         */
         RegExp,
-        /** The built-in Error type. */
+        /**
+         * The built-in Error type.
+         */
         Error
     }
 
@@ -81,7 +97,7 @@ public class TopLevel extends IdScriptableObject {
         for (Builtins builtin : Builtins.values()) {
             Object value = ScriptableObject.getProperty(this, builtin.name());
             if (value instanceof BaseFunction) {
-                ctors.put(builtin, (BaseFunction)value);
+                ctors.put(builtin, (BaseFunction) value);
             }
         }
     }
@@ -92,9 +108,9 @@ public class TopLevel extends IdScriptableObject {
      * an instance of this class or does have a cache of built-ins,
      * the constructor is looked up via normal property lookup.
      *
-     * @param cx the current Context
+     * @param cx    the current Context
      * @param scope the top-level scope
-     * @param type the built-in type
+     * @param type  the built-in type
      * @return the built-in constructor
      */
     public static Function getBuiltinCtor(Context cx,
@@ -103,7 +119,7 @@ public class TopLevel extends IdScriptableObject {
         // must be called with top level scope
         assert scope.getParentScope() == null;
         if (scope instanceof TopLevel) {
-            Function result = ((TopLevel)scope).getBuiltinCtor(type);
+            Function result = ((TopLevel) scope).getBuiltinCtor(type);
             if (result != null) {
                 return result;
             }
@@ -119,7 +135,7 @@ public class TopLevel extends IdScriptableObject {
      * the prototype is looked up via normal property lookup.
      *
      * @param scope the top-level scope
-     * @param type the built-in type
+     * @param type  the built-in type
      * @return the built-in prototype
      */
     public static Scriptable getBuiltinPrototype(Scriptable scope,
@@ -127,7 +143,7 @@ public class TopLevel extends IdScriptableObject {
         // must be called with top level scope
         assert scope.getParentScope() == null;
         if (scope instanceof TopLevel) {
-            Scriptable result = ((TopLevel)scope)
+            Scriptable result = ((TopLevel) scope)
                     .getBuiltinPrototype(type);
             if (result != null) {
                 return result;
@@ -141,6 +157,7 @@ public class TopLevel extends IdScriptableObject {
      * Get the cached built-in object constructor from this scope with the
      * given <code>type</code>. Returns null if {@link #cacheBuiltins()} has not
      * been called on this object.
+     *
      * @param type the built-in type
      * @return the built-in constructor
      */
@@ -152,6 +169,7 @@ public class TopLevel extends IdScriptableObject {
      * Get the cached built-in object prototype from this scope with the
      * given <code>type</code>. Returns null if {@link #cacheBuiltins()} has not
      * been called on this object.
+     *
      * @param type the built-in type
      * @return the built-in prototype
      */

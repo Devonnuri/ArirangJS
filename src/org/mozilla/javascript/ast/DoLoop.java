@@ -10,7 +10,7 @@ import org.mozilla.javascript.Token;
 
 /**
  * Do statement.  Node type is {@link Token#DO}.<p>
- *
+ * <p>
  * <pre><i>DoLoop</i>:
  * <b>do</b> Statement <b>while</b> <b>(</b> Expression <b>)</b> <b>;</b></pre>
  */
@@ -43,6 +43,7 @@ public class DoLoop extends Loop {
 
     /**
      * Sets loop condition, and sets its parent to this node.
+     *
      * @throws IllegalArgumentException if condition is null
      */
     public void setCondition(AstNode condition) {

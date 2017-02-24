@@ -10,7 +10,7 @@ import org.mozilla.javascript.Token;
 
 /**
  * Return statement.  Node type is {@link Token#RETURN}.<p>
- *
+ * <p>
  * <pre><i>ReturnStatement</i> :
  *      <b>return</b> [<i>no LineTerminator here</i>] [Expression] ;</pre>
  */
